@@ -1,12 +1,69 @@
 @tankman_HostAddress = http://localhost:5255
+@tankman_OrgId = "appleinc"
 
-GET {{tankman_HostAddress}}/todos/
+POST {{tankman_HostAddress}}/orgs
+Accept: application/json
+
+{
+  "id": "apple.com",
+  "name": "Apple Inc"
+}
+
+###
+
+GET {{tankman_HostAddress}}/orgs
 Accept: application/json
 
 ###
 
-GET {{tankman_HostAddress}}/todos/1
+GET {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}
 Accept: application/json
 
 ###
 
+POST {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/users/
+Accept: application/json
+
+{
+  "userId": "jdoe",
+  "externalUserId": "jdoeapple"
+}
+
+###
+
+POST {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/roles/
+Accept: application/json
+
+{
+  "name": "managers"
+}
+
+###
+
+POST {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/roles/managers/users
+Accept: application/json
+
+{
+  "name": "managers"
+}
+
+###
+
+GET {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/users/
+Accept: application/json
+
+###
+
+POST {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/resources/{{tankman_ResourceId}}
+Accept: application/json
+
+{
+  "action": "edit"
+}
+
+###
+
+GET {{tankman_HostAddress}}/orgs/{{tankman_OrgId}}/resources/{{tankman_ResourceId}}
+Accept: application/json
+
+###
