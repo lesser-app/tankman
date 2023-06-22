@@ -41,18 +41,18 @@ public static class UserService
   {
     var dbContext = new TankmanDbContext();
     return await (from user in dbContext.Users
-                join assignment in dbContext.RoleAssignments on user.Id equals assignment.UserId
-                join role in dbContext.Roles on assignment.RoleId equals role.Id
-                where user.Id == userId
-                where user.OrgId == orgId
-                select role).ToListAsync();
+                  join assignment in dbContext.RoleAssignments on user.Id equals assignment.UserId
+                  join role in dbContext.Roles on assignment.RoleId equals role.Id
+                  where user.Id == userId
+                  where user.OrgId == orgId
+                  select role).ToListAsync();
 
   }
 
   public static async Task<List<UserPermission>> GetUserPermissionsAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.OrgId == orgId).ToListAsync();
+    return await dbContext.UserPermissions.Where((x) => x.UserId == userId).ToListAsync();
   }
 
 }
