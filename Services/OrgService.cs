@@ -12,7 +12,7 @@ public static class OrgService
     var org = new Org
     {
       Id = id,
-      CreatedAt = DateTime.Now,
+      CreatedAt = DateTimeOffset.Now,
     };
     dbContext.Orgs.Add(org);
     await dbContext.SaveChangesAsync();

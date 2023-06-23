@@ -16,7 +16,7 @@ namespace tankman.Db
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      var connectionString = Environment.GetEnvironmentVariable("CONN_STR");
+      var connectionString = Environment.GetEnvironmentVariable("TANKMAN_CONN_STR");
       optionsBuilder.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
     }
   }
