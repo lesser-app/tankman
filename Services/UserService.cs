@@ -16,7 +16,7 @@ public static class UserService
       IdentityProviderUserId = identityProviderUserId,
       IdentityProvider = identityProvider,
       Active = true,
-      CreatedAt = DateTimeOffset.Now,
+      CreatedAt = DateTime.UtcNow,
       OrgId = orgId,
     };
     var dbContext = new TankmanDbContext();

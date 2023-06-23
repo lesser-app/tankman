@@ -16,7 +16,7 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,7 +30,7 @@ namespace tankman.Migrations
                     id = table.Column<string>(type: "text", nullable: false),
                     path = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,7 +43,7 @@ namespace tankman.Migrations
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -58,7 +58,7 @@ namespace tankman.Migrations
                     identity_provider = table.Column<string>(type: "text", nullable: false),
                     identity_provider_user_id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     active = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -74,7 +74,7 @@ namespace tankman.Migrations
                     resource = table.Column<string>(type: "text", nullable: false),
                     role = table.Column<string>(type: "text", nullable: false),
                     action = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -95,7 +95,7 @@ namespace tankman.Migrations
                     user_id = table.Column<string>(type: "text", nullable: false),
                     resource = table.Column<string>(type: "text", nullable: false),
                     action = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
@@ -115,7 +115,7 @@ namespace tankman.Migrations
                     id = table.Column<string>(type: "text", nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false),
                     role_id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

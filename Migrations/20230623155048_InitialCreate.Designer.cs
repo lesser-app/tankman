@@ -12,7 +12,7 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230623152703_InitialCreate")]
+    [Migration("20230623155048_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -47,7 +47,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -73,7 +73,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -94,7 +94,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -128,7 +128,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("action");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -165,7 +165,7 @@ namespace tankman.Migrations
                         .HasColumnType("boolean")
                         .HasColumnName("active");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
@@ -201,7 +201,7 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("action");
 
-                    b.Property<DateTimeOffset>("CreatedAt")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
