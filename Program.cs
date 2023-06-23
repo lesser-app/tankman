@@ -1,5 +1,6 @@
-using System.Text.Json.Serialization;
-using tankman;
+
+using tankman.Serialization;
+using tankman.Services;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -10,21 +11,16 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 var app = builder.Build();
 
-var sampleTodos = TodoGenerator.GenerateTodos().ToArray();
+await OrgService.CreateOrgAsync("10");
 
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos);
-todosApi.MapGet("/{id}", (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? Results.Ok(todo)
-        : Results.NotFound());
+// var todosApi = app.MapGroup("/todos");
+// todosApi.MapGet("/", () => sampleTodos);
+// todosApi.MapGet("/{id}", (int id) =>
+//     sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
+//         ? Results.Ok(todo)
+//         : Results.NotFound());
 
 
 
 app.Run();
 
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
-{
-
-}

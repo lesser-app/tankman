@@ -1,5 +1,6 @@
 using tankman.Models;
 using Microsoft.EntityFrameworkCore;
+using EFCore.NamingConventions;
 
 namespace tankman
 {
@@ -16,7 +17,7 @@ namespace tankman
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
       var connectionString = Environment.GetEnvironmentVariable("CONN_STR");
-      optionsBuilder.UseNpgsql(connectionString);
+      optionsBuilder.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
     }
   }
 

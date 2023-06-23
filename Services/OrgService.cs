@@ -5,7 +5,7 @@ using tankman.Models;
 public static class OrgService
 {
 
-  public static async Task<Org> AddOrgAsync(string id)
+  public static async Task<Org> CreateOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
     var org = new Org

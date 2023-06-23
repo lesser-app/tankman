@@ -1,7 +1,12 @@
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
 namespace tankman.Models;
 
+[PrimaryKey(nameof(Id))]
 public class Resource
-{
+{  
+  public required string Id { get; set; }
   public required string Path { get; set; }
   public required string OrgId { get; set; }
   public required DateTime CreatedAt { get; set; }
