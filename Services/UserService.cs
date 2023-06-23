@@ -1,7 +1,9 @@
 using tankman.Models;
 using tankman.Utils;
-namespace tankman.Services;
 using Microsoft.EntityFrameworkCore;
+using tankman.Db;
+
+namespace tankman.Services;
 
 public static class UserService
 {

@@ -1,7 +1,8 @@
 using tankman.Models;
-using tankman.Utils;
-namespace tankman.Services;
 using Microsoft.EntityFrameworkCore;
+using tankman.Db;
+
+namespace tankman.Services;
 
 public static class ResourceService
 {
@@ -11,7 +12,8 @@ public static class ResourceService
     return await dbContext.Resources.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
-  public async static Task<List<IPermission>> GetPermissionsAsync(string resourcePath, string orgId) {
+  public async static Task<List<IPermission>> GetPermissionsAsync(string resourcePath, string orgId)
+  {
     var dbContext = new TankmanDbContext();
     var resource = await dbContext.Resources.SingleAsync((x) => x.Path == resourcePath && x.OrgId == orgId);
     var result = new List<IPermission>();

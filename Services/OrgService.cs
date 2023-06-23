@@ -1,10 +1,11 @@
-namespace tankman.Services;
 using Microsoft.EntityFrameworkCore;
+using tankman.Db;
 using tankman.Models;
+
+namespace tankman.Services;
 
 public static class OrgService
 {
-
   public static async Task<Org> CreateOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
