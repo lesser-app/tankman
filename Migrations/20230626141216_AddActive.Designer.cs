@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using tankman.Db;
@@ -11,9 +12,11 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    partial class TankmanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230626141216_AddActive")]
+    partial class AddActive
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

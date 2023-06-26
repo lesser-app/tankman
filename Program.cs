@@ -66,7 +66,10 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 var orgsApi = app.MapGroup("orgs");
+orgsApi.MapGet("/", OrgHandlers.GetOrgs).WithOpenApi();
 orgsApi.MapPost("/", OrgHandlers.CreateOrg).WithOpenApi();
+orgsApi.MapGet("/{id}", OrgHandlers.GetOrg).WithOpenApi();
+orgsApi.MapPatch("/{id}", OrgHandlers.PatchOrg).WithOpenApi();
 
 var usersApi = app.MapGroup("users");
 var rolesApi = app.MapGroup("roles");
