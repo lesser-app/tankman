@@ -14,22 +14,22 @@ public class PatchOrg
 
 public static class OrgHandlers
 {
-  public static async Task<List<Models.Org>> GetOrgs()
+  public static async Task<List<Models.Org>> GetOrgsAsync()
   {
     return await OrgService.GetOrgsAsync();
   }
 
-  public static async Task<Models.Org> CreateOrg(CreateOrg org)
+  public static async Task<Models.Org> CreateOrgAsync(CreateOrg org)
   {
     return await OrgService.CreateOrgAsync(org.Id);
   }
 
-  public static async Task<Models.Org> GetOrg(string id)
+  public static async Task<Models.Org> GetOrgAsync(string id)
   {
     return await OrgService.GetOrgAsync(id);
   }
 
-  public static async Task<Models.Org> PatchOrg(string id, PatchOrg patchOrg)
+  public static async Task<Models.Org> PatchOrgAsync(string id, PatchOrg patchOrg)
   {
     if (patchOrg.Op.ToLower() == "activate")
     {

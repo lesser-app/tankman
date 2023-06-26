@@ -66,12 +66,13 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 var orgsApi = app.MapGroup("orgs");
-orgsApi.MapGet("/", OrgHandlers.GetOrgs).WithOpenApi();
-orgsApi.MapPost("/", OrgHandlers.CreateOrg).WithOpenApi();
-orgsApi.MapGet("/{id}", OrgHandlers.GetOrg).WithOpenApi();
-orgsApi.MapPatch("/{id}", OrgHandlers.PatchOrg).WithOpenApi();
+orgsApi.MapGet("/", OrgHandlers.GetOrgsAsync).WithOpenApi();
+orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
+orgsApi.MapGet("/{id}", OrgHandlers.GetOrgAsync).WithOpenApi();
+orgsApi.MapPatch("/{id}", OrgHandlers.PatchOrgAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
 
-var usersApi = app.MapGroup("users");
+
 var rolesApi = app.MapGroup("roles");
 var resourcesApi = app.MapGroup("resources");
 
