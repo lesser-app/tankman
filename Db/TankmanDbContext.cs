@@ -1,11 +1,21 @@
 using tankman.Models;
 using Microsoft.EntityFrameworkCore;
-using EFCore.NamingConventions;
 
 namespace tankman.Db
 {
+
+
+
   public class TankmanDbContext : DbContext
   {
+    static string? connectionStringFromArgs = null;
+
+    public static void SetConnectionStringFromArgs(string connectionString)
+    {
+      connectionStringFromArgs = connectionString;
+    }
+
+
     public DbSet<Org> Orgs { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Role> Roles { get; set; }
@@ -16,8 +26,24 @@ namespace tankman.Db
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-      var connectionString = Environment.GetEnvironmentVariable("TANKMAN_CONN_STR");
-      optionsBuilder.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+      if (TankmanDbContext.connectionStringFromArgs != null)
+      {
+        optionsBuilder.UseNpgsql(connectionStringFromArgs).UseSnakeCaseNamingConvention();
+      }
+      else
+      {
+        var connectionString = Environment.GetEnvironmentVariable("TANKMAN_CONN_STR");
+        if (connectionString != null)
+        {
+          optionsBuilder.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+
+        }
+        else
+        {
+          throw new Exception("The connection string has to be provided in the TANKMAN_CONN_STR env variable or via CLI options.");
+        }
+      }
+
     }
   }
 

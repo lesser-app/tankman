@@ -9,13 +9,16 @@ public static class OrgService
   public static async Task<Org> CreateOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
+
     var org = new Org
     {
       Id = id,
       CreatedAt = DateTime.UtcNow,
     };
+
     dbContext.Orgs.Add(org);
     await dbContext.SaveChangesAsync();
+
     return org;
   }
 

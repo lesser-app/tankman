@@ -12,7 +12,7 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230623155048_InitialCreate")]
+    [Migration("20230626131612_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

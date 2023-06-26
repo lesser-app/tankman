@@ -5,7 +5,7 @@ namespace tankman.Models;
 [PrimaryKey(nameof(Id))]
 public class Role
 {
-  public required string Id { get; set; }
-  public required string OrgId { get; set; } 
-  public required DateTime CreatedAt { get; set; }
+  public string Id { get; set; }
+  public string OrgId { get; set; } 
+  public DateTime CreatedAt { get; set; }
 }

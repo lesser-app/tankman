@@ -5,9 +5,9 @@ namespace tankman.Models;
 [PrimaryKey(nameof(Id))]
 public class UserPermission : IPermission
 {
-  public required string Id { get; set; }
-  public required string UserId { get; set; }
-  public required string Resource { get; set; }
-  public required string Action { get; set; }
-  public required DateTime CreatedAt { get; set; }
+  public string Id { get; set; }
+  public string UserId { get; set; }
+  public string Resource { get; set; }
+  public string Action { get; set; }
+  public DateTime CreatedAt { get; set; }
 }

@@ -51,7 +51,7 @@ public static class UserService
 
   }
 
-  public static async Task<List<UserPermission>> GetUserPermissionsAsync(string userId, string orgId)
+  public static async Task<List<UserPermission>> GetUserPermissionsAsync(string userId)
   {
     var dbContext = new TankmanDbContext();
     return await dbContext.UserPermissions.Where((x) => x.UserId == userId).ToListAsync();
