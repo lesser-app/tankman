@@ -24,20 +24,20 @@ public static class OrgHandlers
     return await OrgService.CreateOrgAsync(org.Id);
   }
 
-  public static async Task<Models.Org> GetOrgAsync(string id)
+  public static async Task<Models.Org> GetOrgAsync(string orgId)
   {
-    return await OrgService.GetOrgAsync(id);
+    return await OrgService.GetOrgAsync(orgId);
   }
 
-  public static async Task<Models.Org> PatchOrgAsync(string id, PatchOrg patchOrg)
+  public static async Task<Models.Org> PatchOrgAsync(string orgId, PatchOrg patchOrg)
   {
     if (patchOrg.Op.ToLower() == "activate")
     {
-      return await OrgService.ActivateOrgAsync(id);
+      return await OrgService.ActivateOrgAsync(orgId);
     }
     else if (patchOrg.Op.ToLower() == "deactivate")
     {
-      return await OrgService.DeactivateOrgAsync(id);
+      return await OrgService.DeactivateOrgAsync(orgId);
     }
     else
     {

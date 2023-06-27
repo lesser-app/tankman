@@ -6,6 +6,8 @@ namespace tankman.Models;
 public class Role
 {
   public string Id { get; set; }
-  public string OrgId { get; set; } 
   public DateTime CreatedAt { get; set; }
+  public Org Org { get; set; }
+  public List<RoleAssignment> RoleAssignments { get; set; }
+  public List<RolePermission> RolePermissions { get; set; }
 }

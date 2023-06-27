@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.Text.Json.Serialization;
 using tankman.Db;
 using tankman.RequestHandlers;
 
@@ -58,6 +59,8 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.PropertyNameCaseInsensitive = false;
     options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
     options.SerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -68,10 +71,10 @@ var app = builder.Build();
 var orgsApi = app.MapGroup("orgs");
 orgsApi.MapGet("/", OrgHandlers.GetOrgsAsync).WithOpenApi();
 orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
-orgsApi.MapGet("/{id}", OrgHandlers.GetOrgAsync).WithOpenApi();
-orgsApi.MapPatch("/{id}", OrgHandlers.PatchOrgAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}", OrgHandlers.GetOrgAsync).WithOpenApi();
+orgsApi.MapPatch("/{orgId}", OrgHandlers.PatchOrgAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
-
+orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
 
 var rolesApi = app.MapGroup("roles");
 var resourcesApi = app.MapGroup("resources");

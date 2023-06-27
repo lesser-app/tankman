@@ -6,8 +6,8 @@ namespace tankman.Models;
 public class UserPermission : IPermission
 {
   public string Id { get; set; }
-  public string UserId { get; set; }
-  public string Resource { get; set; }
+  public User User { get; set; }
+  public Resource Resource { get; set; }
   public string Action { get; set; }
   public DateTime CreatedAt { get; set; }
 }

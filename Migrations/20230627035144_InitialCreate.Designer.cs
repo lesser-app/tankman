@@ -12,8 +12,8 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230626141216_AddActive")]
-    partial class AddActive
+    [Migration("20230627035144_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,9 @@ namespace tankman.Migrations
                     b.HasKey("Id")
                         .HasName("pk_resources");
 
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_resources_org_id");
+
                     b.ToTable("resources", (string)null);
                 });
 
@@ -89,6 +92,9 @@ namespace tankman.Migrations
                     b.HasKey("Id")
                         .HasName("pk_roles");
 
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_roles_org_id");
+
                     b.ToTable("roles", (string)null);
                 });
 
@@ -103,17 +109,18 @@ namespace tankman.Migrations
                         .HasColumnName("created_at");
 
                     b.Property<string>("RoleId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("role_id");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
                     b.HasKey("Id")
                         .HasName("pk_role_assignments");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_role_assignments_role_id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_role_assignments_user_id");
@@ -136,25 +143,23 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Resource")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("resource");
-
                     b.Property<string>("ResourceId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("resource_id");
 
-                    b.Property<string>("Role")
-                        .IsRequired()
+                    b.Property<string>("RoleId")
                         .HasColumnType("text")
-                        .HasColumnName("role");
+                        .HasColumnName("role_id");
 
                     b.HasKey("Id")
                         .HasName("pk_role_permissions");
 
                     b.HasIndex("ResourceId")
                         .HasDatabaseName("ix_role_permissions_resource_id");
+
+                    b.HasIndex("RoleId")
+                        .HasDatabaseName("ix_role_permissions_role_id");
 
                     b.ToTable("role_permissions", (string)null);
                 });
@@ -191,6 +196,9 @@ namespace tankman.Migrations
                     b.HasKey("Id")
                         .HasName("pk_users");
 
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_users_org_id");
+
                     b.ToTable("users", (string)null);
                 });
 
@@ -209,17 +217,12 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Resource")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("resource");
-
                     b.Property<string>("ResourceId")
+                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("resource_id");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("user_id");
 
@@ -229,33 +232,110 @@ namespace tankman.Migrations
                     b.HasIndex("ResourceId")
                         .HasDatabaseName("ix_user_permissions_resource_id");
 
+                    b.HasIndex("UserId")
+                        .HasDatabaseName("ix_user_permissions_user_id");
+
                     b.ToTable("user_permissions", (string)null);
+                });
+
+            modelBuilder.Entity("tankman.Models.Resource", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany("Resources")
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_resources_orgs_org_id");
+
+                    b.Navigation("Org");
+                });
+
+            modelBuilder.Entity("tankman.Models.Role", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany("Roles")
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_roles_orgs_org_id");
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("tankman.Models.RoleAssignment", b =>
                 {
-                    b.HasOne("tankman.Models.User", null)
+                    b.HasOne("tankman.Models.Role", "Role")
+                        .WithMany("RoleAssignments")
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("fk_role_assignments_roles_role_id");
+
+                    b.HasOne("tankman.Models.User", "User")
                         .WithMany("RoleAssignments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_role_assignments_users_user_id");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("tankman.Models.RolePermission", b =>
                 {
-                    b.HasOne("tankman.Models.Resource", null)
+                    b.HasOne("tankman.Models.Resource", "Resource")
                         .WithMany("RolePermissions")
                         .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_role_permissions_resources_resource_id");
+
+                    b.HasOne("tankman.Models.Role", "Role")
+                        .WithMany("RolePermissions")
+                        .HasForeignKey("RoleId")
+                        .HasConstraintName("fk_role_permissions_roles_role_id");
+
+                    b.Navigation("Resource");
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("tankman.Models.User", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany("Users")
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_users_orgs_org_id");
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("tankman.Models.UserPermission", b =>
                 {
-                    b.HasOne("tankman.Models.Resource", null)
+                    b.HasOne("tankman.Models.Resource", "Resource")
                         .WithMany("UserPermissions")
                         .HasForeignKey("ResourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
                         .HasConstraintName("fk_user_permissions_resources_resource_id");
+
+                    b.HasOne("tankman.Models.User", "User")
+                        .WithMany("UserPermissions")
+                        .HasForeignKey("UserId")
+                        .HasConstraintName("fk_user_permissions_users_user_id");
+
+                    b.Navigation("Resource");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("tankman.Models.Org", b =>
+                {
+                    b.Navigation("Resources");
+
+                    b.Navigation("Roles");
+
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("tankman.Models.Resource", b =>
@@ -265,9 +345,18 @@ namespace tankman.Migrations
                     b.Navigation("UserPermissions");
                 });
 
+            modelBuilder.Entity("tankman.Models.Role", b =>
+                {
+                    b.Navigation("RoleAssignments");
+
+                    b.Navigation("RolePermissions");
+                });
+
             modelBuilder.Entity("tankman.Models.User", b =>
                 {
                     b.Navigation("RoleAssignments");
+
+                    b.Navigation("UserPermissions");
                 });
 #pragma warning restore 612, 618
         }
