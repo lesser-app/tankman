@@ -75,6 +75,9 @@ orgsApi.MapGet("/{orgId}", OrgHandlers.GetOrgAsync).WithOpenApi();
 orgsApi.MapPatch("/{orgId}", OrgHandlers.PatchOrgAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/roles", RoleHandlers.GetRolesAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
+
 
 var rolesApi = app.MapGroup("roles");
 var resourcesApi = app.MapGroup("resources");
