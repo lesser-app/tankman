@@ -23,4 +23,9 @@ public static class UserPermissionHandlers
   {
     return ApiResult.ToResult(await UserPermissionService.CreateUserPermissionAsync(createPermission.UserId, createPermission.ResourceId, createPermission.Action, orgId));
   }
+
+  public static async Task<IResult> GetUserPermissionsForResourceAsync(string resourceId, string orgId)
+  {
+    return ApiResult.ToResult(await UserPermissionService.GetUserPermissionsForResourceAsync(resourceId, orgId));
+  }
 }

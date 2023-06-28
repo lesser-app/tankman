@@ -32,4 +32,28 @@ public static class UserPermissionService
     await dbContext.SaveChangesAsync();
     return userPermission;
   }
+
+  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsForResourceAsync(string resourceId, string orgId)
+  {
+    var isWildCard = resourceId.EndsWith("*");
+
+    if (isWildCard)
+    {
+      resourceId = resourceId.Substring(0, resourceId.Length - 1);
+    }
+
+    var normalizedResourceId = Paths.Normalize(resourceId);
+
+    var dbContext = new TankmanDbContext();
+
+    if (!isWildCard)
+    {
+      return await dbContext.UserPermissions.Where((x) => x.ResourceId == resourceId && x.OrgId == orgId).ToListAsync();
+    }
+    else
+    {
+
+      return await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{resourceId}%") && x.OrgId == orgId).ToListAsync();
+    }
+  }
 }
