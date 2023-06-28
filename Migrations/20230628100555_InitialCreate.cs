@@ -121,15 +121,14 @@ namespace tankman.Migrations
                 name: "role_assignments",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false),
                     role_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_assignments", x => new { x.id, x.org_id });
+                    table.PrimaryKey("pk_role_assignments", x => new { x.role_id, x.user_id, x.org_id });
                     table.ForeignKey(
                         name: "fk_role_assignments_orgs_org_id",
                         column: x => x.org_id,

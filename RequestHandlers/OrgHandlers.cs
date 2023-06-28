@@ -23,8 +23,6 @@ public static class OrgHandlers
   public static async Task<IResult> CreateOrgAsync(CreateOrg org)
   {
     return ApiResult.ToResult(await OrgService.CreateOrgAsync(org.Id));
-
-
   }
 
   public static async Task<IResult> GetOrgAsync(string orgId)

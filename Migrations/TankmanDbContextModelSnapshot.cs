@@ -90,9 +90,13 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.RoleAssignment", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("RoleId")
                         .HasColumnType("text")
-                        .HasColumnName("id");
+                        .HasColumnName("role_id");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
 
                     b.Property<string>("OrgId")
                         .HasColumnType("text")
@@ -102,17 +106,7 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("role_id");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id", "OrgId")
+                    b.HasKey("RoleId", "UserId", "OrgId")
                         .HasName("pk_role_assignments");
 
                     b.HasIndex("OrgId")

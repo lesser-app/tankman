@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
-[PrimaryKey(nameof(Id), nameof(OrgId))]
+[PrimaryKey(nameof(RoleId), nameof(UserId), nameof(OrgId))]
 public class RoleAssignment
 {
-  public required string Id { get; set; }
-
   public required string UserId { get; set; }
   [ForeignKey(nameof(UserId) + "," + nameof(OrgId))]
   public User? User { get; set; }
