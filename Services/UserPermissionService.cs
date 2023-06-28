@@ -48,12 +48,12 @@ public static class UserPermissionService
 
     if (!isWildCard)
     {
-      return await dbContext.UserPermissions.Where((x) => x.ResourceId == resourceId && x.OrgId == orgId).ToListAsync();
+      return await dbContext.UserPermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
     }
     else
     {
 
-      return await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{resourceId}%") && x.OrgId == orgId).ToListAsync();
+      return await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}%") && x.OrgId == orgId).ToListAsync();
     }
   }
 }
