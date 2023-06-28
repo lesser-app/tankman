@@ -7,7 +7,6 @@ namespace tankman.Services;
 
 public static class UserService
 {
-
   public static async Task<User> CreateUserAsync(string id, string identityProviderUserId, string identityProvider, string orgId)
   {
     var dbContext = new TankmanDbContext();
@@ -20,6 +19,7 @@ public static class UserService
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId
     };
+    dbContext.Users.Add(user);
     await dbContext.SaveChangesAsync();
     return user;
   }

@@ -4,7 +4,7 @@ namespace tankman.RequestHandlers;
 
 public class CreateOrg
 {
-  public required string Name { get; set; } 
+  public required string Id { get; set; } 
 }
 
 public class PatchOrg
@@ -21,7 +21,7 @@ public static class OrgHandlers
 
   public static async Task<Models.Org> CreateOrgAsync(CreateOrg org)
   {
-    return await OrgService.CreateOrgAsync(org.Name);
+    return await OrgService.CreateOrgAsync(org.Id);
   }
 
   public static async Task<Models.Org> GetOrgAsync(string orgId)

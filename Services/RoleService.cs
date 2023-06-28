@@ -24,10 +24,8 @@ public static class RoleService
       OrgId = orgId
     };
 
-    dbContext.Attach(role);
+    dbContext.Roles.Add(role);
     await dbContext.SaveChangesAsync();
-
-    role.Org = null;
     return role;
   }
 
