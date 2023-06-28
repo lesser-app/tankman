@@ -21,7 +21,6 @@ public static class OrgService
     {
       Id = id,
       CreatedAt = DateTime.UtcNow,
-      Active = true
     };
 
     dbContext.Orgs.Add(org);
@@ -42,21 +41,12 @@ public static class OrgService
     return await dbContext.Orgs.SingleAsync((x) => x.Id == id);
   }
 
-  public static async Task<OneOf<Org, Error<string>>> ActivateOrgAsync(string id)
+  public static async Task<OneOf<bool, Error<string>>> DeleteOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
-    var org = dbContext.Orgs.Single((x) => x.Id == id);
-    org.Active = true;
+    var org = await dbContext.Orgs.SingleAsync((x) => x.Id == id);
+    dbContext.Orgs.Remove(org);
     await dbContext.SaveChangesAsync();
-    return org;
-  }
-
-  public static async Task<OneOf<Org, Error<string>>> DeactivateOrgAsync(string id)
-  {
-    var dbContext = new TankmanDbContext();
-    var org = dbContext.Orgs.Single((x) => x.Id == id);
-    org.Active = false;
-    await dbContext.SaveChangesAsync();
-    return org;
+    return true;
   }
 }

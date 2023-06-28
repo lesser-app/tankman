@@ -9,8 +9,6 @@ public class Org
   
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   
-  public required bool Active { get; set; } = true;
-  
   public List<User> Users { get; set; } = new List<User>();
   
   public List<Resource> Resources { get; set; } = new List<Resource>();

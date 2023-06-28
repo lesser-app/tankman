@@ -30,19 +30,9 @@ public static class OrgHandlers
     return ApiResult.ToResult(await OrgService.GetOrgAsync(orgId));
   }
 
-  public static async Task<IResult> PatchOrgAsync(string orgId, PatchOrg patchOrg)
+
+  public static async Task<IResult> DeleteOrgAsync(string orgId)
   {
-    if (patchOrg.Op.ToLower() == "activate")
-    {
-      return ApiResult.ToResult(await OrgService.ActivateOrgAsync(orgId));
-    }
-    else if (patchOrg.Op.ToLower() == "deactivate")
-    {
-      return ApiResult.ToResult(await OrgService.DeactivateOrgAsync(orgId));
-    }
-    else
-    {
-      return TypedResults.BadRequest("Invalid operation " + patchOrg.Op.ToLower());
-    }
+    return ApiResult.ToResult(await OrgService.DeleteOrgAsync(orgId));
   }
 }

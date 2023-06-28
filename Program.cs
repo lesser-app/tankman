@@ -69,23 +69,36 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 var orgsApi = app.MapGroup("orgs");
+
+// ORGS
 orgsApi.MapGet("/", OrgHandlers.GetOrgsAsync).WithOpenApi();
 orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}", OrgHandlers.GetOrgAsync).WithOpenApi();
-orgsApi.MapPatch("/{orgId}", OrgHandlers.PatchOrgAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}", OrgHandlers.DeleteOrgAsync).WithOpenApi();
+
+// USERS
 orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/users/{id}", UserHandlers.GetUserAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/users/{id}", UserHandlers.DeleteUserAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/users/{userId}/roles", UserHandlers.AssignRoleAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/users/{userId}/roles/{roleId}", UserHandlers.UnassignRoleAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
+
+// ROLES
 orgsApi.MapGet("/{orgId}/roles", RoleHandlers.GetRolesAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
+
+// RESOURCES
 orgsApi.MapGet("/{orgId}/resources", ResourceHandlers.GetResourcesAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/resources/{*resourceId}", ResourceHandlers.DeleteResourceAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/resources", ResourceHandlers.CreateResourceAsync).WithOpenApi();
+
+// USER PERMISSIONS
 orgsApi.MapGet("/{orgId}/user-permissions", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/user-permissions/{*resourceId}", UserPermissionHandlers.GetUserPermissionsForResourceAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/user-permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
+
+// ROLE PERMISSIONS
 orgsApi.MapGet("/{orgId}/role-permissions", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/role-permissions/{*resourceId}", RolePermissionHandlers.GetRolePermissionsForResourceAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/role-permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();

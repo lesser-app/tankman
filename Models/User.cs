@@ -14,8 +14,6 @@ public class User
 
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-  public required bool Active { get; set; }
-
   public required string OrgId { get; set; }
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;

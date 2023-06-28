@@ -43,4 +43,9 @@ public static class UserHandlers
   {
     return ApiResult.ToResult(await UserService.UnassignRoleAsync(roleId, userId, orgId));
   }
+
+  public static async Task<IResult> DeleteUserAsync( string userId, string orgId)
+  {
+    return ApiResult.ToResult(await UserService.DeleteUserAsync(userId, orgId));
+  }
 }

@@ -31,7 +31,6 @@ public static class UserService
       Id = id,
       IdentityProviderUserId = identityProviderUserId,
       IdentityProvider = identityProvider,
-      Active = true,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId
     };
@@ -44,7 +43,6 @@ public static class UserService
   {
     var dbContext = new TankmanDbContext();
     var user = dbContext.Users.Single((x) => x.Id == userId);
-    user.Active = false;
     await dbContext.SaveChangesAsync();
     return user;
   }
@@ -73,9 +71,18 @@ public static class UserService
     return true;
   }
 
-  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId)
+  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.UserPermissions.Where((x) => x.UserId == userId).ToListAsync();
+    return await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.OrgId == orgId).ToListAsync();
+  }
+
+  public static async Task<OneOf<bool, Error<string>>> DeleteUserAsync(string id, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+    var user = await dbContext.Users.SingleAsync((x) => x.Id == id && x.OrgId == orgId);
+    dbContext.Users.Remove(user);
+    await dbContext.SaveChangesAsync();
+    return true;
   }
 }
