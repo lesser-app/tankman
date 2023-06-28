@@ -61,8 +61,19 @@ public static class UserPermissionService
   {
     var normalizedResourceId = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
-    var userPermission = await dbContext.UserPermissions.SingleAsync((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.OrgId == orgId);
-    dbContext.UserPermissions.Remove(userPermission);
+    if (action != "*")
+    {
+      var userPermission = await dbContext.UserPermissions.SingleAsync((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId);
+      dbContext.UserPermissions.Remove(userPermission);
+    }
+    else
+    {
+      var userPermissions = await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId).ToListAsync();
+      foreach (var userPermission in userPermissions)
+      {
+        dbContext.UserPermissions.Remove(userPermission);
+      }
+    }
     await dbContext.SaveChangesAsync();
     return true;
   }

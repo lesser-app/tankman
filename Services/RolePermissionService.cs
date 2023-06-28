@@ -61,8 +61,19 @@ public static class RolePermissionService
   {
     var normalizedResourceId = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
-    var rolePermission = await dbContext.RolePermissions.SingleAsync((x) => x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.OrgId == orgId);
-    dbContext.RolePermissions.Remove(rolePermission);
+    if (action != "*")
+    {
+      var rolePermission = await dbContext.RolePermissions.SingleAsync((x) => x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId);
+      dbContext.RolePermissions.Remove(rolePermission);
+    }
+    else
+    {
+      var rolePermissions = await dbContext.RolePermissions.Where((x) => x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId).ToListAsync();
+      foreach (var rolePermission in rolePermissions)
+      {
+        dbContext.RolePermissions.Remove(rolePermission);
+      }
+    }
     await dbContext.SaveChangesAsync();
     return true;
   }
