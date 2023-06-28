@@ -33,13 +33,28 @@ public static class ResourceService
 
   public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string resourceId, string orgId)
   {
+    var isWildCard = resourceId.EndsWith(Settings.Wildcard);
+
+    if (isWildCard)
+    {
+      resourceId = resourceId.Substring(0, resourceId.Length - Settings.Wildcard.Length);
+    }
+
     var normalizedResourceId = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
 
     var resource = await dbContext.Resources.SingleAsync((x) => x.Id == normalizedResourceId && x.OrgId == orgId);
-
     dbContext.Resources.Remove(resource);
+
+    if (isWildCard)
+    {
+      var childResources = await dbContext.Resources.Where((x) => EF.Functions.ILike(x.Id, $"{normalizedResourceId}/%") && x.OrgId == orgId).ToListAsync();
+      foreach (var childResource in childResources)
+      {
+        dbContext.Resources.Remove(childResource);
+      }
+    }
 
     await dbContext.SaveChangesAsync();
 

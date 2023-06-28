@@ -35,25 +35,27 @@ public static class UserPermissionService
 
   public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsForResourceAsync(string resourceId, string orgId)
   {
-    var isWildCard = resourceId.EndsWith("*");
+    var isWildCard = resourceId.EndsWith(Settings.Wildcard);
 
     if (isWildCard)
     {
-      resourceId = resourceId.Substring(0, resourceId.Length - 1);
+      resourceId = resourceId.Substring(0, resourceId.Length - Settings.Wildcard.Length);
     }
 
     var normalizedResourceId = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
 
+    var userPermissionsExact = await dbContext.UserPermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
+
     if (!isWildCard)
     {
-      return await dbContext.UserPermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
+      return userPermissionsExact;
     }
     else
     {
-
-      return await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}%") && x.OrgId == orgId).ToListAsync();
+      var childUserPermissions = await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}/%") && x.OrgId == orgId).ToListAsync();
+      return userPermissionsExact.Concat(childUserPermissions).ToList();
     }
   }
 
@@ -61,7 +63,7 @@ public static class UserPermissionService
   {
     var normalizedResourceId = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
-    if (action != "*")
+    if (action != Settings.Wildcard)
     {
       var userPermission = await dbContext.UserPermissions.SingleAsync((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId);
       dbContext.UserPermissions.Remove(userPermission);

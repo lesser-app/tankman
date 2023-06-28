@@ -35,25 +35,27 @@ public static class RolePermissionService
 
   public static async Task<OneOf<List<RolePermission>, Error<string>>> GetRolePermissionsForResourceAsync(string resourceId, string orgId)
   {
-    var isWildCard = resourceId.EndsWith("*");
+    var isWildCard = resourceId.EndsWith(Settings.Wildcard);
 
     if (isWildCard)
     {
-      resourceId = resourceId.Substring(0, resourceId.Length - 1);
+      resourceId = resourceId.Substring(0, resourceId.Length - Settings.Wildcard.Length);
     }
 
     var normalizedResourceId = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
 
+    var rolePermissionsExact = await dbContext.RolePermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
+
     if (!isWildCard)
     {
-      return await dbContext.RolePermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
+      return rolePermissionsExact;
     }
     else
     {
-
-      return await dbContext.RolePermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}%") && x.OrgId == orgId).ToListAsync();
+      var childRolePermissions = await dbContext.RolePermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}/%") && x.OrgId == orgId).ToListAsync();
+      return rolePermissionsExact.Concat(childRolePermissions).ToList();
     }
   }
 
@@ -61,7 +63,7 @@ public static class RolePermissionService
   {
     var normalizedResourceId = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
-    if (action != "*")
+    if (action != Settings.Wildcard)
     {
       var rolePermission = await dbContext.RolePermissions.SingleAsync((x) => x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId);
       dbContext.RolePermissions.Remove(rolePermission);

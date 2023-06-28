@@ -2,47 +2,69 @@ using System.CommandLine;
 using System.Text.Json.Serialization;
 using tankman.Db;
 using tankman.RequestHandlers;
+using tankman.Utils;
 
 var rootCommand = new RootCommand("Tankman user management and access control");
 
-var dbhost = new Argument<string>(
+var dbHostOption = new Option<string>(
             name: "--dbhost",
             description: "Database hostname",
             getDefaultValue: () => "localhost");
 
-var dbport = new Argument<int>(
+var dbPortOption = new Option<int>(
             name: "--dbport",
             description: "Database port",
             getDefaultValue: () => 5432);
 
-var dbname = new Argument<string>(
+var dbNameOption = new Option<string>(
             name: "--dbname",
             description: "Database name",
             getDefaultValue: () => "tankmandb");
 
-var dbuser = new Argument<string?>(
+var dbUserOption = new Option<string?>(
             name: "--dbuser",
             description: "Database username",
             getDefaultValue: () => null);
 
-var dbpass = new Argument<string?>(
+var dbPassOption = new Option<string?>(
             name: "--dbpass",
             description: "Database username",
             getDefaultValue: () => null);
 
-rootCommand.AddArgument(dbhost);
-rootCommand.AddArgument(dbport);
-rootCommand.AddArgument(dbname);
-rootCommand.AddArgument(dbuser);
-rootCommand.AddArgument(dbpass);
+var wildcardOption = new Option<string?>(
+            name: "--wildcard",
+            description: "Wildcard character",
+            getDefaultValue: () => "~");
+
+var safetyKeyArg = new Option<string?>(
+  name: "--safety-key",
+  description: "Protect destructive operations with a key."
+);
+
+rootCommand.AddOption(dbHostOption);
+rootCommand.AddOption(dbPortOption);
+rootCommand.AddOption(dbNameOption);
+rootCommand.AddOption(dbUserOption);
+rootCommand.AddOption(dbPassOption);
+rootCommand.AddOption(wildcardOption);
+rootCommand.AddOption(safetyKeyArg);
 
 rootCommand.SetHandler((context) =>
 {
-  var host = context.ParseResult.GetValueForArgument(dbhost);
-  var port = context.ParseResult.GetValueForArgument(dbport);
-  var dbName = context.ParseResult.GetValueForArgument(dbname);
-  var user = context.ParseResult.GetValueForArgument(dbuser);
-  var password = context.ParseResult.GetValueForArgument(dbpass);
+  var host = context.ParseResult.GetValueForOption(dbHostOption);
+  var port = context.ParseResult.GetValueForOption(dbPortOption);
+  var dbName = context.ParseResult.GetValueForOption(dbNameOption);
+  var user = context.ParseResult.GetValueForOption(dbUserOption);
+  var password = context.ParseResult.GetValueForOption(dbPassOption);
+  var wildcardCharacter = context.ParseResult.GetValueForOption(wildcardOption);
+  var safetyKey = context.ParseResult.GetValueForOption(safetyKeyArg);
+
+  Settings.Wildcard = wildcardCharacter!;
+
+  if (safetyKey != null)
+  {
+    Settings.SafetyKey = safetyKey;
+  }
 
   if (user != null && password != null)
   {
