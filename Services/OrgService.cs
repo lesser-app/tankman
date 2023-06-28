@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using tankman.Db;
 using tankman.Models;
+using tankman.Utils;
 
 namespace tankman.Services;
 
@@ -8,6 +9,11 @@ public static class OrgService
 {
   public static async Task<Org> CreateOrgAsync(string id)
   {
+    if (String.IsNullOrWhiteSpace(id))
+    {
+      throw new Exception($"name should not be empty.");
+    }
+
     var dbContext = new TankmanDbContext();
 
     var org = new Org

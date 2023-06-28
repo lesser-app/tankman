@@ -5,9 +5,9 @@ namespace tankman.RequestHandlers;
 
 public class CreateUser
 {
-  public string Id { get; set; }
-  public string IdentityProviderUserId { get; set; }
-  public string IdentityProvider { get; set; }
+  public required string Id { get; set; }
+  public required string IdentityProviderUserId { get; set; }
+  public required string IdentityProvider { get; set; }
 }
 
 public static class UserHandlers

@@ -1,6 +1,7 @@
 using tankman.Models;
 using Microsoft.EntityFrameworkCore;
 using tankman.Db;
+using tankman.Utils;
 
 namespace tankman.Services;
 
@@ -9,7 +10,7 @@ public static class UserService
 
   public static async Task<User> CreateUserAsync(string id, string identityProviderUserId, string identityProvider, string orgId)
   {
-    var org = new Org { Id = orgId };
+    var dbContext = new TankmanDbContext();
     var user = new User
     {
       Id = id,
@@ -17,11 +18,8 @@ public static class UserService
       IdentityProvider = identityProvider,
       Active = true,
       CreatedAt = DateTime.UtcNow,
-      Org = org
+      OrgId = orgId
     };
-    var dbContext = new TankmanDbContext();
-    dbContext.Users.Add(user);
-    dbContext.Entry(org).State = EntityState.Detached;
     await dbContext.SaveChangesAsync();
     return user;
   }
@@ -29,7 +27,7 @@ public static class UserService
   public static async Task<List<User>> GetUsersAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Users.Where((x) => x.Org.Id == orgId).ToListAsync();
+    return await dbContext.Users.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
   public static async Task DeactivateUserAsync(string userId)
@@ -44,10 +42,10 @@ public static class UserService
   {
     var dbContext = new TankmanDbContext();
     return await (from user in dbContext.Users
-                  join assignment in dbContext.RoleAssignments on user.Id equals assignment.User.Id
-                  join role in dbContext.Roles on assignment.Role.Id equals role.Id
+                  join assignment in dbContext.RoleAssignments on user.Id equals assignment.UserId
+                  join role in dbContext.Roles on assignment.RoleId equals role.Id
                   where user.Id == userId
-                  where user.Org.Id == orgId
+                  where user.OrgId == orgId
                   select role).ToListAsync();
 
   }
@@ -55,7 +53,7 @@ public static class UserService
   public static async Task<List<UserPermission>> GetUserPermissionsAsync(string userId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.UserPermissions.Where((x) => x.User.Id == userId).ToListAsync();
+    return await dbContext.UserPermissions.Where((x) => x.UserId == userId).ToListAsync();
   }
 
 }

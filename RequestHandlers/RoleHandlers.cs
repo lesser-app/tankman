@@ -5,7 +5,7 @@ namespace tankman.RequestHandlers;
 
 public class CreateRole
 {
-  public string Id { get; set; }
+  public required string Name { get; set; }
 }
 
 public static class RoleHandlers
@@ -17,6 +17,6 @@ public static class RoleHandlers
 
   public static async Task<Role> CreateRoleAsync(string orgId, CreateRole createRole)
   {
-    return await RoleService.CreateRoleAsync(createRole.Id, orgId);
+    return await RoleService.CreateRoleAsync(createRole.Name, orgId);
   }
 }

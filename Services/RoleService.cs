@@ -10,24 +10,24 @@ public static class RoleService
   public static async Task<List<Role>> GetRolesAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Roles.Where((x) => x.Org.Id == orgId).ToListAsync();
+    return await dbContext.Roles.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
   public static async Task<Role> CreateRoleAsync(string id, string orgId)
   {
-    var org = new Org { Id = orgId };
+    var dbContext = new TankmanDbContext();
 
     var role = new Role
     {
       Id = id,
       CreatedAt = DateTime.UtcNow,
-      Org = org
+      OrgId = orgId
     };
 
-    var dbContext = new TankmanDbContext();
-    dbContext.Roles.Add(role);
-    dbContext.Entry(org).State = EntityState.Detached;
+    dbContext.Attach(role);
     await dbContext.SaveChangesAsync();
+
+    role.Org = null;
     return role;
   }
 

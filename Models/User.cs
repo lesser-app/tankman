@@ -1,17 +1,26 @@
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
-[PrimaryKey(nameof(Id))]
+[PrimaryKey(nameof(Id), nameof(OrgId))]
 public class User
 {
-  public string Id { get; set; }
-  public string IdentityProvider { get; set; }
-  public string IdentityProviderUserId { get; set; }
-  public DateTime CreatedAt { get; set; }
-  public bool Active { get; set; }
+  public required string Id { get; set; }
+  
+  public required string IdentityProvider { get; set; }
+  
+  public required string IdentityProviderUserId { get; set; }
+  
+  public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+  
+  public required bool Active { get; set; }
 
-  public Org Org { get; set; }
-  public List<RoleAssignment> RoleAssignments { get; set; }
-  public List<UserPermission> UserPermissions { get; set; }
+  public required string OrgId { get; set; }
+  [ForeignKey(nameof(OrgId))]
+  public Org? Org { get; set; } = null;
+  
+  public List<RoleAssignment> RoleAssignments { get; set; } = new List<RoleAssignment>();
+  
+  public List<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 }

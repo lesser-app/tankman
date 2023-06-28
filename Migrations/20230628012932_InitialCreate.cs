@@ -29,13 +29,13 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
                     path = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_resources", x => x.id);
+                    table.PrimaryKey("pk_resources", x => new { x.id, x.org_id });
                     table.ForeignKey(
                         name: "fk_resources_orgs_org_id",
                         column: x => x.org_id,
@@ -49,12 +49,12 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false)
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_roles", x => x.id);
+                    table.PrimaryKey("pk_roles", x => new { x.id, x.org_id });
                     table.ForeignKey(
                         name: "fk_roles_orgs_org_id",
                         column: x => x.org_id,
@@ -68,15 +68,15 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
                     identity_provider = table.Column<string>(type: "text", nullable: false),
                     identity_provider_user_id = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    active = table.Column<bool>(type: "boolean", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false)
+                    active = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_users", x => x.id);
+                    table.PrimaryKey("pk_users", x => new { x.id, x.org_id });
                     table.ForeignKey(
                         name: "fk_users_orgs_org_id",
                         column: x => x.org_id,
@@ -90,25 +90,33 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: false),
-                    role_id = table.Column<string>(type: "text", nullable: true),
                     action = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_permissions", x => x.id);
+                    table.PrimaryKey("pk_role_permissions", x => new { x.id, x.org_id });
                     table.ForeignKey(
-                        name: "fk_role_permissions_resources_resource_id",
-                        column: x => x.resource_id,
-                        principalTable: "resources",
+                        name: "fk_role_permissions_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_role_permissions_roles_role_id",
-                        column: x => x.role_id,
+                        name: "fk_role_permissions_resources_resource_id_org_id",
+                        columns: x => new { x.resource_id, x.org_id },
+                        principalTable: "resources",
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_role_permissions_roles_role_id_org_id",
+                        columns: x => new { x.role_id, x.org_id },
                         principalTable: "roles",
-                        principalColumn: "id");
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -116,23 +124,32 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: true),
-                    role_id = table.Column<string>(type: "text", nullable: true),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_assignments", x => x.id);
+                    table.PrimaryKey("pk_role_assignments", x => new { x.id, x.org_id });
                     table.ForeignKey(
-                        name: "fk_role_assignments_roles_role_id",
-                        column: x => x.role_id,
+                        name: "fk_role_assignments_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_role_assignments_roles_role_id_org_id",
+                        columns: x => new { x.role_id, x.org_id },
                         principalTable: "roles",
-                        principalColumn: "id");
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_role_assignments_users_user_id",
-                        column: x => x.user_id,
+                        name: "fk_role_assignments_users_user_id_org_id",
+                        columns: x => new { x.user_id, x.org_id },
                         principalTable: "users",
-                        principalColumn: "id");
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,25 +157,33 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    user_id = table.Column<string>(type: "text", nullable: true),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: false),
                     action = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_user_permissions", x => x.id);
+                    table.PrimaryKey("pk_user_permissions", x => new { x.id, x.org_id });
                     table.ForeignKey(
-                        name: "fk_user_permissions_resources_resource_id",
-                        column: x => x.resource_id,
-                        principalTable: "resources",
+                        name: "fk_user_permissions_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_user_permissions_users_user_id",
-                        column: x => x.user_id,
+                        name: "fk_user_permissions_resources_resource_id_org_id",
+                        columns: x => new { x.resource_id, x.org_id },
+                        principalTable: "resources",
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_user_permissions_users_user_id_org_id",
+                        columns: x => new { x.user_id, x.org_id },
                         principalTable: "users",
-                        principalColumn: "id");
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -167,24 +192,34 @@ namespace tankman.Migrations
                 column: "org_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_assignments_role_id",
+                name: "ix_role_assignments_org_id",
                 table: "role_assignments",
-                column: "role_id");
+                column: "org_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_assignments_user_id",
+                name: "ix_role_assignments_role_id_org_id",
                 table: "role_assignments",
-                column: "user_id");
+                columns: new[] { "role_id", "org_id" });
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_permissions_resource_id",
-                table: "role_permissions",
-                column: "resource_id");
+                name: "ix_role_assignments_user_id_org_id",
+                table: "role_assignments",
+                columns: new[] { "user_id", "org_id" });
 
             migrationBuilder.CreateIndex(
-                name: "ix_role_permissions_role_id",
+                name: "ix_role_permissions_org_id",
                 table: "role_permissions",
-                column: "role_id");
+                column: "org_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_role_permissions_resource_id_org_id",
+                table: "role_permissions",
+                columns: new[] { "resource_id", "org_id" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_role_permissions_role_id_org_id",
+                table: "role_permissions",
+                columns: new[] { "role_id", "org_id" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_roles_org_id",
@@ -192,14 +227,19 @@ namespace tankman.Migrations
                 column: "org_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_user_permissions_resource_id",
+                name: "ix_user_permissions_org_id",
                 table: "user_permissions",
-                column: "resource_id");
+                column: "org_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_user_permissions_user_id",
+                name: "ix_user_permissions_resource_id_org_id",
                 table: "user_permissions",
-                column: "user_id");
+                columns: new[] { "resource_id", "org_id" });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_user_permissions_user_id_org_id",
+                table: "user_permissions",
+                columns: new[] { "user_id", "org_id" });
 
             migrationBuilder.CreateIndex(
                 name: "ix_users_org_id",

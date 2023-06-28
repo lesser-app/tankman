@@ -9,13 +9,13 @@ public static class ResourceService
   public static async Task<List<Resource>> GetResourcesAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Resources.Where((x) => x.Org.Id == orgId).ToListAsync();
+    return await dbContext.Resources.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
   public static async Task<List<IPermission>> GetPermissionsAsync(string resourcePath, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var resource = await dbContext.Resources.SingleAsync((x) => x.Path == resourcePath && x.Org.Id == orgId);
+    var resource = await dbContext.Resources.SingleAsync((x) => x.Path == resourcePath && x.OrgId == orgId);
     var result = new List<IPermission>();
     result.AddRange(resource.UserPermissions);
     result.AddRange(resource.RolePermissions);
