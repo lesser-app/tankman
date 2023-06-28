@@ -8,8 +8,6 @@ public class Resource
 {
   public required string Id { get; set; }
 
-  public required string Path { get; set; }
-
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
   public required string OrgId { get; set; }

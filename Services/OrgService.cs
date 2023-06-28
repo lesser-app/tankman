@@ -1,17 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using tankman.Db;
 using tankman.Models;
-using tankman.Utils;
+using OneOf;
+using tankman.Types;
 
 namespace tankman.Services;
 
 public static class OrgService
 {
-  public static async Task<Org> CreateOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string id)
   {
     if (String.IsNullOrWhiteSpace(id))
     {
-      throw new Exception($"name should not be empty.");
+      return new Error<string>("name should not be empty.");
     }
 
     var dbContext = new TankmanDbContext();
@@ -29,19 +30,19 @@ public static class OrgService
     return org;
   }
 
-  public static async Task<List<Org>> GetOrgsAsync()
+  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync()
   {
     var dbContext = new TankmanDbContext();
     return await dbContext.Orgs.ToListAsync();
   }
 
-  public static async Task<Org> GetOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> GetOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
     return await dbContext.Orgs.SingleAsync((x) => x.Id == id);
   }
 
-  public static async Task<Org> ActivateOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> ActivateOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
     var org = dbContext.Orgs.Single((x) => x.Id == id);
@@ -50,7 +51,7 @@ public static class OrgService
     return org;
   }
 
-  public static async Task<Org> DeactivateOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> DeactivateOrgAsync(string id)
   {
     var dbContext = new TankmanDbContext();
     var org = dbContext.Orgs.Single((x) => x.Id == id);

@@ -56,11 +56,6 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("path");
-
                     b.HasKey("Id", "OrgId")
                         .HasName("pk_resources");
 
@@ -134,9 +129,13 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.RolePermission", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("RoleId")
                         .HasColumnType("text")
-                        .HasColumnName("id");
+                        .HasColumnName("role_id");
+
+                    b.Property<string>("ResourceId")
+                        .HasColumnType("text")
+                        .HasColumnName("resource_id");
 
                     b.Property<string>("OrgId")
                         .HasColumnType("text")
@@ -151,17 +150,7 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("ResourceId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("resource_id");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("Id", "OrgId")
+                    b.HasKey("RoleId", "ResourceId", "OrgId")
                         .HasName("pk_role_permissions");
 
                     b.HasIndex("OrgId")
@@ -215,9 +204,13 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.UserPermission", b =>
                 {
-                    b.Property<string>("Id")
+                    b.Property<string>("UserId")
                         .HasColumnType("text")
-                        .HasColumnName("id");
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("ResourceId")
+                        .HasColumnType("text")
+                        .HasColumnName("resource_id");
 
                     b.Property<string>("OrgId")
                         .HasColumnType("text")
@@ -232,17 +225,7 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<string>("ResourceId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("resource_id");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id", "OrgId")
+                    b.HasKey("UserId", "ResourceId", "OrgId")
                         .HasName("pk_user_permissions");
 
                     b.HasIndex("OrgId")

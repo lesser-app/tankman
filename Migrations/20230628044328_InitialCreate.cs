@@ -30,7 +30,6 @@ namespace tankman.Migrations
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
-                    path = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -89,16 +88,15 @@ namespace tankman.Migrations
                 name: "role_permissions",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false),
                     role_id = table.Column<string>(type: "text", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
                     action = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_role_permissions", x => new { x.id, x.org_id });
+                    table.PrimaryKey("pk_role_permissions", x => new { x.role_id, x.resource_id, x.org_id });
                     table.ForeignKey(
                         name: "fk_role_permissions_orgs_org_id",
                         column: x => x.org_id,
@@ -156,16 +154,15 @@ namespace tankman.Migrations
                 name: "user_permissions",
                 columns: table => new
                 {
-                    id = table.Column<string>(type: "text", nullable: false),
-                    org_id = table.Column<string>(type: "text", nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false),
                     resource_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
                     action = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_user_permissions", x => new { x.id, x.org_id });
+                    table.PrimaryKey("pk_user_permissions", x => new { x.user_id, x.resource_id, x.org_id });
                     table.ForeignKey(
                         name: "fk_user_permissions_orgs_org_id",
                         column: x => x.org_id,

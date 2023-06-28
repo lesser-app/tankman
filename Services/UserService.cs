@@ -1,13 +1,14 @@
 using tankman.Models;
 using Microsoft.EntityFrameworkCore;
 using tankman.Db;
-using tankman.Utils;
+using OneOf;
+using tankman.Types;
 
 namespace tankman.Services;
 
 public static class UserService
 {
-  public static async Task<User> CreateUserAsync(string id, string identityProviderUserId, string identityProvider, string orgId)
+  public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string id, string identityProviderUserId, string identityProvider, string orgId)
   {
     var dbContext = new TankmanDbContext();
     var user = new User
@@ -24,21 +25,22 @@ public static class UserService
     return user;
   }
 
-  public static async Task<List<User>> GetUsersAsync(string orgId)
+  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
     return await dbContext.Users.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
-  public static async Task DeactivateUserAsync(string userId)
+  public static async Task<OneOf<User, Error<string>>> DeactivateUserAsync(string userId)
   {
     var dbContext = new TankmanDbContext();
     var user = dbContext.Users.Single((x) => x.Id == userId);
     user.Active = false;
     await dbContext.SaveChangesAsync();
+    return user;
   }
 
-  public static async Task<List<Role>> GetRolesAsync(string userId, string orgId)
+  public static async Task<OneOf<List<Role>, Error<string>>> GetRolesAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
     return await (from user in dbContext.Users
@@ -50,7 +52,7 @@ public static class UserService
 
   }
 
-  public static async Task<List<UserPermission>> GetUserPermissionsAsync(string userId)
+  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId)
   {
     var dbContext = new TankmanDbContext();
     return await dbContext.UserPermissions.Where((x) => x.UserId == userId).ToListAsync();

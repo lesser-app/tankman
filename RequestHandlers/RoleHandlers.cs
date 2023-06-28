@@ -1,5 +1,7 @@
+using tankman.Http;
 using tankman.Models;
 using tankman.Services;
+using tankman.Types;
 
 namespace tankman.RequestHandlers;
 
@@ -10,13 +12,13 @@ public class CreateRole
 
 public static class RoleHandlers
 {
-  public static async Task<List<Role>> GetRolesAsync(string orgId)
+  public static async Task<IResult> GetRolesAsync(string orgId)
   {
-    return await RoleService.GetRolesAsync(orgId);
+    return ApiResult.ToResult(await RoleService.GetRolesAsync(orgId));
   }
 
-  public static async Task<Role> CreateRoleAsync(string orgId, CreateRole createRole)
+  public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole createRole)
   {
-    return await RoleService.CreateRoleAsync(createRole.Id, orgId);
+    return ApiResult.ToResult(await RoleService.CreateRoleAsync(createRole.Id, orgId));
   }
 }

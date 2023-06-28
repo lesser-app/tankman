@@ -77,7 +77,12 @@ orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/roles", RoleHandlers.GetRolesAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
-
+orgsApi.MapGet("/{orgId}/resources", ResourceHandlers.GetResourcesAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/resources", ResourceHandlers.CreateResourceAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/user-permissions", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/user-permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/role-permissions", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/role-permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();
 
 var rolesApi = app.MapGroup("roles");
 var resourcesApi = app.MapGroup("resources");

@@ -1,48 +1,50 @@
 using tankman.Services;
+using tankman.Http;
 
 namespace tankman.RequestHandlers;
 
 public class CreateOrg
 {
-  public required string Id { get; set; } 
+  public required string Id { get; set; }
 }
 
 public class PatchOrg
 {
-  public required string Op { get; set; } 
+  public required string Op { get; set; }
 }
 
 public static class OrgHandlers
 {
-  public static async Task<List<Models.Org>> GetOrgsAsync()
+  public static async Task<IResult> GetOrgsAsync()
   {
-    return await OrgService.GetOrgsAsync();
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync());
   }
 
-  public static async Task<Models.Org> CreateOrgAsync(CreateOrg org)
+  public static async Task<IResult> CreateOrgAsync(CreateOrg org)
   {
-    return await OrgService.CreateOrgAsync(org.Id);
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(org.Id));
+
+
   }
 
-  public static async Task<Models.Org> GetOrgAsync(string orgId)
+  public static async Task<IResult> GetOrgAsync(string orgId)
   {
-    return await OrgService.GetOrgAsync(orgId);
+    return ApiResult.ToResult(await OrgService.GetOrgAsync(orgId));
   }
 
-  public static async Task<Models.Org> PatchOrgAsync(string orgId, PatchOrg patchOrg)
+  public static async Task<IResult> PatchOrgAsync(string orgId, PatchOrg patchOrg)
   {
     if (patchOrg.Op.ToLower() == "activate")
     {
-      return await OrgService.ActivateOrgAsync(orgId);
+      return ApiResult.ToResult(await OrgService.ActivateOrgAsync(orgId));
     }
     else if (patchOrg.Op.ToLower() == "deactivate")
     {
-      return await OrgService.DeactivateOrgAsync(orgId);
+      return ApiResult.ToResult(await OrgService.DeactivateOrgAsync(orgId));
     }
     else
     {
-      throw new Exception("Invalid operation on org.");
+      return TypedResults.BadRequest("Invalid operation " + patchOrg.Op.ToLower());
     }
   }
-
 }

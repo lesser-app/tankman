@@ -3,11 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
-[PrimaryKey(nameof(Id), nameof(OrgId))]
+[PrimaryKey(nameof(RoleId), nameof(ResourceId), nameof(OrgId))]
 public class RolePermission : IPermission
 {
-  public required string Id { get; set; }
-
   public required string RoleId { get; set; }
   [ForeignKey(nameof(RoleId) + "," + nameof(OrgId))]
   public Role? Role { get; set; }
@@ -23,4 +21,5 @@ public class RolePermission : IPermission
   public required string OrgId { get; set; }
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
+
 }
