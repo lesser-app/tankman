@@ -32,7 +32,7 @@ public static class OrgHandlers
   }
 
 
-  public static async Task<IResult> DeleteOrgAsync(string orgId, string safetyKey)
+  public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)
   {
     if (Settings.SafetyKey != null && safetyKey != Settings.SafetyKey)  {
       return TypedResults.BadRequest("Missing org deletion key.");

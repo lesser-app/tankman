@@ -8,4 +8,9 @@ public static class Paths
     path = path.EndsWith("/") ? path.Substring(0, path.Length - 1) : path;
     return path;
   }
+
+  public static string StripFromEnd(string path, string text)
+  {
+    return path.Substring(0, path.Length - text.Length);
+  }
 }

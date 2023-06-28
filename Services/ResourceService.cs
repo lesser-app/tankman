@@ -37,7 +37,7 @@ public static class ResourceService
 
     if (isWildCard)
     {
-      resourceId = resourceId.Substring(0, resourceId.Length - Settings.Wildcard.Length);
+      resourceId = Paths.StripFromEnd(resourceId, Settings.Wildcard);
     }
 
     var normalizedResourceId = Paths.Normalize(resourceId);
