@@ -38,16 +38,16 @@ rootCommand.AddArgument(dbpass);
 
 rootCommand.SetHandler((context) =>
 {
-    var host = context.ParseResult.GetValueForArgument(dbhost);
-    var port = context.ParseResult.GetValueForArgument(dbport);
-    var dbName = context.ParseResult.GetValueForArgument(dbname);
-    var user = context.ParseResult.GetValueForArgument(dbuser);
-    var password = context.ParseResult.GetValueForArgument(dbpass);
+  var host = context.ParseResult.GetValueForArgument(dbhost);
+  var port = context.ParseResult.GetValueForArgument(dbport);
+  var dbName = context.ParseResult.GetValueForArgument(dbname);
+  var user = context.ParseResult.GetValueForArgument(dbuser);
+  var password = context.ParseResult.GetValueForArgument(dbpass);
 
-    if (user != null && password != null)
-    {
-        TankmanDbContext.SetConnectionStringFromArgs($"Server={host};Port={port};Database={dbName};User Id={user};Password={password}");
-    }
+  if (user != null && password != null)
+  {
+    TankmanDbContext.SetConnectionStringFromArgs($"Server={host};Port={port};Database={dbName};User Id={user};Password={password}");
+  }
 });
 
 rootCommand.Invoke(args);
@@ -56,11 +56,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
-    options.SerializerOptions.PropertyNameCaseInsensitive = false;
-    options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
-    options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-    options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+  options.SerializerOptions.PropertyNameCaseInsensitive = false;
+  options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+  options.SerializerOptions.DictionaryKeyPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+  options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+  options.SerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
 builder.Services.AddEndpointsApiExplorer();
@@ -81,6 +81,7 @@ orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/roles", RoleHandlers.GetRolesAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/resources", ResourceHandlers.GetResourcesAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/resources/{*resourceId}", ResourceHandlers.DeleteResourceAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/resources", ResourceHandlers.CreateResourceAsync).WithOpenApi();
 orgsApi.MapGet("/{orgId}/user-permissions", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/user-permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
@@ -92,8 +93,8 @@ var resourcesApi = app.MapGroup("resources");
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+  app.UseSwagger();
+  app.UseSwaggerUI();
 }
 
 app.Run();

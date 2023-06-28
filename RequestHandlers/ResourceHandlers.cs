@@ -21,4 +21,9 @@ public static class ResourceHandlers
   {
     return ApiResult.ToResult(await ResourceService.CreateResourceAsync(createResource.Id, orgId));
   }
+
+  public static async Task<IResult> DeleteResourceAsync(string resourceId, string orgId)
+  {
+    return ApiResult.ToResult(await ResourceService.DeleteResourceAsync(resourceId, orgId));
+  }
 }

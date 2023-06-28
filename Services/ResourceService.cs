@@ -30,4 +30,19 @@ public static class ResourceService
     await dbContext.SaveChangesAsync();
     return resource;
   }
+
+  public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string id, string orgId)
+  {
+    var normalizedId = Paths.Normalize(id);
+
+    var dbContext = new TankmanDbContext();
+
+    var resource = await dbContext.Resources.SingleAsync((x) => x.Id == normalizedId && x.OrgId == orgId);
+
+    dbContext.Resources.Remove(resource);
+
+    await dbContext.SaveChangesAsync();
+
+    return true;
+  }
 }
