@@ -56,4 +56,14 @@ public static class RolePermissionService
       return await dbContext.RolePermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}%") && x.OrgId == orgId).ToListAsync();
     }
   }
+
+  public static async Task<OneOf<bool, Error<string>>> DeleteRolePermissionAsync(string roleId, string resourceId, string action, string orgId)
+  {
+    var normalizedResourceId = Paths.Normalize(resourceId);
+    var dbContext = new TankmanDbContext();
+    var rolePermission = await dbContext.RolePermissions.SingleAsync((x) => x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.OrgId == orgId);
+    dbContext.RolePermissions.Remove(rolePermission);
+    await dbContext.SaveChangesAsync();
+    return true;
+  }
 }

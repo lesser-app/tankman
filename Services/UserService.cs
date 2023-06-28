@@ -14,21 +14,21 @@ public static class UserService
     return await dbContext.Users.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
-  public static async Task<OneOf<User, Error<string>>> GetUserAsync(string id, string orgId)
+  public static async Task<OneOf<User, Error<string>>> GetUserAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var userDetails = await dbContext.Users.Include((x) => x.RoleAssignments).SingleAsync((x) => x.Id == id && x.OrgId == orgId);
+    var userDetails = await dbContext.Users.Include((x) => x.RoleAssignments).SingleAsync((x) => x.Id == userId && x.OrgId == orgId);
     userDetails.Roles = userDetails.RoleAssignments.Select((x) => x.RoleId).ToList();
     userDetails.RoleAssignments = new List<RoleAssignment>();
     return userDetails;
   }
 
-  public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string id, string identityProviderUserId, string identityProvider, string orgId)
+  public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string userId, string identityProviderUserId, string identityProvider, string orgId)
   {
     var dbContext = new TankmanDbContext();
     var user = new User
     {
-      Id = id,
+      Id = userId,
       IdentityProviderUserId = identityProviderUserId,
       IdentityProvider = identityProvider,
       CreatedAt = DateTime.UtcNow,
@@ -77,10 +77,10 @@ public static class UserService
     return await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.OrgId == orgId).ToListAsync();
   }
 
-  public static async Task<OneOf<bool, Error<string>>> DeleteUserAsync(string id, string orgId)
+  public static async Task<OneOf<bool, Error<string>>> DeleteUserAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var user = await dbContext.Users.SingleAsync((x) => x.Id == id && x.OrgId == orgId);
+    var user = await dbContext.Users.SingleAsync((x) => x.Id == userId && x.OrgId == orgId);
     dbContext.Users.Remove(user);
     await dbContext.SaveChangesAsync();
     return true;

@@ -12,7 +12,7 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230628100555_InitialCreate")]
+    [Migration("20230628115507_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -30,10 +30,6 @@ namespace tankman.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("text")
                         .HasColumnName("id");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
@@ -171,10 +167,6 @@ namespace tankman.Migrations
                     b.Property<string>("OrgId")
                         .HasColumnType("text")
                         .HasColumnName("org_id");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")

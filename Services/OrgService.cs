@@ -8,9 +8,9 @@ namespace tankman.Services;
 
 public static class OrgService
 {
-  public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId)
   {
-    if (String.IsNullOrWhiteSpace(id))
+    if (String.IsNullOrWhiteSpace(orgId))
     {
       return new Error<string>("name should not be empty.");
     }
@@ -19,7 +19,7 @@ public static class OrgService
 
     var org = new Org
     {
-      Id = id,
+      Id = orgId,
       CreatedAt = DateTime.UtcNow,
     };
 
@@ -35,16 +35,16 @@ public static class OrgService
     return await dbContext.Orgs.ToListAsync();
   }
 
-  public static async Task<OneOf<Org, Error<string>>> GetOrgAsync(string id)
+  public static async Task<OneOf<Org, Error<string>>> GetOrgAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs.SingleAsync((x) => x.Id == id);
+    return await dbContext.Orgs.SingleAsync((x) => x.Id == orgId);
   }
 
-  public static async Task<OneOf<bool, Error<string>>> DeleteOrgAsync(string id)
+  public static async Task<OneOf<bool, Error<string>>> DeleteOrgAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var org = await dbContext.Orgs.SingleAsync((x) => x.Id == id);
+    var org = await dbContext.Orgs.SingleAsync((x) => x.Id == orgId);
     dbContext.Orgs.Remove(org);
     await dbContext.SaveChangesAsync();
     return true;

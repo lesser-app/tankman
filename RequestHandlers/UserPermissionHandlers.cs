@@ -28,4 +28,9 @@ public static class UserPermissionHandlers
   {
     return ApiResult.ToResult(await UserPermissionService.GetUserPermissionsForResourceAsync(resourceId, orgId));
   }
+
+  public static async Task<IResult> DeleteUserPermissionAsync(string userId, string resourceId, string action, string orgId)
+  {
+    return ApiResult.ToResult(await UserPermissionService.DeleteUserPermissionAsync(userId, resourceId, action, orgId));
+  }
 }

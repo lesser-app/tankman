@@ -14,13 +14,13 @@ public static class RoleService
     return await dbContext.Roles.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
-  public static async Task<OneOf<Role, Error<string>>> CreateRoleAsync(string id, string orgId)
+  public static async Task<OneOf<Role, Error<string>>> CreateRoleAsync(string roleId, string orgId)
   {
     var dbContext = new TankmanDbContext();
 
     var role = new Role
     {
-      Id = id,
+      Id = roleId,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId
     };
@@ -30,4 +30,12 @@ public static class RoleService
     return role;
   }
 
+  public static async Task<OneOf<bool, Error<string>>> DeleteRoleAsync(string roleId, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+    var role = await dbContext.Roles.SingleAsync((x) => x.Id == roleId && x.OrgId == orgId);
+    dbContext.Roles.Remove(role);
+    await dbContext.SaveChangesAsync();
+    return true;
+  }
 }

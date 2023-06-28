@@ -28,4 +28,9 @@ public static class RolePermissionHandlers
   {
     return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsForResourceAsync(resourceId, orgId));
   }
+
+  public static async Task<IResult> DeleteRolePermissionAsync(string roleId, string resourceId, string action, string orgId)
+  {
+    return ApiResult.ToResult(await RolePermissionService.DeleteRolePermissionAsync(roleId, resourceId, action, orgId));
+  }
 }

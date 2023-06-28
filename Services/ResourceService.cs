@@ -15,14 +15,14 @@ public static class ResourceService
     return await dbContext.Resources.Where((x) => x.OrgId == orgId).ToListAsync();
   }
 
-  public static async Task<OneOf<Resource, Error<string>>> CreateResourceAsync(string id, string orgId)
+  public static async Task<OneOf<Resource, Error<string>>> CreateResourceAsync(string resourceId, string orgId)
   {
-    var normalizedId = Paths.Normalize(id);
+    var normalizedResourceId = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
     var resource = new Resource
     {
-      Id = normalizedId,
+      Id = normalizedResourceId,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId,
     };
@@ -31,13 +31,13 @@ public static class ResourceService
     return resource;
   }
 
-  public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string id, string orgId)
+  public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string resourceId, string orgId)
   {
-    var normalizedId = Paths.Normalize(id);
+    var normalizedResourceId = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
 
-    var resource = await dbContext.Resources.SingleAsync((x) => x.Id == normalizedId && x.OrgId == orgId);
+    var resource = await dbContext.Resources.SingleAsync((x) => x.Id == normalizedResourceId && x.OrgId == orgId);
 
     dbContext.Resources.Remove(resource);
 

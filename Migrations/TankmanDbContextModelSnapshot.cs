@@ -28,10 +28,6 @@ namespace tankman.Migrations
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -168,10 +164,6 @@ namespace tankman.Migrations
                     b.Property<string>("OrgId")
                         .HasColumnType("text")
                         .HasColumnName("org_id");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("boolean")
-                        .HasColumnName("active");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")

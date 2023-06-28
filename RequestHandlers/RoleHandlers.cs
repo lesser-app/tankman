@@ -21,4 +21,9 @@ public static class RoleHandlers
   {
     return ApiResult.ToResult(await RoleService.CreateRoleAsync(createRole.Id, orgId));
   }
+
+  public static async Task<IResult> DeleteRoleAsync(string roleId, string orgId)
+  {
+    return ApiResult.ToResult(await RoleService.DeleteRoleAsync(roleId, orgId));
+  }
 }

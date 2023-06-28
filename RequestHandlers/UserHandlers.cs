@@ -24,9 +24,9 @@ public static class UserHandlers
     return ApiResult.ToResult(await UserService.GetUsersAsync(orgId));
   }
 
-  public static async Task<IResult> GetUserAsync(string id, string orgId)
+  public static async Task<IResult> GetUserAsync(string userId, string orgId)
   {
-    return ApiResult.ToResult(await UserService.GetUserAsync(id, orgId));
+    return ApiResult.ToResult(await UserService.GetUserAsync(userId, orgId));
   }
 
   public static async Task<IResult> CreateUserAsync(string orgId, CreateUser createUser)

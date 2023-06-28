@@ -56,4 +56,14 @@ public static class UserPermissionService
       return await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}%") && x.OrgId == orgId).ToListAsync();
     }
   }
+
+  public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionAsync(string userId, string resourceId, string action, string orgId)
+  {
+    var normalizedResourceId = Paths.Normalize(resourceId);
+    var dbContext = new TankmanDbContext();
+    var userPermission = await dbContext.UserPermissions.SingleAsync((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.OrgId == orgId);
+    dbContext.UserPermissions.Remove(userPermission);
+    await dbContext.SaveChangesAsync();
+    return true;
+  }
 }
