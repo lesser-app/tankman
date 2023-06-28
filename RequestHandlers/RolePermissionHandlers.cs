@@ -23,4 +23,9 @@ public static class RolePermissionHandlers
   {
     return ApiResult.ToResult(await RolePermissionService.CreateRolePermissionAsync(createPermission.RoleId, createPermission.ResourceId, createPermission.Action, orgId));
   }
+
+  public static async Task<IResult> GetRolePermissionsForResourceAsync(string resourceId, string orgId)
+  {
+    return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsForResourceAsync(resourceId, orgId));
+  }
 }
