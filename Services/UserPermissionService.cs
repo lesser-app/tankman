@@ -9,12 +9,6 @@ namespace tankman.Services;
 
 public static class UserPermissionService
 {
-  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetPermissionsAsync(string orgId)
-  {
-    var dbContext = new TankmanDbContext();
-    return await dbContext.UserPermissions.Where((x) => x.OrgId == orgId).ToListAsync();
-  }
-
   public static async Task<OneOf<UserPermission, Error<string>>> CreateUserPermissionAsync(string userId, string resourceId, string action, string orgId)
   {
     var normalizedResourceId = Paths.Normalize(resourceId);
@@ -33,50 +27,31 @@ public static class UserPermissionService
     return userPermission;
   }
 
-  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsForResourceAsync(string resourceId, string orgId)
+  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
-    var isWildCard = resourceId.EndsWith(Settings.Wildcard);
-
-    if (isWildCard)
-    {
-      resourceId = Paths.StripFromEnd(resourceId, Settings.Wildcard);
-    }
-
-    var normalizedResourceId = Paths.Normalize(resourceId);
-
     var dbContext = new TankmanDbContext();
 
-    var userPermissionsExact = await dbContext.UserPermissions.Where((x) => x.ResourceId == normalizedResourceId && x.OrgId == orgId).ToListAsync();
+    var permissions = await dbContext.UserPermissions
+      .ApplyOrgFilter(orgId)
+      .ApplyUsersFilter(userId)
+      .ApplyActionsFilter(action)
+      .ApplyResourceFilter(resourceId)
+      .ToListAsync();
 
-    if (!isWildCard)
-    {
-      return userPermissionsExact;
-    }
-    else
-    {
-      var childUserPermissions = await dbContext.UserPermissions.Where((x) => EF.Functions.ILike(x.ResourceId, $"{normalizedResourceId}/%") && x.OrgId == orgId).ToListAsync();
-      return userPermissionsExact.Concat(childUserPermissions).ToList();
-    }
+    return permissions;
   }
 
-  public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionAsync(string userId, string resourceId, string action, string orgId)
+  public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
-    var normalizedResourceId = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
-    if (action != Settings.Wildcard)
-    {
-      var userPermission = await dbContext.UserPermissions.SingleAsync((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId);
-      dbContext.UserPermissions.Remove(userPermission);
-    }
-    else
-    {
-      var userPermissions = await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action && x.OrgId == orgId).ToListAsync();
-      foreach (var userPermission in userPermissions)
-      {
-        dbContext.UserPermissions.Remove(userPermission);
-      }
-    }
+
+    var permission = await dbContext.UserPermissions
+      .SingleAsync((x) => x.OrgId == orgId && x.UserId == userId && x.ResourceId == resourceId && x.Action == action);
+
+    dbContext.UserPermissions.Remove(permission);
     await dbContext.SaveChangesAsync();
+
     return true;
   }
+
 }

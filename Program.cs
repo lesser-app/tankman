@@ -8,17 +8,17 @@ var rootCommand = new RootCommand("Tankman user management and access control");
 
 var dbHostOption = new Option<string>(
             name: "--dbhost",
-            description: "Database hostname",
+            description: "Database hostname.",
             getDefaultValue: () => "localhost");
 
 var dbPortOption = new Option<int>(
             name: "--dbport",
-            description: "Database port",
+            description: "Database port.",
             getDefaultValue: () => 5432);
 
 var dbNameOption = new Option<string>(
             name: "--dbname",
-            description: "Database name",
+            description: "Database name.",
             getDefaultValue: () => "tankmandb");
 
 var dbUserOption = new Option<string?>(
@@ -33,12 +33,17 @@ var dbPassOption = new Option<string?>(
 
 var wildcardOption = new Option<string?>(
             name: "--wildcard",
-            description: "Wildcard character",
+            description: "Wildcard character to be used in matches.",
             getDefaultValue: () => "~");
+
+var separatorOption = new Option<string?>(
+            name: "--separator",
+            description: "Separator character to be used in the url.",
+            getDefaultValue: () => ",");            
 
 var safetyKeyArg = new Option<string?>(
   name: "--safety-key",
-  description: "Protect destructive operations with a key."
+  description: "Require this key to be supplied as the querystring parameter 'safetyKey' for org deletion."
 );
 
 rootCommand.AddOption(dbHostOption);
@@ -47,6 +52,7 @@ rootCommand.AddOption(dbNameOption);
 rootCommand.AddOption(dbUserOption);
 rootCommand.AddOption(dbPassOption);
 rootCommand.AddOption(wildcardOption);
+rootCommand.AddOption(separatorOption);
 rootCommand.AddOption(safetyKeyArg);
 
 rootCommand.SetHandler((context) =>
@@ -57,9 +63,11 @@ rootCommand.SetHandler((context) =>
   var user = context.ParseResult.GetValueForOption(dbUserOption);
   var password = context.ParseResult.GetValueForOption(dbPassOption);
   var wildcardCharacter = context.ParseResult.GetValueForOption(wildcardOption);
+  var separatorCharacter = context.ParseResult.GetValueForOption(separatorOption);
   var safetyKey = context.ParseResult.GetValueForOption(safetyKeyArg);
 
   Settings.Wildcard = wildcardCharacter!;
+  Settings.Separator = separatorCharacter!;
 
   if (safetyKey != null)
   {
@@ -93,41 +101,51 @@ var app = builder.Build();
 var orgsApi = app.MapGroup("orgs");
 
 // ORGS
-orgsApi.MapGet("/", OrgHandlers.GetOrgsAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId?}", OrgHandlers.GetOrgsAsync).WithOpenApi();
 orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
-orgsApi.MapGet("/{orgId}", OrgHandlers.GetOrgAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}", OrgHandlers.DeleteOrgAsync).WithOpenApi();
 
-// USERS
-orgsApi.MapGet("/{orgId}/users", UserHandlers.GetUsersAsync).WithOpenApi();
-orgsApi.MapGet("/{orgId}/users/{userId}", UserHandlers.GetUserAsync).WithOpenApi();
-orgsApi.MapDelete("/{orgId}/users/{userId}", UserHandlers.DeleteUserAsync).WithOpenApi();
-orgsApi.MapPost("/{orgId}/users/{userId}/roles", UserHandlers.AssignRoleAsync).WithOpenApi();
-orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
-orgsApi.MapDelete("/{orgId}/users/{userId}/roles/{roleId}", UserHandlers.UnassignRoleAsync).WithOpenApi();
-orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", UserPermissionHandlers.DeleteUserPermissionAsync).WithOpenApi();
-
-// ROLES
-orgsApi.MapGet("/{orgId}/roles", RoleHandlers.GetRolesAsync).WithOpenApi();
-orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
-orgsApi.MapDelete("/{orgId}/roles/{roleId}", RoleHandlers.DeleteRoleAsync).WithOpenApi();
-orgsApi.MapDelete("/{orgId}/roles/{roleId}/permissions/{action}/{*resourceId}", RolePermissionHandlers.DeleteRolePermissionAsync).WithOpenApi();
+// TODO: support the following
+// orgsApi.MapGet("/{orgId}?fields=name,location,country", ...
+// orgsApi.MapDelete("/{orgId}/fields/name,location", ...
 
 // RESOURCES
-orgsApi.MapGet("/{orgId}/resources", ResourceHandlers.GetResourcesAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/resources/{*resourceId}", ResourceHandlers.GetResourcesAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/resources", ResourceHandlers.CreateResourceAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/resources/{*resourceId}", ResourceHandlers.DeleteResourceAsync).WithOpenApi();
 
+// TODO: support the following
+// orgsApi.MapGet("/{orgId}/resources?fields=name,location,country", ...
+// orgsApi.MapDelete("/{orgId}/resources/fields/name,location", ...
+
+// USERS
+orgsApi.MapGet("/{orgId}/users/{userId?}", UserHandlers.GetUsersAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/users", UserHandlers.CreateUserAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/users/{userId}", UserHandlers.DeleteUserAsync).WithOpenApi();
+// USER ROLES
+orgsApi.MapPost("/{orgId}/users/{userId}/roles", UserHandlers.AssignRoleAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/users/{userId}/roles/{roleId}", UserHandlers.UnassignRoleAsync).WithOpenApi();
 // USER PERMISSIONS
-orgsApi.MapGet("/{orgId}/user-permissions", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
-orgsApi.MapGet("/{orgId}/user-permissions/{*resourceId}", UserPermissionHandlers.GetUserPermissionsForResourceAsync).WithOpenApi();
-orgsApi.MapPost("/{orgId}/user-permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/users/{userId}/permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/users/{userId}/permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", UserPermissionHandlers.DeleteUserPermissionAsync).WithOpenApi();
 
+// TODO: support the following
+// orgsApi.MapGet("/{orgId}/users?fields=name,location,country", ...
+// orgsApi.MapDelete("/{orgId}/users/fields/name,location", ...
 
+// ROLES
+orgsApi.MapGet("/{orgId}/roles/{roleId?}", RoleHandlers.GetRolesAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/roles/{roleId}", RoleHandlers.DeleteRoleAsync).WithOpenApi();
 // ROLE PERMISSIONS
-orgsApi.MapGet("/{orgId}/role-permissions", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
-orgsApi.MapGet("/{orgId}/role-permissions/{*resourceId}", RolePermissionHandlers.GetRolePermissionsForResourceAsync).WithOpenApi();
-orgsApi.MapPost("/{orgId}/role-permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();
+orgsApi.MapGet("/{orgId}/roles/{roleId}/permissions/{action?}/{*resourceId}", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
+orgsApi.MapPost("/{orgId}/roles/{roleId}/permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/roles/{roleId}/permissions/{action}/{*resourceId}", RolePermissionHandlers.DeleteRolePermissionAsync).WithOpenApi();
+
+// TODO: support the following
+// orgsApi.MapPost("/{orgId}/roles?fields=name,location,country", ...
+// orgsApi.MapDelete("/{orgId}/roles/fields/name,location", ...
 
 var rolesApi = app.MapGroup("roles");
 var resourcesApi = app.MapGroup("resources");

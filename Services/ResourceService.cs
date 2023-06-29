@@ -9,10 +9,16 @@ namespace tankman.Services;
 
 public static class ResourceService
 {
-  public static async Task<OneOf<List<Resource>, Error<string>>> GetResourcesAsync(string orgId)
+  public static async Task<OneOf<List<Resource>, Error<string>>> GetResourcesAsync(string resourceId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Resources.Where((x) => x.OrgId == orgId).ToListAsync();
+
+    var resources = await dbContext.Resources
+      .ApplyOrgFilter(orgId)
+      .ApplyPathedIdFilter(resourceId)
+      .ToListAsync();
+
+    return resources;
   }
 
   public static async Task<OneOf<Resource, Error<string>>> CreateResourceAsync(string resourceId, string orgId)
@@ -33,29 +39,12 @@ public static class ResourceService
 
   public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string resourceId, string orgId)
   {
-    var isWildCard = resourceId.EndsWith(Settings.Wildcard);
-
-    if (isWildCard)
-    {
-      resourceId = Paths.StripFromEnd(resourceId, Settings.Wildcard);
-    }
-
-    var normalizedResourceId = Paths.Normalize(resourceId);
-
     var dbContext = new TankmanDbContext();
 
-    var resource = await dbContext.Resources.SingleAsync((x) => x.Id == normalizedResourceId && x.OrgId == orgId);
+    var normalizedResourceId = Paths.Normalize(resourceId);
+    var resource = await dbContext.Resources.SingleAsync((x) => x.OrgId == orgId && x.Id == normalizedResourceId);
+
     dbContext.Resources.Remove(resource);
-
-    if (isWildCard)
-    {
-      var childResources = await dbContext.Resources.Where((x) => EF.Functions.ILike(x.Id, $"{normalizedResourceId}/%") && x.OrgId == orgId).ToListAsync();
-      foreach (var childResource in childResources)
-      {
-        dbContext.Resources.Remove(childResource);
-      }
-    }
-
     await dbContext.SaveChangesAsync();
 
     return true;

@@ -16,27 +16,22 @@ public class PatchOrg
 
 public static class OrgHandlers
 {
-  public static async Task<IResult> GetOrgsAsync()
+  public static async Task<IResult> GetOrgsAsync(string? orgId)
   {
-    return ApiResult.ToResult(await OrgService.GetOrgsAsync());
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard));
   }
 
   public static async Task<IResult> CreateOrgAsync(CreateOrg org)
   {
-    return ApiResult.ToResult(await OrgService.CreateOrgAsync(org.Id));
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: org.Id));
   }
-
-  public static async Task<IResult> GetOrgAsync(string orgId)
-  {
-    return ApiResult.ToResult(await OrgService.GetOrgAsync(orgId));
-  }
-
 
   public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)
   {
-    if (Settings.SafetyKey != null && safetyKey != Settings.SafetyKey)  {
+    if (Settings.SafetyKey != null && safetyKey != Settings.SafetyKey)
+    {
       return TypedResults.BadRequest("Missing org deletion key.");
     }
-    return ApiResult.ToResult(await OrgService.DeleteOrgAsync(orgId));
+    return ApiResult.ToResult(await OrgService.DeleteOrgAsync(orgId: orgId));
   }
 }

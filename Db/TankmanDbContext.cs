@@ -3,18 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Db
 {
-
-
-
   public class TankmanDbContext : DbContext
   {
+
     static string? connectionStringFromArgs = null;
 
     public static void SetConnectionStringFromArgs(string connectionString)
     {
       connectionStringFromArgs = connectionString;
     }
-
 
     public DbSet<Org> Orgs { get; set; }
     public DbSet<User> Users { get; set; }
@@ -26,6 +23,10 @@ namespace tankman.Db
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+      #if DEBUG
+        optionsBuilder.LogTo(Console.WriteLine);
+      #endif
+
       if (TankmanDbContext.connectionStringFromArgs != null)
       {
         optionsBuilder.UseNpgsql(connectionStringFromArgs).UseSnakeCaseNamingConvention();
@@ -43,9 +44,6 @@ namespace tankman.Db
           throw new Exception("The connection string has to be provided in the TANKMAN_CONN_STR env variable or via CLI options.");
         }
       }
-
     }
-
   }
-
 }

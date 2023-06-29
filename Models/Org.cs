@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(Id))]
-public class Org
+public class Org : IEntity
 {
   public required string Id { get; set; }
   

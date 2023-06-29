@@ -1,7 +1,6 @@
 using tankman.Http;
-using tankman.Models;
+using tankman.Utils;
 using tankman.Services;
-using tankman.Types;
 
 namespace tankman.RequestHandlers;
 
@@ -12,18 +11,18 @@ public class CreateResource
 
 public static class ResourceHandlers
 {
-  public static async Task<IResult> GetResourcesAsync(string orgId)
+  public static async Task<IResult> GetResourcesAsync(string? resourceId, string orgId)
   {
-    return ApiResult.ToResult(await ResourceService.GetResourcesAsync(orgId));
+    return ApiResult.ToResult(await ResourceService.GetResourcesAsync(resourceId: resourceId ?? Settings.Wildcard, orgId: orgId));
   }
 
   public static async Task<IResult> CreateResourceAsync(string orgId, CreateResource createResource)
   {
-    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(createResource.Id, orgId));
+    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, orgId: orgId));
   }
 
   public static async Task<IResult> DeleteResourceAsync(string resourceId, string orgId)
   {
-    return ApiResult.ToResult(await ResourceService.DeleteResourceAsync(resourceId, orgId));
+    return ApiResult.ToResult(await ResourceService.DeleteResourceAsync(resourceId: resourceId, orgId: orgId));
   }
 }

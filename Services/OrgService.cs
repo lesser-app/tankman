@@ -8,6 +8,12 @@ namespace tankman.Services;
 
 public static class OrgService
 {
+  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+    return await dbContext.Orgs.ApplyIdFilter(orgId).ToListAsync();
+  }
+
   public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId)
   {
     if (String.IsNullOrWhiteSpace(orgId))
@@ -27,18 +33,6 @@ public static class OrgService
     await dbContext.SaveChangesAsync();
 
     return org;
-  }
-
-  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync()
-  {
-    var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs.ToListAsync();
-  }
-
-  public static async Task<OneOf<Org, Error<string>>> GetOrgAsync(string orgId)
-  {
-    var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs.SingleAsync((x) => x.Id == orgId);
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeleteOrgAsync(string orgId)

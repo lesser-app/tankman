@@ -14,23 +14,33 @@ public class CreateRolePermission
 
 public static class RolePermissionHandlers
 {
-  public static async Task<IResult> GetRolePermissionsAsync(string orgId)
+  public static async Task<IResult> GetRolePermissionsAsync(string orgId, string roleId, string action, string resourceId)
   {
-    return ApiResult.ToResult(await RolePermissionService.GetPermissionsAsync(orgId));
+    return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsAsync(
+      roleId: roleId,
+      resourceId: resourceId,
+      action: action,
+      orgId: orgId
+    ));
   }
 
   public static async Task<IResult> CreateRolePermissionAsync(string orgId, CreateRolePermission createPermission)
   {
-    return ApiResult.ToResult(await RolePermissionService.CreateRolePermissionAsync(createPermission.RoleId, createPermission.ResourceId, createPermission.Action, orgId));
-  }
-
-  public static async Task<IResult> GetRolePermissionsForResourceAsync(string resourceId, string orgId)
-  {
-    return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsForResourceAsync(resourceId, orgId));
+    return ApiResult.ToResult(await RolePermissionService.CreateRolePermissionAsync(
+      roleId: createPermission.RoleId,
+      resourceId: createPermission.ResourceId,
+      action: createPermission.Action, 
+      orgId: orgId
+    ));
   }
 
   public static async Task<IResult> DeleteRolePermissionAsync(string roleId, string resourceId, string action, string orgId)
   {
-    return ApiResult.ToResult(await RolePermissionService.DeleteRolePermissionAsync(roleId, resourceId, action, orgId));
+    return ApiResult.ToResult(await RolePermissionService.DeleteRolePermissionsAsync(
+      roleId:roleId, 
+      resourceId:resourceId, 
+      action:action, 
+      orgId:orgId
+    ));
   }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(RoleId), nameof(ResourceId), nameof(OrgId))]
-public class RolePermission : IPermission
+public class RolePermission : IPermission, IRoleAssociated, IResourceAssociated, IActionAssociated, IOrgAssociated
 {
   public required string RoleId { get; set; }
   [ForeignKey(nameof(RoleId) + "," + nameof(OrgId))]

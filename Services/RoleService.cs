@@ -8,10 +8,13 @@ namespace tankman.Services;
 
 public static class RoleService
 {
-  public static async Task<OneOf<List<Role>, Error<string>>> GetRolesAsync(string orgId)
+  public static async Task<OneOf<List<Role>, Error<string>>> GetRolesAsync(string roleId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Roles.Where((x) => x.OrgId == orgId).ToListAsync();
+    return await dbContext.Roles
+      .ApplyOrgFilter(orgId)
+      .ApplyIdFilter(roleId)
+      .ToListAsync();
   }
 
   public static async Task<OneOf<Role, Error<string>>> CreateRoleAsync(string roleId, string orgId)

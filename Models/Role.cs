@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
-public class Role
+public class Role : IEntity, IOrgAssociated
 {
   public required string Id { get; set; }
 

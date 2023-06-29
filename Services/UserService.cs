@@ -8,19 +8,19 @@ namespace tankman.Services;
 
 public static class UserService
 {
-  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string orgId)
+  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Users.Where((x) => x.OrgId == orgId).ToListAsync();
-  }
+    var users = await dbContext.Users.ApplyIdFilter(userId)
+      .Include((x) => x.RoleAssignments).ToListAsync();
 
-  public static async Task<OneOf<User, Error<string>>> GetUserAsync(string userId, string orgId)
-  {
-    var dbContext = new TankmanDbContext();
-    var userDetails = await dbContext.Users.Include((x) => x.RoleAssignments).SingleAsync((x) => x.Id == userId && x.OrgId == orgId);
-    userDetails.Roles = userDetails.RoleAssignments.Select((x) => x.RoleId).ToList();
-    userDetails.RoleAssignments = new List<RoleAssignment>();
-    return userDetails;
+    foreach (var user in users)
+    {
+      user.Roles = user.RoleAssignments.Select((x) => x.RoleId).ToList();
+      user.RoleAssignments = new List<RoleAssignment>();
+    }
+
+    return users;
   }
 
   public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string userId, string identityProviderUserId, string identityProvider, string orgId)
@@ -39,17 +39,10 @@ public static class UserService
     return user;
   }
 
-  public static async Task<OneOf<User, Error<string>>> DeactivateUserAsync(string userId)
-  {
-    var dbContext = new TankmanDbContext();
-    var user = dbContext.Users.Single((x) => x.Id == userId);
-    await dbContext.SaveChangesAsync();
-    return user;
-  }
-
   public static async Task<OneOf<RoleAssignment, Error<string>>> AssignRoleAsync(string roleId, string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
+
     var roleAssignment = new RoleAssignment
     {
       RoleId = roleId,
@@ -58,23 +51,19 @@ public static class UserService
       OrgId = orgId
     };
     dbContext.RoleAssignments.Add(roleAssignment);
+
     await dbContext.SaveChangesAsync();
+
     return roleAssignment;
   }
 
   public static async Task<OneOf<bool, Error<string>>> UnassignRoleAsync(string roleId, string userId, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var roleAssignment = dbContext.RoleAssignments.Single((x) => x.RoleId == roleId && x.UserId == userId && x.OrgId == orgId);
+    var roleAssignment = await dbContext.RoleAssignments.SingleAsync((x) => x.OrgId == orgId && x.UserId == userId && x.RoleId == roleId);
     dbContext.RoleAssignments.Remove(roleAssignment);
     await dbContext.SaveChangesAsync();
     return true;
-  }
-
-  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string orgId)
-  {
-    var dbContext = new TankmanDbContext();
-    return await dbContext.UserPermissions.Where((x) => x.UserId == userId && x.OrgId == orgId).ToListAsync();
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeleteUserAsync(string userId, string orgId)
