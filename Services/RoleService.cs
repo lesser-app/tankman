@@ -73,6 +73,7 @@ public static class RoleService
     if (property != null)
     {
       property.Value = value;
+      property.Hidden = hidden;
     }
     else
     {

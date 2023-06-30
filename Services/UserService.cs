@@ -129,6 +129,7 @@ public static class UserService
     if (property != null)
     {
       property.Value = value;
+      property.Hidden = hidden;
     }
     else
     {
