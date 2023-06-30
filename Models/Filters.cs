@@ -170,8 +170,8 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string resourceId) where T : IResourceAssociated
+  public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string normalizedResourceId) where T : IResourceAssociated
   {
-    return baseQuery.Where((x) => x.ResourceId == resourceId);
+    return baseQuery.Where((x) => x.ResourceId == normalizedResourceId);
   }
 }

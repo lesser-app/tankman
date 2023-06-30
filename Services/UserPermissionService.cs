@@ -83,10 +83,11 @@ public static class UserPermissionService
 
   public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);    
     var dbContext = new TankmanDbContext();
 
     var permission = await dbContext.UserPermissions
-      .SingleAsync((x) => x.OrgId == orgId && x.UserId == userId && x.ResourceId == resourceId && x.Action == action);
+      .SingleAsync((x) => x.OrgId == orgId && x.UserId == userId && x.ResourceId == normalizedResourceId && x.Action == action);
 
     dbContext.UserPermissions.Remove(permission);
     await dbContext.SaveChangesAsync();

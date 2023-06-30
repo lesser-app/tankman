@@ -66,7 +66,6 @@ public static class RolePermissionService
 
         return await rolePermissionsQuery.ToListAsync();
       }
-
     }
     else
     {
@@ -83,10 +82,11 @@ public static class RolePermissionService
 
   public static async Task<OneOf<bool, Error<string>>> DeleteRolePermissionsAsync(string roleId, string resourceId, string action, string orgId)
   {
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
 
     var permission = await dbContext.RolePermissions
-      .SingleAsync((x) => x.OrgId == orgId && x.RoleId == roleId && x.ResourceId == resourceId && x.Action == action);
+      .SingleAsync((x) => x.OrgId == orgId && x.RoleId == roleId && x.ResourceId == normalizedResourceId && x.Action == action);
 
     dbContext.RolePermissions.Remove(permission);
     await dbContext.SaveChangesAsync();
