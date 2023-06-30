@@ -140,6 +140,8 @@ orgsApi.MapDelete("/{orgId}/users/{userId}/roles/{roleId}", UserHandlers.Unassig
 orgsApi.MapGet("/{orgId}/users/{userId}/permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/users/{userId}/permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", UserPermissionHandlers.DeleteUserPermissionAsync).WithOpenApi();
+// COMBINED USER/ROLE
+orgsApi.MapGet("/{orgId}/users/{userId}/effective-permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetEffectivePermissionsAsync).WithOpenApi();
 
 // TODO: support the following
 // orgsApi.MapGet("/{orgId}/users?fields=name,location,country", ...

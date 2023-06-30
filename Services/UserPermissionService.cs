@@ -88,6 +88,35 @@ public static class UserPermissionService
     }
   }
 
+  public static async Task<OneOf<List<object>, Error<string>>> GetEffectivePermissionsAsync(string userId, string resourceId, string action, string orgId, int? from, int? limit)
+  {
+    var dbContext = new TankmanDbContext();
+    var userPermissions = await GetUserPermissionsAsync(userId: userId, resourceId: resourceId, action: action, orgId: orgId, from: from, limit: limit);
+
+    if (userPermissions.IsT0)
+    {
+      var roles = await dbContext.RoleAssignments
+        .Where(x => x.UserId == userId && x.OrgId == orgId)
+        .ToListAsync();
+      var rolePermissions = await RolePermissionService.GetRolePermissionsAsync(String.Join(",", roles.Select(x => x.RoleId)), resourceId, action, orgId, from, limit);
+      if (rolePermissions.IsT0)
+      {
+        var allPermissions = new List<object>();
+        allPermissions.AddRange(userPermissions.AsT0);
+        allPermissions.AddRange(rolePermissions.AsT0);
+        return allPermissions;
+      }
+      else
+      {
+        return userPermissions.AsT1;
+      }
+    }
+    else
+    {
+      return userPermissions.AsT1;
+    }
+  }
+
   public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
     var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);

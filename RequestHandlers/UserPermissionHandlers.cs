@@ -21,7 +21,19 @@ public static class UserPermissionHandlers
       userId: userId,
       orgId: orgId,
       from: from,
-      limit: limit      
+      limit: limit
+    ));
+  }
+
+  public static async Task<IResult> GetEffectivePermissionsAsync(string orgId, string userId, string? action, string? resourceId, int? from, int? limit)
+  {
+    return ApiResult.ToResult(await UserPermissionService.GetEffectivePermissionsAsync(
+      resourceId: resourceId ?? "/" + Settings.Wildcard,
+      action: action ?? Settings.Wildcard,
+      userId: userId,
+      orgId: orgId,
+      from: from,
+      limit: limit
     ));
   }
 
