@@ -1,6 +1,7 @@
 using tankman.Http;
 using tankman.Utils;
 using tankman.Services;
+using tankman.Models;
 
 namespace tankman.RequestHandlers;
 
@@ -43,39 +44,51 @@ public static class UserHandlers
       _ => null
     };
 
-    return ApiResult.ToResult(await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit));
+    return ApiResult.ToResult(
+      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
+      (List<User> user) => user.Select(User.ToJson)
+    );
   }
 
   public static async Task<IResult> CreateUserAsync(string orgId, CreateUser createUser)
   {
-    return ApiResult.ToResult(await UserService.CreateUserAsync(
-      userId: createUser.Id,
-      identityProviderUserId: createUser.IdentityProviderUserId,
-      identityProvider: createUser.IdentityProvider,
-      data: createUser.Data,
-      orgId: orgId
-    ));
+    return ApiResult.ToResult(
+      await UserService.CreateUserAsync(
+        userId: createUser.Id,
+        identityProviderUserId: createUser.IdentityProviderUserId,
+        identityProvider: createUser.IdentityProvider,
+        data: createUser.Data,
+        orgId: orgId
+      ),
+      User.ToJson
+    );
   }
 
   public static async Task<IResult> UpdateUserAsync(string userId, string orgId, UpdateUser updateUser)
   {
-    return ApiResult.ToResult(await UserService.UpdateUserAsync(
-      userId: userId,
-      identityProviderUserId: updateUser.IdentityProviderUserId,
-      identityProvider: updateUser.IdentityProvider,
-      data: updateUser.Data,
-      orgId: orgId
-    ));
+    return ApiResult.ToResult(
+      await UserService.UpdateUserAsync(
+        userId: userId,
+        identityProviderUserId: updateUser.IdentityProviderUserId,
+        identityProvider: updateUser.IdentityProvider,
+        data: updateUser.Data,
+        orgId: orgId
+      ),
+      User.ToJson
+    );
   }
 
 
   public static async Task<IResult> AssignRoleAsync(string userId, string orgId, AssignRole assignRole)
   {
-    return ApiResult.ToResult(await UserService.AssignRoleAsync(
-      roleId: assignRole.RoleId,
-      userId: userId,
-      orgId: orgId
-    ));
+    return ApiResult.ToResult(
+      await UserService.AssignRoleAsync(
+        roleId: assignRole.RoleId,
+        userId: userId,
+        orgId: orgId
+      ),
+      RoleAssignment.ToJson
+    );
   }
 
   public static async Task<IResult> UnassignRoleAsync(string roleId, string userId, string orgId)

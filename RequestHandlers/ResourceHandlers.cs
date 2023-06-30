@@ -1,6 +1,7 @@
 using tankman.Http;
 using tankman.Utils;
 using tankman.Services;
+using tankman.Models;
 
 namespace tankman.RequestHandlers;
 
@@ -19,17 +20,25 @@ public static class ResourceHandlers
 {
   public static async Task<IResult> GetResourcesAsync(string? resourceId, string orgId, int? depth, int? from, int? limit)
   {
-    return ApiResult.ToResult(await ResourceService.GetResourcesAsync(resourceId: resourceId ?? Settings.Wildcard, orgId: orgId, from: from, limit: limit));
+    return ApiResult.ToResult(
+      await ResourceService.GetResourcesAsync(
+        resourceId: resourceId ?? Settings.Wildcard, 
+        orgId: orgId, 
+        from: from, 
+        limit: limit
+      ), 
+      (List<Resource> resources) => resources.Select(Resource.ToJson)
+    );
   }
 
   public static async Task<IResult> CreateResourceAsync(string orgId, CreateResource createResource)
   {
-    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, data: createResource.Data, orgId: orgId));
+    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, data: createResource.Data, orgId: orgId), Resource.ToJson);
   }
 
   public static async Task<IResult> UpdateResourceAsync(string resourceId, string orgId, UpdateResource updateResource)
   {
-    return ApiResult.ToResult(await ResourceService.UpdateResourceAsync(resourceId: resourceId, data: updateResource.Data, orgId: orgId));
+    return ApiResult.ToResult(await ResourceService.UpdateResourceAsync(resourceId: resourceId, data: updateResource.Data, orgId: orgId), Resource.ToJson);
   }
 
   public static async Task<IResult> DeleteResourceAsync(string resourceId, string orgId)

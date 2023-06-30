@@ -1,6 +1,7 @@
 using tankman.Services;
 using tankman.Http;
 using tankman.Utils;
+using tankman.Models;
 
 namespace tankman.RequestHandlers;
 
@@ -19,17 +20,17 @@ public static class OrgHandlers
 {
   public static async Task<IResult> GetOrgsAsync(string? orgId)
   {
-    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard));
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard), (List<Org> orgs) => orgs.Select(Org.ToJson));
   }
 
   public static async Task<IResult> CreateOrgAsync(CreateOrg createOrg)
   {
-    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: createOrg.Id, data: createOrg.Data));
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: createOrg.Id, data: createOrg.Data), Org.ToJson);
   }
 
   public static async Task<IResult> UpdateOrgAsync(string orgId, UpdateOrg updateOrg)
   {
-    return ApiResult.ToResult(await OrgService.UpdateOrgAsync(orgId: orgId, data: updateOrg.Data));
+    return ApiResult.ToResult(await OrgService.UpdateOrgAsync(orgId: orgId, data: updateOrg.Data), Org.ToJson);
   }
 
   public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)

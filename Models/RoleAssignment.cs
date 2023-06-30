@@ -3,6 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
+public class RoleAssignmentJson
+{
+  public required string UserId { get; set; }
+  public required string RoleId { get; set; }
+  public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+  public required string OrgId { get; set; }
+}
+
 [PrimaryKey(nameof(RoleId), nameof(UserId), nameof(OrgId))]
 public class RoleAssignment : IUserAssociated, IRoleAssociated, IOrgAssociated
 {
@@ -19,4 +27,15 @@ public class RoleAssignment : IUserAssociated, IRoleAssociated, IOrgAssociated
   public required string OrgId { get; set; }
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
+
+  public static RoleAssignmentJson ToJson(RoleAssignment roleAssignment)
+  {
+    return new RoleAssignmentJson
+    {
+      RoleId = roleAssignment.RoleId,
+      UserId = roleAssignment.UserId,
+      CreatedAt = roleAssignment.CreatedAt,
+      OrgId = roleAssignment.OrgId
+    };
+  }
 }

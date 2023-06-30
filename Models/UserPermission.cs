@@ -3,6 +3,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
+public class UserPermissionJson
+{
+  public required string UserId { get; set; }
+  public required string ResourceId { get; set; }
+  public required string Action { get; set; }
+  public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+  public required string OrgId { get; set; }
+}
+
 [PrimaryKey(nameof(UserId), nameof(ResourceId), nameof(OrgId))]
 public class UserPermission : IPermission, IUserAssociated, IResourceAssociated, IActionAssociated, IOrgAssociated
 {
@@ -22,4 +31,15 @@ public class UserPermission : IPermission, IUserAssociated, IResourceAssociated,
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
 
+  public static UserPermissionJson ToJson(UserPermission userPermission)
+  {
+    return new UserPermissionJson
+    {
+      UserId = userPermission.UserId,
+      ResourceId = userPermission.ResourceId,
+      Action = userPermission.Action,
+      CreatedAt = userPermission.CreatedAt,
+      OrgId = userPermission.OrgId
+    };
+  }
 }
