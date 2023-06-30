@@ -12,6 +12,14 @@ public class CreateUser
   public required string Data { get; set; }
 }
 
+public class UpdateUser
+{
+  public required string IdentityProviderUserId { get; set; }
+  public required string IdentityProvider { get; set; }
+  public required string Data { get; set; }
+}
+
+
 public class AssignRole
 {
   public required string RoleId { get; set; }
@@ -48,6 +56,18 @@ public static class UserHandlers
       orgId: orgId
     ));
   }
+
+  public static async Task<IResult> UpdateUserAsync(string userId, string orgId, UpdateUser updateUser)
+  {
+    return ApiResult.ToResult(await UserService.UpdateUserAsync(
+      userId: userId,
+      identityProviderUserId: updateUser.IdentityProviderUserId,
+      identityProvider: updateUser.IdentityProvider,
+      data: updateUser.Data,
+      orgId: orgId
+    ));
+  }
+
 
   public static async Task<IResult> AssignRoleAsync(string userId, string orgId, AssignRole assignRole)
   {

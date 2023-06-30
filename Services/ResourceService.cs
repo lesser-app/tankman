@@ -116,6 +116,16 @@ public static class ResourceService
     return resource;
   }
 
+  public static async Task<OneOf<Resource, Error<string>>> UpdateResourceAsync(string resourceId, string data, string orgId)
+  {
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
+    var dbContext = new TankmanDbContext();
+    var resource = await dbContext.Resources.SingleAsync(x => x.Id == normalizedResourceId && x.OrgId == orgId);
+    resource.Data = data;
+    await dbContext.SaveChangesAsync();
+    return resource;
+  }
+
   public static async Task<OneOf<bool, Error<string>>> DeleteResourceAsync(string resourceId, string orgId)
   {
     var dbContext = new TankmanDbContext();

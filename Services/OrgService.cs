@@ -40,6 +40,17 @@ public static class OrgService
     return org;
   }
 
+  public static async Task<OneOf<Org, Error<string>>> UpdateOrgAsync(string orgId, string data)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var org = await dbContext.Orgs.SingleAsync(x => x.Id == orgId);
+    org.Data = data;    
+    await dbContext.SaveChangesAsync();
+
+    return org;
+  }
+
   public static async Task<OneOf<bool, Error<string>>> DeleteOrgAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();

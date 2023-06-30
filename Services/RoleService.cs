@@ -36,6 +36,15 @@ public static class RoleService
     return role;
   }
 
+  public static async Task<OneOf<Role, Error<string>>> UpdateRoleAsync(string roleId, string data, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+    var role = await dbContext.Roles.SingleAsync(x => x.Id == roleId && x.OrgId == orgId);
+    role.Data = data;
+    await dbContext.SaveChangesAsync();
+    return role;
+  }
+
   public static async Task<OneOf<bool, Error<string>>> DeleteRoleAsync(string roleId, string orgId)
   {
     var dbContext = new TankmanDbContext();

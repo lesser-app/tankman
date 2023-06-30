@@ -10,6 +10,11 @@ public class CreateOrg
   public required string Data { get; set; }
 }
 
+public class UpdateOrg
+{
+  public required string Data { get; set; }
+}
+
 public static class OrgHandlers
 {
   public static async Task<IResult> GetOrgsAsync(string? orgId)
@@ -17,9 +22,14 @@ public static class OrgHandlers
     return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard));
   }
 
-  public static async Task<IResult> CreateOrgAsync(CreateOrg org)
+  public static async Task<IResult> CreateOrgAsync(CreateOrg createOrg)
   {
-    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: org.Id, data: org.Data));
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: createOrg.Id, data: createOrg.Data));
+  }
+
+  public static async Task<IResult> UpdateOrgAsync(string orgId, UpdateOrg updateOrg)
+  {
+    return ApiResult.ToResult(await OrgService.UpdateOrgAsync(orgId: orgId, data: updateOrg.Data));
   }
 
   public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)

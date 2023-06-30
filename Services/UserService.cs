@@ -58,13 +58,24 @@ public static class UserService
     var user = new User
     {
       Id = userId,
-      Data = data,      
+      Data = data,
       IdentityProviderUserId = identityProviderUserId,
       IdentityProvider = identityProvider,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId
     };
     dbContext.Users.Add(user);
+    await dbContext.SaveChangesAsync();
+    return user;
+  }
+
+  public static async Task<OneOf<User, Error<string>>> UpdateUserAsync(string userId, string identityProviderUserId, string identityProvider, string data, string orgId)
+  {
+    var dbContext = new TankmanDbContext();    
+    var user = await dbContext.Users.SingleAsync((x) => x.Id == userId && x.OrgId == orgId);
+    user.IdentityProviderUserId = identityProviderUserId;
+    user.IdentityProvider = identityProvider;
+    user.Data = data;
     await dbContext.SaveChangesAsync();
     return user;
   }

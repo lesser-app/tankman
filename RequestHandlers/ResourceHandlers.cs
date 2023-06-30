@@ -10,6 +10,11 @@ public class CreateResource
   public required string Data { get; set; }
 }
 
+public class UpdateResource
+{
+  public required string Data { get; set; }
+}
+
 public static class ResourceHandlers
 {
   public static async Task<IResult> GetResourcesAsync(string? resourceId, string orgId, int? depth, int? from, int? limit)
@@ -20,6 +25,11 @@ public static class ResourceHandlers
   public static async Task<IResult> CreateResourceAsync(string orgId, CreateResource createResource)
   {
     return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, data: createResource.Data, orgId: orgId));
+  }
+
+  public static async Task<IResult> UpdateResourceAsync(string resourceId, string orgId, UpdateResource updateResource)
+  {
+    return ApiResult.ToResult(await ResourceService.UpdateResourceAsync(resourceId: resourceId, data: updateResource.Data, orgId: orgId));
   }
 
   public static async Task<IResult> DeleteResourceAsync(string resourceId, string orgId)
