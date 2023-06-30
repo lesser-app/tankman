@@ -7,6 +7,13 @@ using tankman.Types;
 
 namespace tankman.Services;
 
+
+public class UserPermissionResourcePathJoin : IPathScanEntityInJoin<ResourcePath>
+{
+  public required UserPermission UserPermission { get; set; }
+  public required ResourcePath ResourcePath { get; set; }
+}
+
 public static class UserPermissionService
 {
   public static async Task<OneOf<UserPermission, Error<string>>> CreateUserPermissionAsync(string userId, string resourceId, string action, string orgId)
@@ -30,15 +37,38 @@ public static class UserPermissionService
   public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
     var dbContext = new TankmanDbContext();
+    var normalizedResourceId = Paths.Normalize(resourceId);
+    var parts = normalizedResourceId.Split("/").Skip(1).ToList();
 
-    var permissions = await dbContext.UserPermissions
-      .ApplyOrgFilter(orgId)
-      .ApplyUsersFilter(userId)
-      .ApplyActionsFilter(action)
-      .ApplyResourceFilter(resourceId)
-      .ToListAsync();
+    if (Paths.IsWildcard(resourceId))
+    {
+      var baseQuery = dbContext.UserPermissions
+          .ApplyOrgFilter(orgId)
+          .ApplyUsersFilter(userId)
+          .ApplyActionsFilter(action);
 
-    return permissions;
+      var userPermissionsQuery = baseQuery.Join(
+          dbContext.ResourcePaths,
+          (x) => x.ResourceId,
+          (x) => x.ResourceId,
+          (perm, path) => new UserPermissionResourcePathJoin { UserPermission = perm, ResourcePath = path }
+        )
+        .ApplyPathScanFilterToJoin<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
+        .Select((x) => x.UserPermission);
+
+      return await userPermissionsQuery.ToListAsync();
+    }
+    else
+    {
+      var permissions = await dbContext.UserPermissions
+        .ApplyOrgFilter(orgId)
+        .ApplyUsersFilter(userId)
+        .ApplyActionsFilter(action)
+        .ApplyExactResourceFilter(resourceId)
+        .ToListAsync();
+
+      return permissions;
+    }
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionsAsync(string userId, string resourceId, string action, string orgId)

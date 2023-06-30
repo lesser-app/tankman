@@ -1,7 +1,6 @@
 using tankman.Http;
-using tankman.Models;
+using tankman.Utils;
 using tankman.Services;
-using tankman.Types;
 
 namespace tankman.RequestHandlers;
 
@@ -14,12 +13,12 @@ public class CreateRolePermission
 
 public static class RolePermissionHandlers
 {
-  public static async Task<IResult> GetRolePermissionsAsync(string orgId, string roleId, string action, string resourceId)
+  public static async Task<IResult> GetRolePermissionsAsync(string orgId, string roleId, string? action, string resourceId)
   {
     return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsAsync(
       roleId: roleId,
       resourceId: resourceId,
-      action: action,
+      action: action ?? Settings.Separator,
       orgId: orgId
     ));
   }
@@ -29,7 +28,7 @@ public static class RolePermissionHandlers
     return ApiResult.ToResult(await RolePermissionService.CreateRolePermissionAsync(
       roleId: createPermission.RoleId,
       resourceId: createPermission.ResourceId,
-      action: createPermission.Action, 
+      action: createPermission.Action,
       orgId: orgId
     ));
   }
@@ -37,10 +36,10 @@ public static class RolePermissionHandlers
   public static async Task<IResult> DeleteRolePermissionAsync(string roleId, string resourceId, string action, string orgId)
   {
     return ApiResult.ToResult(await RolePermissionService.DeleteRolePermissionsAsync(
-      roleId:roleId, 
-      resourceId:resourceId, 
-      action:action, 
-      orgId:orgId
+      roleId: roleId,
+      resourceId: resourceId,
+      action: action,
+      orgId: orgId
     ));
   }
 }

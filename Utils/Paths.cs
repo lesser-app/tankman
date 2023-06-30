@@ -13,4 +13,9 @@ public static class Paths
   {
     return path.Substring(0, path.Length - text.Length);
   }
+
+  public static bool IsWildcard(string path)
+  {
+    return path.EndsWith(Settings.Wildcard);
+  }
 }

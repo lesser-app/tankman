@@ -14,6 +14,8 @@ public class Resource : IPathedEntity, IOrgAssociated
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
 
+  public ResourcePath? ResourcePath { get; set; }
+
   public List<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 
   public List<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();

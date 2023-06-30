@@ -14,6 +14,33 @@ public interface IPathedEntity
   string Id { get; }
 }
 
+public interface IPathScanEntityInJoin<T> where T : IPathScanEntity
+{
+  T ResourcePath { get; }
+}
+
+public interface IPathScanEntity
+{
+  string ResourceId { get; }
+  string ParentId { get; }
+  string Root1Id { get; }
+  string Root2Id { get; }
+  string Root3Id { get; }
+  string Root4Id { get; }
+  string Root5Id { get; }
+  string Root6Id { get; }
+  string Root7Id { get; }
+  string Root8Id { get; }
+  string Root9Id { get; }
+  string Root10Id { get; }
+  string Root11Id { get; }
+  string Root12Id { get; }
+  string Root13Id { get; }
+  string Root14Id { get; }
+  string Root15Id { get; }
+  string Root16Id { get; }
+}
+
 public interface IOrgAssociated
 {
   string OrgId { get; }
@@ -55,14 +82,34 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyPathedIdFilter<T>(this IQueryable<T> baseQuery, string id) where T : IPathedEntity
+  public static IQueryable<T> ApplyPathedExactIdFilter<T>(this IQueryable<T> baseQuery, string id) where T : IPathedEntity
   {
-    return ApplyPathedFilterImpl(
-      baseQuery,
-      id,
-      (normalizedPath) => (x) => x.Id == normalizedPath || EF.Functions.ILike(x.Id, $"{normalizedPath}/%"),
-      (normalizedPath) => (x) => x.Id == normalizedPath
-      );
+    return baseQuery.Where((x) => x.Id == id);
+  }
+
+  public static IQueryable<TJoin> ApplyPathScanFilterToJoin<TJoin, TPathScanEntity>(this IQueryable<TJoin> baseQuery, string normalizedResourceId, int partsLength)
+    where TJoin : IPathScanEntityInJoin<TPathScanEntity>
+    where TPathScanEntity : IPathScanEntity
+  {
+    var parts = normalizedResourceId.Split("/").Skip(1).ToList();
+
+    return (partsLength == 1
+                ? baseQuery.Where((x) => x.ResourcePath.Root1Id == normalizedResourceId)
+                : partsLength == 2
+                ? baseQuery.Where((x) => x.ResourcePath.Root2Id == normalizedResourceId)
+                : partsLength == 3
+                ? baseQuery.Where((x) => x.ResourcePath.Root3Id == normalizedResourceId)
+                : partsLength == 4
+                ? baseQuery.Where((x) => x.ResourcePath.Root4Id == normalizedResourceId)
+                : partsLength == 5
+                ? baseQuery.Where((x) => x.ResourcePath.Root5Id == normalizedResourceId)
+                : partsLength == 6
+                ? baseQuery.Where((x) => x.ResourcePath.Root6Id == normalizedResourceId)
+                : partsLength == 7
+                ? baseQuery.Where((x) => x.ResourcePath.Root7Id == normalizedResourceId)
+                : partsLength == 8
+                ? baseQuery.Where((x) => x.ResourcePath.Root8Id == normalizedResourceId)
+                : throw new Exception("Internal error. Shouldn't get here."));
   }
 
   public static IQueryable<T> ApplyOrgFilter<T>(this IQueryable<T> baseQuery, string orgId) where T : IOrgAssociated
@@ -109,34 +156,40 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyResourceFilter<T>(this IQueryable<T> baseQuery, string resourceId) where T : IResourceAssociated
+  public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string resourceId) where T : IResourceAssociated
   {
-    return ApplyPathedFilterImpl(
-      baseQuery,
-      resourceId,
-      (normalizedPath) => (x) => x.ResourceId == normalizedPath || EF.Functions.ILike(x.ResourceId, $"{normalizedPath}/%"),
-      (normalizedPath) => (x) => x.ResourceId == normalizedPath);
+    return baseQuery.Where((x) => x.ResourceId == resourceId);
   }
 
-  private static IQueryable<T> ApplyPathedFilterImpl<T>(this IQueryable<T> baseQuery, string id, Func<string, Expression<Func<T, bool>>> makeWildcardPredicate, Func<string, Expression<Func<T, bool>>> makeExactPredicate)
-  {
-    var isWildCardResource = id.EndsWith(Settings.Wildcard);
 
-    if (isWildCardResource)
-    {
-      id = Paths.StripFromEnd(id, Settings.Wildcard);
-    }
+  // public static IQueryable<T> ApplyResourceFilter<T>(this IQueryable<T> baseQuery, string resourceId) where T : IResourceAssociated
+  // {
+  //   return ApplyPathedFilterImpl(
+  //     baseQuery,
+  //     resourceId,
+  //     (normalizedPath) => (x) => x.ResourceId == normalizedPath || EF.Functions.ILike(x.ResourceId, $"{normalizedPath}/%"),
+  //     (normalizedPath) => (x) => x.ResourceId == normalizedPath);
+  // }
 
-    var normalizedPath = Paths.Normalize(id);
+  // private static IQueryable<T> ApplyPathedFilterImpl<T>(this IQueryable<T> baseQuery, string id, Func<string, Expression<Func<T, bool>>> makeWildcardPredicate, Func<string, Expression<Func<T, bool>>> makeExactPredicate)
+  // {
+  //   var isWildCardResource = id.EndsWith(Settings.Wildcard);
 
-    var wildcardPredicate = makeWildcardPredicate(normalizedPath);
-    var exactPredicate = makeExactPredicate(normalizedPath);
+  //   if (isWildCardResource)
+  //   {
+  //     id = Paths.StripFromEnd(id, Settings.Wildcard);
+  //   }
 
-    return isWildCardResource
-      ? (normalizedPath == "")
-        ? baseQuery
-        : baseQuery.Where(wildcardPredicate)
-      : baseQuery.Where(exactPredicate);
-  }
+  //   var normalizedPath = Paths.Normalize(id);
+
+  //   var wildcardPredicate = makeWildcardPredicate(normalizedPath);
+  //   var exactPredicate = makeExactPredicate(normalizedPath);
+
+  //   return isWildCardResource
+  //     ? (normalizedPath == "")
+  //       ? baseQuery
+  //       : baseQuery.Where(wildcardPredicate)
+  //     : baseQuery.Where(exactPredicate);
+  // }
 
 }

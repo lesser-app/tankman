@@ -83,6 +83,40 @@ namespace tankman.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "resource_paths",
+                columns: table => new
+                {
+                    resource_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    parent_id = table.Column<string>(type: "text", nullable: false),
+                    root1id = table.Column<string>(type: "text", nullable: false),
+                    root2id = table.Column<string>(type: "text", nullable: false),
+                    root3id = table.Column<string>(type: "text", nullable: false),
+                    root4id = table.Column<string>(type: "text", nullable: false),
+                    root5id = table.Column<string>(type: "text", nullable: false),
+                    root6id = table.Column<string>(type: "text", nullable: false),
+                    root7id = table.Column<string>(type: "text", nullable: false),
+                    root8id = table.Column<string>(type: "text", nullable: false),
+                    depth = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_resource_paths", x => new { x.resource_id, x.org_id });
+                    table.ForeignKey(
+                        name: "fk_resource_paths_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_resource_paths_resources_resource_id_org_id",
+                        columns: x => new { x.resource_id, x.org_id },
+                        principalTable: "resources",
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "role_permissions",
                 columns: table => new
                 {
@@ -181,6 +215,11 @@ namespace tankman.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "ix_resource_paths_org_id",
+                table: "resource_paths",
+                column: "org_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_resources_org_id",
                 table: "resources",
                 column: "org_id");
@@ -244,6 +283,9 @@ namespace tankman.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "resource_paths");
+
             migrationBuilder.DropTable(
                 name: "role_assignments");
 

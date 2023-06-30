@@ -61,6 +61,74 @@ namespace tankman.Migrations
                     b.ToTable("resources", (string)null);
                 });
 
+            modelBuilder.Entity("tankman.Models.ResourcePath", b =>
+                {
+                    b.Property<string>("ResourceId")
+                        .HasColumnType("text")
+                        .HasColumnName("resource_id");
+
+                    b.Property<string>("OrgId")
+                        .HasColumnType("text")
+                        .HasColumnName("org_id");
+
+                    b.Property<int>("Depth")
+                        .HasColumnType("integer")
+                        .HasColumnName("depth");
+
+                    b.Property<string>("ParentId")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent_id");
+
+                    b.Property<string>("Root1Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root1id");
+
+                    b.Property<string>("Root2Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root2id");
+
+                    b.Property<string>("Root3Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root3id");
+
+                    b.Property<string>("Root4Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root4id");
+
+                    b.Property<string>("Root5Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root5id");
+
+                    b.Property<string>("Root6Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root6id");
+
+                    b.Property<string>("Root7Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root7id");
+
+                    b.Property<string>("Root8Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("root8id");
+
+                    b.HasKey("ResourceId", "OrgId")
+                        .HasName("pk_resource_paths");
+
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_resource_paths_org_id");
+
+                    b.ToTable("resource_paths", (string)null);
+                });
+
             modelBuilder.Entity("tankman.Models.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -236,6 +304,27 @@ namespace tankman.Migrations
                         .HasConstraintName("fk_resources_orgs_org_id");
 
                     b.Navigation("Org");
+                });
+
+            modelBuilder.Entity("tankman.Models.ResourcePath", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_resource_paths_orgs_org_id");
+
+                    b.HasOne("tankman.Models.Resource", "Resource")
+                        .WithMany()
+                        .HasForeignKey("ResourceId", "OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_resource_paths_resources_resource_id_org_id");
+
+                    b.Navigation("Org");
+
+                    b.Navigation("Resource");
                 });
 
             modelBuilder.Entity("tankman.Models.Role", b =>
