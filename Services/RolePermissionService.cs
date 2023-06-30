@@ -74,7 +74,7 @@ public static class RolePermissionService
         .ApplyOrgFilter(orgId)
         .ApplyRolesFilter(roleId)
         .ApplyActionsFilter(action)
-        .ApplyExactResourceFilter(resourceId)
+        .ApplyExactResourceFilter(normalizedResourceId)
         .ToListAsync();
 
       return permissions;

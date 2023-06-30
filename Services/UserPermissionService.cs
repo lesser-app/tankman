@@ -74,7 +74,7 @@ public static class UserPermissionService
         .ApplyOrgFilter(orgId)
         .ApplyUsersFilter(userId)
         .ApplyActionsFilter(action)
-        .ApplyExactResourceFilter(resourceId)
+        .ApplyExactResourceFilter(normalizedResourceId)
         .ToListAsync();
 
       return permissions;

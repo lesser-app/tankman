@@ -13,10 +13,10 @@ public class CreateUserPermission
 
 public static class UserPermissionHandlers
 {
-  public static async Task<IResult> GetUserPermissionsAsync(string orgId, string userId, string? action, string resourceId)
+  public static async Task<IResult> GetUserPermissionsAsync(string orgId, string userId, string? action, string? resourceId)
   {
     return ApiResult.ToResult(await UserPermissionService.GetUserPermissionsAsync(
-      resourceId: resourceId,
+      resourceId: resourceId ?? "/" + Settings.Wildcard,
       action: action ?? Settings.Wildcard,
       userId: userId,
       orgId: orgId
