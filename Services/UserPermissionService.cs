@@ -8,7 +8,7 @@ using tankman.Types;
 namespace tankman.Services;
 
 
-public class UserPermissionResourcePathJoin : IPathScanEntityInJoin<ResourcePath>
+public class UserPermissionResourcePathJoin : IPathSearchHelperEntityInJoin<ResourcePath>
 {
   public required UserPermission UserPermission { get; set; }
   public required ResourcePath ResourcePath { get; set; }
@@ -18,7 +18,7 @@ public static class UserPermissionService
 {
   public static async Task<OneOf<UserPermission, Error<string>>> CreateUserPermissionAsync(string userId, string resourceId, string action, string orgId)
   {
-    var normalizedResourceId = Paths.Normalize(resourceId);
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
 
     var dbContext = new TankmanDbContext();
     var userPermission = new UserPermission
@@ -37,26 +37,36 @@ public static class UserPermissionService
   public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
     var dbContext = new TankmanDbContext();
-    var normalizedResourceId = Paths.Normalize(resourceId);
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
     var parts = normalizedResourceId.Split("/").Skip(1).ToList();
 
-    if (Paths.IsWildcard(resourceId))
+    if (isWildcard)
     {
-      var baseQuery = dbContext.UserPermissions
-          .ApplyOrgFilter(orgId)
-          .ApplyUsersFilter(userId)
-          .ApplyActionsFilter(action);
+      if (normalizedResourceId == "/")
+      {
+        return await dbContext.UserPermissions
+                   .ApplyOrgFilter(orgId)
+                   .ApplyUsersFilter(userId)
+                   .ApplyActionsFilter(action).ToListAsync();
+      }
+      else
+      {
+        var baseQuery = dbContext.UserPermissions
+            .ApplyOrgFilter(orgId)
+            .ApplyUsersFilter(userId)
+            .ApplyActionsFilter(action);
 
-      var userPermissionsQuery = baseQuery.Join(
-          dbContext.ResourcePaths,
-          (x) => x.ResourceId,
-          (x) => x.ResourceId,
-          (perm, path) => new UserPermissionResourcePathJoin { UserPermission = perm, ResourcePath = path }
-        )
-        .ApplyPathScanFilterToJoin<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
-        .Select((x) => x.UserPermission);
+        var userPermissionsQuery = baseQuery.Join(
+            dbContext.ResourcePaths,
+            (x) => x.ResourceId,
+            (x) => x.ResourceId,
+            (perm, path) => new UserPermissionResourcePathJoin { UserPermission = perm, ResourcePath = path }
+          )
+          .UsePathScanOptimization<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
+          .Select((x) => x.UserPermission);
 
-      return await userPermissionsQuery.ToListAsync();
+        return await userPermissionsQuery.ToListAsync();
+      }
     }
     else
     {

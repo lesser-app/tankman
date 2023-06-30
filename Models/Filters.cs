@@ -14,31 +14,31 @@ public interface IPathedEntity
   string Id { get; }
 }
 
-public interface IPathScanEntityInJoin<T> where T : IPathScanEntity
+public interface IPathSearchHelperEntityInJoin<T> where T : IPathSearchHelperEntity
 {
   T ResourcePath { get; }
 }
 
-public interface IPathScanEntity
+public interface IPathSearchHelperEntity
 {
   string ResourceId { get; }
   string ParentId { get; }
-  string Root1Id { get; }
-  string Root2Id { get; }
-  string Root3Id { get; }
-  string Root4Id { get; }
-  string Root5Id { get; }
-  string Root6Id { get; }
-  string Root7Id { get; }
-  string Root8Id { get; }
-  string Root9Id { get; }
-  string Root10Id { get; }
-  string Root11Id { get; }
-  string Root12Id { get; }
-  string Root13Id { get; }
-  string Root14Id { get; }
-  string Root15Id { get; }
-  string Root16Id { get; }
+  string Parent1Id { get; }
+  string Parent2Id { get; }
+  string Parent3Id { get; }
+  string Parent4Id { get; }
+  string Parent5Id { get; }
+  string Parent6Id { get; }
+  string Parent7Id { get; }
+  string Parent8Id { get; }
+  string Parent9Id { get; }
+  string Parent10Id { get; }
+  string Parent11Id { get; }
+  string Parent12Id { get; }
+  string Parent13Id { get; }
+  string Parent14Id { get; }
+  string Parent15Id { get; }
+  string Parent16Id { get; }
 }
 
 public interface IOrgAssociated
@@ -87,28 +87,42 @@ public static class Filters
     return baseQuery.Where((x) => x.Id == id);
   }
 
-  public static IQueryable<TJoin> ApplyPathScanFilterToJoin<TJoin, TPathScanEntity>(this IQueryable<TJoin> baseQuery, string normalizedResourceId, int partsLength)
-    where TJoin : IPathScanEntityInJoin<TPathScanEntity>
-    where TPathScanEntity : IPathScanEntity
+  public static IQueryable<TJoin> UsePathScanOptimization<TJoin, TPathScanEntity>(this IQueryable<TJoin> baseQuery, string normalizedResourceId, int partsLength)
+    where TJoin : IPathSearchHelperEntityInJoin<TPathScanEntity>
+    where TPathScanEntity : IPathSearchHelperEntity
   {
-    var parts = normalizedResourceId.Split("/").Skip(1).ToList();
-
     return (partsLength == 1
-                ? baseQuery.Where((x) => x.ResourcePath.Root1Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent1Id == normalizedResourceId)
                 : partsLength == 2
-                ? baseQuery.Where((x) => x.ResourcePath.Root2Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent2Id == normalizedResourceId)
                 : partsLength == 3
-                ? baseQuery.Where((x) => x.ResourcePath.Root3Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent3Id == normalizedResourceId)
                 : partsLength == 4
-                ? baseQuery.Where((x) => x.ResourcePath.Root4Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent4Id == normalizedResourceId)
                 : partsLength == 5
-                ? baseQuery.Where((x) => x.ResourcePath.Root5Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent5Id == normalizedResourceId)
                 : partsLength == 6
-                ? baseQuery.Where((x) => x.ResourcePath.Root6Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent6Id == normalizedResourceId)
                 : partsLength == 7
-                ? baseQuery.Where((x) => x.ResourcePath.Root7Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent7Id == normalizedResourceId)
                 : partsLength == 8
-                ? baseQuery.Where((x) => x.ResourcePath.Root8Id == normalizedResourceId)
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent8Id == normalizedResourceId)
+                : partsLength == 9
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent9Id == normalizedResourceId)
+                : partsLength == 10
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent10Id == normalizedResourceId)
+                : partsLength == 11
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent11Id == normalizedResourceId)
+                : partsLength == 12
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent12Id == normalizedResourceId)
+                : partsLength == 13
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent13Id == normalizedResourceId)
+                : partsLength == 14
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent14Id == normalizedResourceId)
+                : partsLength == 15
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent15Id == normalizedResourceId)
+                : partsLength == 16
+                ? baseQuery.Where((x) => x.ResourcePath.ResourceId == normalizedResourceId || x.ResourcePath.Parent16Id == normalizedResourceId)
                 : throw new Exception("Internal error. Shouldn't get here."));
   }
 
@@ -160,36 +174,4 @@ public static class Filters
   {
     return baseQuery.Where((x) => x.ResourceId == resourceId);
   }
-
-
-  // public static IQueryable<T> ApplyResourceFilter<T>(this IQueryable<T> baseQuery, string resourceId) where T : IResourceAssociated
-  // {
-  //   return ApplyPathedFilterImpl(
-  //     baseQuery,
-  //     resourceId,
-  //     (normalizedPath) => (x) => x.ResourceId == normalizedPath || EF.Functions.ILike(x.ResourceId, $"{normalizedPath}/%"),
-  //     (normalizedPath) => (x) => x.ResourceId == normalizedPath);
-  // }
-
-  // private static IQueryable<T> ApplyPathedFilterImpl<T>(this IQueryable<T> baseQuery, string id, Func<string, Expression<Func<T, bool>>> makeWildcardPredicate, Func<string, Expression<Func<T, bool>>> makeExactPredicate)
-  // {
-  //   var isWildCardResource = id.EndsWith(Settings.Wildcard);
-
-  //   if (isWildCardResource)
-  //   {
-  //     id = Paths.StripFromEnd(id, Settings.Wildcard);
-  //   }
-
-  //   var normalizedPath = Paths.Normalize(id);
-
-  //   var wildcardPredicate = makeWildcardPredicate(normalizedPath);
-  //   var exactPredicate = makeExactPredicate(normalizedPath);
-
-  //   return isWildCardResource
-  //     ? (normalizedPath == "")
-  //       ? baseQuery
-  //       : baseQuery.Where(wildcardPredicate)
-  //     : baseQuery.Where(exactPredicate);
-  // }
-
 }

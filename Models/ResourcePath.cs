@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(ResourceId), nameof(OrgId))]
-public class ResourcePath : IPathScanEntity, IOrgAssociated
+public class ResourcePath : IPathSearchHelperEntity, IOrgAssociated
 {
   public required string ResourceId { get; set; }
   [ForeignKey(nameof(ResourceId) + "," + nameof(OrgId))]
@@ -12,22 +12,22 @@ public class ResourcePath : IPathScanEntity, IOrgAssociated
 
   public required string ParentId { get; set; }
   
-  public required string Root1Id { get; set; }
-  public required string Root2Id { get; set; }
-  public required string Root3Id { get; set; }
-  public required string Root4Id { get; set; }
-  public required string Root5Id { get; set; }
-  public required string Root6Id { get; set; }
-  public required string Root7Id { get; set; }
-  public required string Root8Id { get; set; }
-  public required string Root9Id { get; set; }
-  public required string Root10Id { get; set; }
-  public required string Root11Id { get; set; }
-  public required string Root12Id { get; set; }
-  public required string Root13Id { get; set; }
-  public required string Root14Id { get; set; }
-  public required string Root15Id { get; set; }
-  public required string Root16Id { get; set; }
+  public required string Parent1Id { get; set; }
+  public required string Parent2Id { get; set; }
+  public required string Parent3Id { get; set; }
+  public required string Parent4Id { get; set; }
+  public required string Parent5Id { get; set; }
+  public required string Parent6Id { get; set; }
+  public required string Parent7Id { get; set; }
+  public required string Parent8Id { get; set; }
+  public required string Parent9Id { get; set; }
+  public required string Parent10Id { get; set; }
+  public required string Parent11Id { get; set; }
+  public required string Parent12Id { get; set; }
+  public required string Parent13Id { get; set; }
+  public required string Parent14Id { get; set; }
+  public required string Parent15Id { get; set; }
+  public required string Parent16Id { get; set; }
 
   // How deep is the resource identifiers?
   // eg: /a/b/c = 3

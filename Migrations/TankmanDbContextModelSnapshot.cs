@@ -75,50 +75,90 @@ namespace tankman.Migrations
                         .HasColumnType("integer")
                         .HasColumnName("depth");
 
+                    b.Property<string>("Parent10Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent10id");
+
+                    b.Property<string>("Parent11Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent11id");
+
+                    b.Property<string>("Parent12Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent12id");
+
+                    b.Property<string>("Parent13Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent13id");
+
+                    b.Property<string>("Parent14Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent14id");
+
+                    b.Property<string>("Parent15Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent15id");
+
+                    b.Property<string>("Parent16Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent16id");
+
+                    b.Property<string>("Parent1Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent1id");
+
+                    b.Property<string>("Parent2Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent2id");
+
+                    b.Property<string>("Parent3Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent3id");
+
+                    b.Property<string>("Parent4Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent4id");
+
+                    b.Property<string>("Parent5Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent5id");
+
+                    b.Property<string>("Parent6Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent6id");
+
+                    b.Property<string>("Parent7Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent7id");
+
+                    b.Property<string>("Parent8Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent8id");
+
+                    b.Property<string>("Parent9Id")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("parent9id");
+
                     b.Property<string>("ParentId")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("parent_id");
-
-                    b.Property<string>("Root1Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root1id");
-
-                    b.Property<string>("Root2Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root2id");
-
-                    b.Property<string>("Root3Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root3id");
-
-                    b.Property<string>("Root4Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root4id");
-
-                    b.Property<string>("Root5Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root5id");
-
-                    b.Property<string>("Root6Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root6id");
-
-                    b.Property<string>("Root7Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root7id");
-
-                    b.Property<string>("Root8Id")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("root8id");
 
                     b.HasKey("ResourceId", "OrgId")
                         .HasName("pk_resource_paths");
@@ -316,8 +356,8 @@ namespace tankman.Migrations
                         .HasConstraintName("fk_resource_paths_orgs_org_id");
 
                     b.HasOne("tankman.Models.Resource", "Resource")
-                        .WithMany()
-                        .HasForeignKey("ResourceId", "OrgId")
+                        .WithOne("ResourcePath")
+                        .HasForeignKey("tankman.Models.ResourcePath", "ResourceId", "OrgId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_resource_paths_resources_resource_id_org_id");
@@ -452,6 +492,8 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.Resource", b =>
                 {
+                    b.Navigation("ResourcePath");
+
                     b.Navigation("RolePermissions");
 
                     b.Navigation("UserPermissions");
