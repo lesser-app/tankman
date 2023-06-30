@@ -7,6 +7,7 @@ namespace tankman.RequestHandlers;
 public class CreateResource
 {
   public required string Id { get; set; }
+  public required string Data { get; set; }
 }
 
 public static class ResourceHandlers
@@ -18,7 +19,7 @@ public static class ResourceHandlers
 
   public static async Task<IResult> CreateResourceAsync(string orgId, CreateResource createResource)
   {
-    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, orgId: orgId));
+    return ApiResult.ToResult(await ResourceService.CreateResourceAsync(resourceId: createResource.Id, data: createResource.Data, orgId: orgId));
   }
 
   public static async Task<IResult> DeleteResourceAsync(string resourceId, string orgId)

@@ -32,6 +32,11 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
+
                     b.HasKey("Id")
                         .HasName("pk_orgs");
 
@@ -51,6 +56,11 @@ namespace tankman.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
 
                     b.HasKey("Id", "OrgId")
                         .HasName("pk_resources");
@@ -183,6 +193,11 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
+
                     b.HasKey("Id", "OrgId")
                         .HasName("pk_roles");
 
@@ -276,6 +291,11 @@ namespace tankman.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
 
                     b.Property<string>("IdentityProvider")
                         .IsRequired()

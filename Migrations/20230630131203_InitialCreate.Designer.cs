@@ -12,7 +12,7 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230630084958_InitialCreate")]
+    [Migration("20230630131203_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -35,6 +35,11 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
+
                     b.HasKey("Id")
                         .HasName("pk_orgs");
 
@@ -54,6 +59,11 @@ namespace tankman.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
 
                     b.HasKey("Id", "OrgId")
                         .HasName("pk_resources");
@@ -186,6 +196,11 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
+
                     b.HasKey("Id", "OrgId")
                         .HasName("pk_roles");
 
@@ -279,6 +294,11 @@ namespace tankman.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("data");
 
                     b.Property<string>("IdentityProvider")
                         .IsRequired()

@@ -8,6 +8,8 @@ public class Resource : IPathedEntity, IOrgAssociated
 {
   public required string Id { get; set; }
 
+  public required string Data { get; set; }
+
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
   public required string OrgId { get; set; }

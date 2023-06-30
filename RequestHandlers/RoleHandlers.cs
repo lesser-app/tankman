@@ -7,6 +7,7 @@ namespace tankman.RequestHandlers;
 public class CreateRole
 {
   public required string Id { get; set; }
+  public required string Data { get; set; }
 }
 
 public static class RoleHandlers
@@ -18,7 +19,7 @@ public static class RoleHandlers
 
   public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole createRole)
   {
-    return ApiResult.ToResult(await RoleService.CreateRoleAsync(roleId: createRole.Id, orgId: orgId));
+    return ApiResult.ToResult(await RoleService.CreateRoleAsync(roleId: createRole.Id, data: createRole.Data, orgId: orgId));
   }
 
   public static async Task<IResult> DeleteRoleAsync(string roleId, string orgId)

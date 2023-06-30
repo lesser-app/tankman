@@ -52,12 +52,13 @@ public static class UserService
     return users;
   }
 
-  public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string userId, string identityProviderUserId, string identityProvider, string orgId)
+  public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string userId, string identityProviderUserId, string identityProvider, string data, string orgId)
   {
     var dbContext = new TankmanDbContext();
     var user = new User
     {
       Id = userId,
+      Data = data,      
       IdentityProviderUserId = identityProviderUserId,
       IdentityProvider = identityProvider,
       CreatedAt = DateTime.UtcNow,

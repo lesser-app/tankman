@@ -61,7 +61,7 @@ public static class ResourceService
     }
   }
 
-  public static async Task<OneOf<Resource, Error<string>>> CreateResourceAsync(string resourceId, string orgId)
+  public static async Task<OneOf<Resource, Error<string>>> CreateResourceAsync(string resourceId, string data, string orgId)
   {
     var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
 
@@ -69,6 +69,7 @@ public static class ResourceService
     var resource = new Resource
     {
       Id = normalizedResourceId,
+      Data = data,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId,
     };
@@ -109,6 +110,9 @@ public static class ResourceService
     dbContext.ResourcePaths.Add(resourcePath);
 
     await dbContext.SaveChangesAsync();
+
+    // Clear this.
+    resource.ResourcePath = null;
     return resource;
   }
 

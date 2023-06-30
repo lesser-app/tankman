@@ -9,6 +9,7 @@ public class CreateUser
   public required string Id { get; set; }
   public required string IdentityProviderUserId { get; set; }
   public required string IdentityProvider { get; set; }
+  public required string Data { get; set; }
 }
 
 public class AssignRole
@@ -43,6 +44,7 @@ public static class UserHandlers
       userId: createUser.Id,
       identityProviderUserId: createUser.IdentityProviderUserId,
       identityProvider: createUser.IdentityProvider,
+      data: createUser.Data,
       orgId: orgId
     ));
   }

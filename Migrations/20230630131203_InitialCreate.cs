@@ -16,7 +16,8 @@ namespace tankman.Migrations
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    data = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -29,6 +30,7 @@ namespace tankman.Migrations
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
+                    data = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -48,6 +50,7 @@ namespace tankman.Migrations
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
+                    data = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -67,6 +70,7 @@ namespace tankman.Migrations
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
+                    data = table.Column<string>(type: "text", nullable: false),
                     identity_provider = table.Column<string>(type: "text", nullable: false),
                     identity_provider_user_id = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)

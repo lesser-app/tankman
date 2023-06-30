@@ -18,7 +18,7 @@ public static class OrgService
       .ToListAsync();
   }
 
-  public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId)
+  public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId, string data)
   {
     if (String.IsNullOrWhiteSpace(orgId))
     {
@@ -30,6 +30,7 @@ public static class OrgService
     var org = new Org
     {
       Id = orgId,
+      Data = data,
       CreatedAt = DateTime.UtcNow,
     };
 

@@ -19,13 +19,14 @@ public static class RoleService
       .ToListAsync();
   }
 
-  public static async Task<OneOf<Role, Error<string>>> CreateRoleAsync(string roleId, string orgId)
+  public static async Task<OneOf<Role, Error<string>>> CreateRoleAsync(string roleId, string data, string orgId)
   {
     var dbContext = new TankmanDbContext();
 
     var role = new Role
     {
       Id = roleId,
+      Data = data,
       CreatedAt = DateTime.UtcNow,
       OrgId = orgId
     };

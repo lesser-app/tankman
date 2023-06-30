@@ -7,11 +7,7 @@ namespace tankman.RequestHandlers;
 public class CreateOrg
 {
   public required string Id { get; set; }
-}
-
-public class PatchOrg
-{
-  public required string Op { get; set; }
+  public required string Data { get; set; }
 }
 
 public static class OrgHandlers
@@ -23,7 +19,7 @@ public static class OrgHandlers
 
   public static async Task<IResult> CreateOrgAsync(CreateOrg org)
   {
-    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: org.Id));
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: org.Id, data: org.Data));
   }
 
   public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)

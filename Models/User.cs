@@ -8,6 +8,8 @@ public class User : IEntity, IOrgAssociated
 {
   public required string Id { get; set; }
 
+  public required string Data { get; set; }
+
   public required string IdentityProvider { get; set; }
 
   public required string IdentityProviderUserId { get; set; }
