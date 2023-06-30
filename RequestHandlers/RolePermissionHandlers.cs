@@ -25,16 +25,16 @@ public static class RolePermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<RolePermission> rolePermissions) => rolePermissions.Select(RolePermission.ToJson)
+      (List<RolePermission> entities) => entities.Select(RolePermission.ToJson)
     );
   }
 
-  public static async Task<IResult> CreateRolePermissionAsync(string orgId, CreateRolePermission createPermission)
+  public static async Task<IResult> CreateRolePermissionAsync(string orgId, CreateRolePermission create)
   {
     return ApiResult.ToResult(await RolePermissionService.CreateRolePermissionAsync(
-      roleId: createPermission.RoleId,
-      resourceId: createPermission.ResourceId,
-      action: createPermission.Action,
+      roleId: create.RoleId,
+      resourceId: create.ResourceId,
+      action: create.Action,
       orgId: orgId
     ), RolePermission.ToJson);
   }

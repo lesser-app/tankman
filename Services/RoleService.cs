@@ -15,6 +15,7 @@ public static class RoleService
     return await dbContext.Roles
       .ApplyOrgFilter(orgId)
       .ApplyIdFilter(roleId)
+      .Include(x => x.Properties)      
       .ApplyLimit()
       .ToListAsync();
   }
@@ -51,6 +52,48 @@ public static class RoleService
     var role = await dbContext.Roles.SingleAsync((x) => x.Id == roleId && x.OrgId == orgId);
     dbContext.Roles.Remove(role);
     await dbContext.SaveChangesAsync();
+    return true;
+  }
+
+  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string roleId, string name, string value, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var property = await dbContext.RoleProperties.SingleOrDefaultAsync(x => x.Name == name && x.RoleId == roleId && x.OrgId == orgId);
+
+    if (property != null)
+    {
+      property.Value = value;
+    }
+    else
+    {
+      var newProperty = new RoleProperty
+      {
+        Name = name,
+        Value = value,
+        RoleId = roleId,
+        OrgId = orgId,
+        CreatedAt = DateTime.UtcNow
+      };
+      dbContext.RoleProperties.Add(newProperty);
+    }
+
+    await dbContext.SaveChangesAsync();
+    return true;
+  }
+
+  public static async Task<OneOf<bool, Error<string>>> DeletePropertyAsync(string roleId, string name, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var property = await dbContext.RoleProperties.SingleOrDefaultAsync(x => x.Name == name && x.RoleId == roleId && x.OrgId == orgId);
+
+    if (property != null)
+    {
+      dbContext.RoleProperties.Remove(property);
+      await dbContext.SaveChangesAsync();
+    }
+
     return true;
   }
 }

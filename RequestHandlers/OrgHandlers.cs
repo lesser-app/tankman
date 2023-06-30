@@ -20,17 +20,17 @@ public static class OrgHandlers
 {
   public static async Task<IResult> GetOrgsAsync(string? orgId)
   {
-    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard), (List<Org> orgs) => orgs.Select(Org.ToJson));
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard), (List<Org> entities) => entities.Select(Org.ToJson));
   }
 
-  public static async Task<IResult> CreateOrgAsync(CreateOrg createOrg)
+  public static async Task<IResult> CreateOrgAsync(CreateOrg create)
   {
-    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: createOrg.Id, data: createOrg.Data), Org.ToJson);
+    return ApiResult.ToResult(await OrgService.CreateOrgAsync(orgId: create.Id, data: create.Data), Org.ToJson);
   }
 
-  public static async Task<IResult> UpdateOrgAsync(string orgId, UpdateOrg updateOrg)
+  public static async Task<IResult> UpdateOrgAsync(string orgId, UpdateOrg update)
   {
-    return ApiResult.ToResult(await OrgService.UpdateOrgAsync(orgId: orgId, data: updateOrg.Data), Org.ToJson);
+    return ApiResult.ToResult(await OrgService.UpdateOrgAsync(orgId: orgId, data: update.Data), Org.ToJson);
   }
 
   public static async Task<IResult> DeleteOrgAsync(string orgId, string? safetyKey)
@@ -40,5 +40,15 @@ public static class OrgHandlers
       return TypedResults.BadRequest("Missing org deletion key.");
     }
     return ApiResult.ToResult(await OrgService.DeleteOrgAsync(orgId: orgId));
+  }
+
+  public static async Task<IResult> UpdatePropertyAsync(string orgId, string name, UpdateProperty update)
+  {
+    return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value));
+  }
+
+  public static async Task<IResult> DeletePropertyAsync(string orgId, string name)
+  {
+    return ApiResult.ToResult(await OrgService.DeletePropertyAsync(orgId: orgId, name: name));
   }
 }

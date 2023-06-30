@@ -21,6 +21,9 @@ namespace tankman.Db
     public DbSet<RolePermission> RolePermissions { get; set; }
     public DbSet<UserPermission> UserPermissions { get; set; }
     public DbSet<RoleAssignment> RoleAssignments { get; set; }
+    public DbSet<OrgProperty> OrgProperties { get; set; }
+    public DbSet<RoleProperty> RoleProperties { get; set; }
+    public DbSet<UserProperty> UserProperties { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

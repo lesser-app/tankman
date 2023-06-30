@@ -7,6 +7,7 @@ public class OrgJson
   public required string Id { get; set; }
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   public required string Data { get; set; }
+  public required Dictionary<string, string> Properties { get; set; }
 }
 
 [PrimaryKey(nameof(Id))]
@@ -24,13 +25,23 @@ public class Org : IEntity
 
   public List<Role> Roles { get; set; } = new List<Role>();
 
-  public static OrgJson ToJson(Org org)
+  public List<OrgProperty> Properties { get; set; } = new List<OrgProperty>();
+
+  public static OrgJson ToJson(Org entity)
   {
+    var properties = new Dictionary<string, string>();
+
+    foreach (var property in entity.Properties)
+    {
+      properties[property.Name] = property.Value;
+    }
+
     return new OrgJson
     {
-      Id = org.Id,
-      CreatedAt = org.CreatedAt,
-      Data = org.Data,
+      Id = entity.Id,
+      CreatedAt = entity.CreatedAt,
+      Data = entity.Data,
+      Properties = properties
     };
   }
 }

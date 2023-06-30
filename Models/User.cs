@@ -12,6 +12,7 @@ public class UserJson
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   public required string OrgId { get; set; }
   public List<string> Roles { get; set; } = new List<string>();
+  public required Dictionary<string, string> Properties { get; set; }
 }
 
 
@@ -39,17 +40,27 @@ public class User : IEntity, IOrgAssociated
 
   public List<UserPermission> UserPermissions { get; set; } = new List<UserPermission>();
 
-  public static UserJson ToJson(User user)
+  public List<UserProperty> Properties { get; set; } = new List<UserProperty>();
+
+  public static UserJson ToJson(User entity)
   {
+    var properties = new Dictionary<string, string>();
+
+    foreach (var property in entity.Properties)
+    {
+      properties[property.Name] = property.Value;
+    }
+
     return new UserJson
     {
-      Id = user.Id,
-      Data = user.Data,
-      IdentityProvider = user.IdentityProvider,
-      IdentityProviderUserId = user.IdentityProviderUserId,
-      CreatedAt = user.CreatedAt,
-      OrgId = user.OrgId,
-      Roles = user.Roles
+      Id = entity.Id,
+      Data = entity.Data,
+      IdentityProvider = entity.IdentityProvider,
+      IdentityProviderUserId = entity.IdentityProviderUserId,
+      CreatedAt = entity.CreatedAt,
+      OrgId = entity.OrgId,
+      Roles = entity.Roles,
+      Properties = properties
     };
   }
 }

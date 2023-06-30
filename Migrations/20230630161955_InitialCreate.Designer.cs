@@ -12,7 +12,7 @@ using tankman.Db;
 namespace tankman.Migrations
 {
     [DbContext(typeof(TankmanDbContext))]
-    [Migration("20230630131203_InitialCreate")]
+    [Migration("20230630161955_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -44,6 +44,34 @@ namespace tankman.Migrations
                         .HasName("pk_orgs");
 
                     b.ToTable("orgs", (string)null);
+                });
+
+            modelBuilder.Entity("tankman.Models.OrgProperty", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("OrgId")
+                        .HasColumnType("text")
+                        .HasColumnName("org_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("Name", "OrgId")
+                        .HasName("pk_org_properties");
+
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_org_properties_org_id");
+
+                    b.ToTable("org_properties", (string)null);
                 });
 
             modelBuilder.Entity("tankman.Models.Resource", b =>
@@ -281,6 +309,41 @@ namespace tankman.Migrations
                     b.ToTable("role_permissions", (string)null);
                 });
 
+            modelBuilder.Entity("tankman.Models.RoleProperty", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("text")
+                        .HasColumnName("role_id");
+
+                    b.Property<string>("OrgId")
+                        .HasColumnType("text")
+                        .HasColumnName("org_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("Name", "RoleId", "OrgId")
+                        .HasName("pk_role_properties");
+
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_role_properties_org_id");
+
+                    b.HasIndex("RoleId", "OrgId")
+                        .HasDatabaseName("ix_role_properties_role_id_org_id");
+
+                    b.ToTable("role_properties", (string)null);
+                });
+
             modelBuilder.Entity("tankman.Models.User", b =>
                 {
                     b.Property<string>("Id")
@@ -355,6 +418,53 @@ namespace tankman.Migrations
                         .HasDatabaseName("ix_user_permissions_user_id_org_id");
 
                     b.ToTable("user_permissions", (string)null);
+                });
+
+            modelBuilder.Entity("tankman.Models.UserProperty", b =>
+                {
+                    b.Property<string>("Name")
+                        .HasColumnType("text")
+                        .HasColumnName("name");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text")
+                        .HasColumnName("user_id");
+
+                    b.Property<string>("OrgId")
+                        .HasColumnType("text")
+                        .HasColumnName("org_id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("value");
+
+                    b.HasKey("Name", "UserId", "OrgId")
+                        .HasName("pk_user_properties");
+
+                    b.HasIndex("OrgId")
+                        .HasDatabaseName("ix_user_properties_org_id");
+
+                    b.HasIndex("UserId", "OrgId")
+                        .HasDatabaseName("ix_user_properties_user_id_org_id");
+
+                    b.ToTable("user_properties", (string)null);
+                });
+
+            modelBuilder.Entity("tankman.Models.OrgProperty", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany("Properties")
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_org_properties_orgs_org_id");
+
+                    b.Navigation("Org");
                 });
 
             modelBuilder.Entity("tankman.Models.Resource", b =>
@@ -462,6 +572,27 @@ namespace tankman.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("tankman.Models.RoleProperty", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_properties_orgs_org_id");
+
+                    b.HasOne("tankman.Models.Role", "Role")
+                        .WithMany("Properties")
+                        .HasForeignKey("RoleId", "OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_role_properties_roles_role_id_org_id");
+
+                    b.Navigation("Org");
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("tankman.Models.User", b =>
                 {
                     b.HasOne("tankman.Models.Org", "Org")
@@ -504,8 +635,31 @@ namespace tankman.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("tankman.Models.UserProperty", b =>
+                {
+                    b.HasOne("tankman.Models.Org", "Org")
+                        .WithMany()
+                        .HasForeignKey("OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_properties_orgs_org_id");
+
+                    b.HasOne("tankman.Models.User", "User")
+                        .WithMany("Properties")
+                        .HasForeignKey("UserId", "OrgId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_user_properties_users_user_id_org_id");
+
+                    b.Navigation("Org");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("tankman.Models.Org", b =>
                 {
+                    b.Navigation("Properties");
+
                     b.Navigation("Resources");
 
                     b.Navigation("Roles");
@@ -524,6 +678,8 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.Role", b =>
                 {
+                    b.Navigation("Properties");
+
                     b.Navigation("RoleAssignments");
 
                     b.Navigation("RolePermissions");
@@ -531,6 +687,8 @@ namespace tankman.Migrations
 
             modelBuilder.Entity("tankman.Models.User", b =>
                 {
+                    b.Navigation("Properties");
+
                     b.Navigation("RoleAssignments");
 
                     b.Navigation("UserPermissions");

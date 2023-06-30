@@ -46,32 +46,32 @@ public static class UserHandlers
 
     return ApiResult.ToResult(
       await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
-      (List<User> users) => users.Select(User.ToJson)
+      (List<User> entities) => entities.Select(User.ToJson)
     );
   }
 
-  public static async Task<IResult> CreateUserAsync(string orgId, CreateUser createUser)
+  public static async Task<IResult> CreateUserAsync(string orgId, CreateUser create)
   {
     return ApiResult.ToResult(
       await UserService.CreateUserAsync(
-        userId: createUser.Id,
-        identityProviderUserId: createUser.IdentityProviderUserId,
-        identityProvider: createUser.IdentityProvider,
-        data: createUser.Data,
+        userId: create.Id,
+        identityProviderUserId: create.IdentityProviderUserId,
+        identityProvider: create.IdentityProvider,
+        data: create.Data,
         orgId: orgId
       ),
       User.ToJson
     );
   }
 
-  public static async Task<IResult> UpdateUserAsync(string userId, string orgId, UpdateUser updateUser)
+  public static async Task<IResult> UpdateUserAsync(string userId, string orgId, UpdateUser update)
   {
     return ApiResult.ToResult(
       await UserService.UpdateUserAsync(
         userId: userId,
-        identityProviderUserId: updateUser.IdentityProviderUserId,
-        identityProvider: updateUser.IdentityProvider,
-        data: updateUser.Data,
+        identityProviderUserId: update.IdentityProviderUserId,
+        identityProvider: update.IdentityProvider,
+        data: update.Data,
         orgId: orgId
       ),
       User.ToJson
@@ -79,11 +79,11 @@ public static class UserHandlers
   }
 
 
-  public static async Task<IResult> AssignRoleAsync(string userId, string orgId, AssignRole assignRole)
+  public static async Task<IResult> AssignRoleAsync(string userId, string orgId, AssignRole assign)
   {
     return ApiResult.ToResult(
       await UserService.AssignRoleAsync(
-        roleId: assignRole.RoleId,
+        roleId: assign.RoleId,
         userId: userId,
         orgId: orgId
       ),
@@ -106,5 +106,15 @@ public static class UserHandlers
       userId: userId,
       orgId: orgId
     ));
+  }
+
+  public static async Task<IResult> UpdatePropertyAsync(string orgId, string userId, string name, UpdateProperty update)
+  {
+    return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value));
+  }
+
+  public static async Task<IResult> DeletePropertyAsync(string orgId, string userId, string name)
+  {
+    return ApiResult.ToResult(await UserService.DeletePropertyAsync(orgId: orgId, userId: userId, name: name));
   }
 }

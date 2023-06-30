@@ -31,15 +31,15 @@ public class RolePermission : IPermission, IRoleAssociated, IResourceAssociated,
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
 
-  public static RolePermissionJson ToJson(RolePermission rolePermission)
+  public static RolePermissionJson ToJson(RolePermission entity)
   {
     return new RolePermissionJson
     {
-      RoleId = rolePermission.RoleId,
-      ResourceId = rolePermission.ResourceId,
-      Action = rolePermission.Action,
-      CreatedAt = rolePermission.CreatedAt,
-      OrgId = rolePermission.OrgId
+      RoleId = entity.RoleId,
+      ResourceId = entity.ResourceId,
+      Action = entity.Action,
+      CreatedAt = entity.CreatedAt,
+      OrgId = entity.OrgId
     };
   }
 }

@@ -20,22 +20,31 @@ public static class RoleHandlers
 {
   public static async Task<IResult> GetRolesAsync(string? roleId, string orgId)
   {
-    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId), (List<Role> roles) => roles.Select(Role.ToJson));
+    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId), (List<Role> entities) => entities.Select(Role.ToJson));
   }
 
-  public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole createRole)
+  public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole create)
   {
-    return ApiResult.ToResult(await RoleService.CreateRoleAsync(roleId: createRole.Id, data: createRole.Data, orgId: orgId), Role.ToJson);
+    return ApiResult.ToResult(await RoleService.CreateRoleAsync(roleId: create.Id, data: create.Data, orgId: orgId), Role.ToJson);
   }
 
-  public static async Task<IResult> UpdateRoleAsync(string roleId, string orgId, UpdateRole updateRole)
+  public static async Task<IResult> UpdateRoleAsync(string roleId, string orgId, UpdateRole update)
   {
-    return ApiResult.ToResult(await RoleService.UpdateRoleAsync(roleId: roleId, data: updateRole.Data, orgId: orgId), Role.ToJson);
+    return ApiResult.ToResult(await RoleService.UpdateRoleAsync(roleId: roleId, data: update.Data, orgId: orgId), Role.ToJson);
   }
-
 
   public static async Task<IResult> DeleteRoleAsync(string roleId, string orgId)
   {
     return ApiResult.ToResult(await RoleService.DeleteRoleAsync(roleId: roleId, orgId: orgId));
+  }
+
+  public static async Task<IResult> UpdatePropertyAsync(string orgId, string roleId, string name, UpdateProperty update)
+  {
+    return ApiResult.ToResult(await RoleService.UpdatePropertyAsync(orgId: orgId, roleId: roleId, name: name, value: update.Value));
+  }
+
+  public static async Task<IResult> DeletePropertyAsync(string orgId, string roleId, string name)
+  {
+    return ApiResult.ToResult(await RoleService.DeletePropertyAsync(orgId: orgId, roleId: roleId, name: name));
   }
 }

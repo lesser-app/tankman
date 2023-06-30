@@ -25,7 +25,7 @@ public static class UserPermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<UserPermission> userPermissions) => userPermissions.Select(UserPermission.ToJson)
+      (List<UserPermission> entities) => entities.Select(UserPermission.ToJson)
     );
   }
 
@@ -40,17 +40,17 @@ public static class UserPermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<object> permissions) => permissions.Select<object, object>((object x) => x is UserPermission ? UserPermission.ToJson((UserPermission)x) : RolePermission.ToJson((RolePermission)x))
+      (List<object> entities) => entities.Select<object, object>((object x) => x is UserPermission ? UserPermission.ToJson((UserPermission)x) : RolePermission.ToJson((RolePermission)x))
     );
   }
 
-  public static async Task<IResult> CreateUserPermissionAsync(string orgId, CreateUserPermission createPermission)
+  public static async Task<IResult> CreateUserPermissionAsync(string orgId, CreateUserPermission create)
   {
     return ApiResult.ToResult(
       await UserPermissionService.CreateUserPermissionAsync(
-        userId: createPermission.UserId,
-        resourceId: createPermission.ResourceId,
-        action: createPermission.Action,
+        userId: create.UserId,
+        resourceId: create.ResourceId,
+        action: create.Action,
         orgId: orgId
       ),
       UserPermission.ToJson

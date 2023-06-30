@@ -30,14 +30,14 @@ public class Resource : IPathedEntity, IOrgAssociated
 
   public List<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
 
-  public static ResourceJson ToJson(Resource resource)
+  public static ResourceJson ToJson(Resource entity)
   {
     return new ResourceJson
     {
-      Id = resource.Id,
-      CreatedAt = resource.CreatedAt,
-      Data = resource.Data,
-      OrgId = resource.OrgId
+      Id = entity.Id,
+      CreatedAt = entity.CreatedAt,
+      Data = entity.Data,
+      OrgId = entity.OrgId,
     };
   }
 }

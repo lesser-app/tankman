@@ -28,14 +28,14 @@ public class RoleAssignment : IUserAssociated, IRoleAssociated, IOrgAssociated
   [ForeignKey(nameof(OrgId))]
   public Org? Org { get; set; } = null;
 
-  public static RoleAssignmentJson ToJson(RoleAssignment roleAssignment)
+  public static RoleAssignmentJson ToJson(RoleAssignment entity)
   {
     return new RoleAssignmentJson
     {
-      RoleId = roleAssignment.RoleId,
-      UserId = roleAssignment.UserId,
-      CreatedAt = roleAssignment.CreatedAt,
-      OrgId = roleAssignment.OrgId
+      RoleId = entity.RoleId,
+      UserId = entity.UserId,
+      CreatedAt = entity.CreatedAt,
+      OrgId = entity.OrgId
     };
   }
 }

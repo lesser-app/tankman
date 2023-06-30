@@ -9,6 +9,7 @@ public class RoleJson
   public required string Data { get; set; }
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
   public required string OrgId { get; set; }
+  public required Dictionary<string, string> Properties { get; set; }
 }
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
@@ -28,14 +29,24 @@ public class Role : IEntity, IOrgAssociated
 
   public List<RolePermission> RolePermissions { get; set; } = new List<RolePermission>();
 
-  public static RoleJson ToJson(Role role)
+  public List<RoleProperty> Properties { get; set; } = new List<RoleProperty>();
+
+  public static RoleJson ToJson(Role entity)
   {
+    var properties = new Dictionary<string, string>();
+
+    foreach (var property in entity.Properties)
+    {
+      properties[property.Name] = property.Value;
+    }
+
     return new RoleJson
     {
-      Id = role.Id,
-      CreatedAt = role.CreatedAt,
-      Data = role.Data,
-      OrgId = role.OrgId
+      Id = entity.Id,
+      CreatedAt = entity.CreatedAt,
+      Data = entity.Data,
+      OrgId = entity.OrgId,
+      Properties = properties
     };
   }
 }

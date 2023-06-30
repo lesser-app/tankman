@@ -113,6 +113,9 @@ orgsApi.MapGet("/{orgId?}", OrgHandlers.GetOrgsAsync).WithOpenApi();
 orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}", OrgHandlers.UpdateOrgAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}", OrgHandlers.DeleteOrgAsync).WithOpenApi();
+// ORG PROPERTIES
+orgsApi.MapPut("/{orgId}/properties/{name}", OrgHandlers.UpdatePropertyAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/properties/{name}", OrgHandlers.DeletePropertyAsync).WithOpenApi();
 
 // TODO: support the following
 // orgsApi.MapGet("/{orgId}?fields=name,location,country", ...
@@ -142,6 +145,9 @@ orgsApi.MapPost("/{orgId}/users/{userId}/permissions", UserPermissionHandlers.Cr
 orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", UserPermissionHandlers.DeleteUserPermissionAsync).WithOpenApi();
 // COMBINED USER/ROLE
 orgsApi.MapGet("/{orgId}/users/{userId}/effective-permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetEffectivePermissionsAsync).WithOpenApi();
+// ROLE PROPERTIES
+orgsApi.MapPut("/{orgId}/users/{userId}/properties/{name}", UserHandlers.UpdatePropertyAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/users/{userId}/properties/{name}", UserHandlers.DeletePropertyAsync).WithOpenApi();
 
 // TODO: support the following
 // orgsApi.MapGet("/{orgId}/users?fields=name,location,country", ...
@@ -156,6 +162,9 @@ orgsApi.MapDelete("/{orgId}/roles/{roleId}", RoleHandlers.DeleteRoleAsync).WithO
 orgsApi.MapGet("/{orgId}/roles/{roleId}/permissions/{action?}/{*resourceId}", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/roles/{roleId}/permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/roles/{roleId}/permissions/{action}/{*resourceId}", RolePermissionHandlers.DeleteRolePermissionAsync).WithOpenApi();
+// ROLE PROPERTIES
+orgsApi.MapPut("/{orgId}/roles/{roleId}/properties/{name}", RoleHandlers.UpdatePropertyAsync).WithOpenApi();
+orgsApi.MapDelete("/{orgId}/roles/{roleId}/properties/{name}", RoleHandlers.DeletePropertyAsync).WithOpenApi();
 
 // TODO: support the following
 // orgsApi.MapPost("/{orgId}/roles?fields=name,location,country", ...

@@ -25,6 +25,26 @@ namespace tankman.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "org_properties",
+                columns: table => new
+                {
+                    name = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_org_properties", x => new { x.name, x.org_id });
+                    table.ForeignKey(
+                        name: "fk_org_properties_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "resources",
                 columns: table => new
                 {
@@ -162,6 +182,33 @@ namespace tankman.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "role_properties",
+                columns: table => new
+                {
+                    name = table.Column<string>(type: "text", nullable: false),
+                    role_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_role_properties", x => new { x.name, x.role_id, x.org_id });
+                    table.ForeignKey(
+                        name: "fk_role_properties_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_role_properties_roles_role_id_org_id",
+                        columns: x => new { x.role_id, x.org_id },
+                        principalTable: "roles",
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "role_assignments",
                 columns: table => new
                 {
@@ -226,6 +273,38 @@ namespace tankman.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "user_properties",
+                columns: table => new
+                {
+                    name = table.Column<string>(type: "text", nullable: false),
+                    user_id = table.Column<string>(type: "text", nullable: false),
+                    org_id = table.Column<string>(type: "text", nullable: false),
+                    value = table.Column<string>(type: "text", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_user_properties", x => new { x.name, x.user_id, x.org_id });
+                    table.ForeignKey(
+                        name: "fk_user_properties_orgs_org_id",
+                        column: x => x.org_id,
+                        principalTable: "orgs",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_user_properties_users_user_id_org_id",
+                        columns: x => new { x.user_id, x.org_id },
+                        principalTable: "users",
+                        principalColumns: new[] { "id", "org_id" },
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_org_properties_org_id",
+                table: "org_properties",
+                column: "org_id");
+
             migrationBuilder.CreateIndex(
                 name: "ix_resource_paths_org_id",
                 table: "resource_paths",
@@ -267,6 +346,16 @@ namespace tankman.Migrations
                 columns: new[] { "role_id", "org_id" });
 
             migrationBuilder.CreateIndex(
+                name: "ix_role_properties_org_id",
+                table: "role_properties",
+                column: "org_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_role_properties_role_id_org_id",
+                table: "role_properties",
+                columns: new[] { "role_id", "org_id" });
+
+            migrationBuilder.CreateIndex(
                 name: "ix_roles_org_id",
                 table: "roles",
                 column: "org_id");
@@ -287,6 +376,16 @@ namespace tankman.Migrations
                 columns: new[] { "user_id", "org_id" });
 
             migrationBuilder.CreateIndex(
+                name: "ix_user_properties_org_id",
+                table: "user_properties",
+                column: "org_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_user_properties_user_id_org_id",
+                table: "user_properties",
+                columns: new[] { "user_id", "org_id" });
+
+            migrationBuilder.CreateIndex(
                 name: "ix_users_org_id",
                 table: "users",
                 column: "org_id");
@@ -295,6 +394,9 @@ namespace tankman.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "org_properties");
+
             migrationBuilder.DropTable(
                 name: "resource_paths");
 
@@ -305,7 +407,13 @@ namespace tankman.Migrations
                 name: "role_permissions");
 
             migrationBuilder.DropTable(
+                name: "role_properties");
+
+            migrationBuilder.DropTable(
                 name: "user_permissions");
+
+            migrationBuilder.DropTable(
+                name: "user_properties");
 
             migrationBuilder.DropTable(
                 name: "roles");
