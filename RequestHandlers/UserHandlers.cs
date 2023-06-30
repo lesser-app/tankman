@@ -46,7 +46,7 @@ public static class UserHandlers
 
     return ApiResult.ToResult(
       await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
-      (List<User> user) => user.Select(User.ToJson)
+      (List<User> users) => users.Select(User.ToJson)
     );
   }
 
