@@ -34,7 +34,7 @@ public static class UserPermissionService
     return userPermission;
   }
 
-  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
+  public static async Task<OneOf<List<UserPermission>, Error<string>>> GetUserPermissionsAsync(string userId, string resourceId, string action, string orgId, int? from, int? limit)
   {
     var dbContext = new TankmanDbContext();
     var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
@@ -48,7 +48,8 @@ public static class UserPermissionService
                   .ApplyOrgFilter(orgId)
                   .ApplyUsersFilter(userId)
                   .ApplyActionsFilter(action)
-                  .Take(Settings.MaxResults)
+                  .ApplySkip(from)
+                  .ApplyLimit(limit)
                   .ToListAsync();
       }
       else
@@ -67,7 +68,10 @@ public static class UserPermissionService
           .UsePathScanOptimization<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.UserPermission);
 
-        return await userPermissionsQuery.Take(Settings.MaxResults).ToListAsync();
+        return await userPermissionsQuery
+          .ApplySkip(from)
+          .ApplyLimit(limit)
+          .ToListAsync();
       }
     }
     else
@@ -77,7 +81,7 @@ public static class UserPermissionService
         .ApplyUsersFilter(userId)
         .ApplyActionsFilter(action)
         .ApplyExactResourceFilter(normalizedResourceId)
-        .Take(Settings.MaxResults)
+        .ApplyLimit()
         .ToListAsync();
 
       return permissions;

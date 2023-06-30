@@ -12,7 +12,10 @@ public static class OrgService
   public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs.ApplyIdFilter(orgId).Take(Settings.MaxResults).ToListAsync();
+    return await dbContext.Orgs
+      .ApplyIdFilter(orgId)
+      .ApplyLimit(null)
+      .ToListAsync();
   }
 
   public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId)

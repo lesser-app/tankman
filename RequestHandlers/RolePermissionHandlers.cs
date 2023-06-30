@@ -13,13 +13,15 @@ public class CreateRolePermission
 
 public static class RolePermissionHandlers
 {
-  public static async Task<IResult> GetRolePermissionsAsync(string orgId, string roleId, string? action, string? resourceId)
+  public static async Task<IResult> GetRolePermissionsAsync(string orgId, string roleId, string? action, string? resourceId, int? from, int? limit)
   {
     return ApiResult.ToResult(await RolePermissionService.GetRolePermissionsAsync(
       roleId: roleId,
       resourceId: resourceId ?? "/" + Settings.Wildcard,
       action: action ?? Settings.Wildcard,
-      orgId: orgId
+      orgId: orgId, 
+      from: from,
+      limit: limit
     ));
   }
 

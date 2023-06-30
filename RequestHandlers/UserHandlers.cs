@@ -18,9 +18,23 @@ public class AssignRole
 
 public static class UserHandlers
 {
-  public static async Task<IResult> GetUsersAsync(string? userId, string orgId)
+  public static async Task<IResult> GetUsersAsync(string? userId, string orgId, string? sort, string? order, int? from, int? limit)
   {
-    return ApiResult.ToResult(await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId));
+    SortUserBy? sortBy = sort switch
+    {
+      "id" => SortUserBy.UserId,
+      "createdAt" => SortUserBy.CreatedAt,
+      _ => null
+    };
+
+    SortOrder? sortOrder = order switch
+    {
+      "asc" => SortOrder.Ascending,
+      "desc" => SortOrder.Descending,
+      _ => null
+    };
+
+    return ApiResult.ToResult(await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit));
   }
 
   public static async Task<IResult> CreateUserAsync(string orgId, CreateUser createUser)

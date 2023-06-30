@@ -7,14 +7,40 @@ using tankman.Utils;
 
 namespace tankman.Services;
 
+public enum SortUserBy
+{
+  UserId,
+  CreatedAt
+}
+
 public static class UserService
 {
-  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId)
+  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId, SortUserBy? sortBy, SortOrder? sortOrder, int? from, int? limit)
   {
     var dbContext = new TankmanDbContext();
-    var users = await dbContext.Users.ApplyIdFilter(userId)
+
+    var query = dbContext.Users
+      .ApplyOrgFilter(orgId)
+      .ApplyIdFilter(userId);
+
+    if (sortBy.HasValue)
+    {
+      query =
+        sortBy == SortUserBy.UserId ?
+          !sortOrder.HasValue || sortOrder.Value == SortOrder.Ascending ?
+            query.OrderBy((x) => x.Id) :
+            query.OrderByDescending((x) => x.Id) :
+        sortBy == SortUserBy.CreatedAt ?
+          !sortOrder.HasValue || sortOrder.Value == SortOrder.Ascending ?
+            query.OrderBy((x) => x.CreatedAt) :
+            query.OrderByDescending((x) => x.CreatedAt)
+        : query;
+    }
+
+    var users = await query
       .Include((x) => x.RoleAssignments)
-      .Take(Settings.MaxResults)
+      .ApplySkip(from)
+      .ApplyLimit(limit)
       .ToListAsync();
 
     foreach (var user in users)

@@ -15,7 +15,7 @@ public static class RoleService
     return await dbContext.Roles
       .ApplyOrgFilter(orgId)
       .ApplyIdFilter(roleId)
-      .Take(Settings.MaxResults)
+      .ApplyLimit()
       .ToListAsync();
   }
 

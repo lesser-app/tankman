@@ -11,9 +11,9 @@ public class CreateResource
 
 public static class ResourceHandlers
 {
-  public static async Task<IResult> GetResourcesAsync(string? resourceId, string orgId, int? depth)
+  public static async Task<IResult> GetResourcesAsync(string? resourceId, string orgId, int? depth, int? from, int? limit)
   {
-    return ApiResult.ToResult(await ResourceService.GetResourcesAsync(resourceId: resourceId ?? Settings.Wildcard, orgId: orgId));
+    return ApiResult.ToResult(await ResourceService.GetResourcesAsync(resourceId: resourceId ?? Settings.Wildcard, orgId: orgId, from: from, limit: limit));
   }
 
   public static async Task<IResult> CreateResourceAsync(string orgId, CreateResource createResource)

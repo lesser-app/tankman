@@ -33,7 +33,7 @@ public static class RolePermissionService
     return rolePermission;
   }
 
-  public static async Task<OneOf<List<RolePermission>, Error<string>>> GetRolePermissionsAsync(string roleId, string resourceId, string action, string orgId)
+  public static async Task<OneOf<List<RolePermission>, Error<string>>> GetRolePermissionsAsync(string roleId, string resourceId, string action, string orgId, int? from, int? limit)
   {
     var dbContext = new TankmanDbContext();
     var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
@@ -46,7 +46,10 @@ public static class RolePermissionService
         return await dbContext.RolePermissions
                   .ApplyOrgFilter(orgId)
                   .ApplyRolesFilter(roleId)
-                  .ApplyActionsFilter(action).Take(Settings.MaxResults).ToListAsync();
+                  .ApplyActionsFilter(action)
+                  .ApplySkip(from)
+                  .ApplyLimit(limit)
+                  .ToListAsync();
       }
       else
       {
@@ -64,7 +67,10 @@ public static class RolePermissionService
           .UsePathScanOptimization<RolePermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.RolePermission);
 
-        return await rolePermissionsQuery.Take(Settings.MaxResults).ToListAsync();
+        return await rolePermissionsQuery
+          .ApplySkip(from)
+          .ApplyLimit(limit)
+          .ToListAsync();
       }
     }
     else
@@ -74,7 +80,7 @@ public static class RolePermissionService
         .ApplyRolesFilter(roleId)
         .ApplyActionsFilter(action)
         .ApplyExactResourceFilter(normalizedResourceId)
-        .Take(Settings.MaxResults)
+        .ApplyLimit()
         .ToListAsync();
 
       return permissions;

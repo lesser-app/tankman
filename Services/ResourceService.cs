@@ -15,7 +15,7 @@ public class ResourceResourcePathJoin : IPathSearchHelperEntityInJoin<ResourcePa
 
 public static class ResourceService
 {
-  public static async Task<OneOf<List<Resource>, Error<string>>> GetResourcesAsync(string resourceId, string orgId)
+  public static async Task<OneOf<List<Resource>, Error<string>>> GetResourcesAsync(string resourceId, string orgId, int? from, int? limit)
   {
     var dbContext = new TankmanDbContext();
     var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
@@ -25,7 +25,11 @@ public static class ResourceService
     {
       if (normalizedResourceId == "/")
       {
-        return await dbContext.Resources.ApplyOrgFilter(orgId).Take(Settings.MaxResults).ToListAsync();
+        return await dbContext.Resources
+          .ApplyOrgFilter(orgId)
+          .ApplySkip(from)
+          .ApplyLimit(limit)
+          .ToListAsync();
       }
       else
       {
@@ -39,14 +43,17 @@ public static class ResourceService
         .UsePathScanOptimization<ResourceResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
         .Select(x => x.Resource);
 
-        return await resourcesQuery.ToListAsync();
+        return await resourcesQuery
+          .ApplySkip(from)
+          .ApplyLimit(limit)
+          .ToListAsync();
       }
 
     }
     else
     {
       var resources = await dbContext.Resources
-          .ApplyOrgFilter(orgId)
+        .ApplyOrgFilter(orgId)
         .Where(x => x.Id == normalizedResourceId)
         .ToListAsync();
 

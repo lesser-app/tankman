@@ -170,6 +170,16 @@ public static class Filters
     }
   }
 
+  public static IQueryable<T> ApplySkip<T>(this IQueryable<T> baseQuery, int? from)
+  {
+    return from.HasValue ? baseQuery.Skip(from.Value) : baseQuery;
+  }
+
+  public static IQueryable<T> ApplyLimit<T>(this IQueryable<T> baseQuery, int? limit = null)
+  {
+    return limit.HasValue ? baseQuery.Take(limit.Value) : baseQuery.Take(Settings.MaxResults);
+  }
+
   public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string normalizedResourceId) where T : IResourceAssociated
   {
     return baseQuery.Where((x) => x.ResourceId == normalizedResourceId);
