@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using tankman.Db;
 using OneOf;
 using tankman.Types;
+using tankman.Utils;
 
 namespace tankman.Services;
 
@@ -12,7 +13,9 @@ public static class UserService
   {
     var dbContext = new TankmanDbContext();
     var users = await dbContext.Users.ApplyIdFilter(userId)
-      .Include((x) => x.RoleAssignments).ToListAsync();
+      .Include((x) => x.RoleAssignments)
+      .Take(Settings.MaxResults)
+      .ToListAsync();
 
     foreach (var user in users)
     {

@@ -46,7 +46,7 @@ public static class RolePermissionService
         return await dbContext.RolePermissions
                   .ApplyOrgFilter(orgId)
                   .ApplyRolesFilter(roleId)
-                  .ApplyActionsFilter(action).ToListAsync();
+                  .ApplyActionsFilter(action).Take(Settings.MaxResults).ToListAsync();
       }
       else
       {
@@ -64,7 +64,7 @@ public static class RolePermissionService
           .UsePathScanOptimization<RolePermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.RolePermission);
 
-        return await rolePermissionsQuery.ToListAsync();
+        return await rolePermissionsQuery.Take(Settings.MaxResults).ToListAsync();
       }
     }
     else
@@ -74,6 +74,7 @@ public static class RolePermissionService
         .ApplyRolesFilter(roleId)
         .ApplyActionsFilter(action)
         .ApplyExactResourceFilter(normalizedResourceId)
+        .Take(Settings.MaxResults)
         .ToListAsync();
 
       return permissions;

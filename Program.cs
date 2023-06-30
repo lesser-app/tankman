@@ -39,7 +39,12 @@ var wildcardOption = new Option<string?>(
 var separatorOption = new Option<string?>(
             name: "--separator",
             description: "Separator character to be used in the url.",
-            getDefaultValue: () => ",");            
+            getDefaultValue: () => ",");
+
+var maxResultsOptions = new Option<int>(
+            name: "--max-results",
+            description: "Maximum number of results to return.",
+            getDefaultValue: () => 10000);
 
 var safetyKeyArg = new Option<string?>(
   name: "--safety-key",
@@ -54,6 +59,7 @@ rootCommand.AddOption(dbPassOption);
 rootCommand.AddOption(wildcardOption);
 rootCommand.AddOption(separatorOption);
 rootCommand.AddOption(safetyKeyArg);
+rootCommand.AddOption(maxResultsOptions);
 
 rootCommand.SetHandler((context) =>
 {
@@ -65,7 +71,9 @@ rootCommand.SetHandler((context) =>
   var wildcardCharacter = context.ParseResult.GetValueForOption(wildcardOption);
   var separatorCharacter = context.ParseResult.GetValueForOption(separatorOption);
   var safetyKey = context.ParseResult.GetValueForOption(safetyKeyArg);
+  var maxResults = context.ParseResult.GetValueForOption(maxResultsOptions);
 
+  Settings.MaxResults = maxResults;
   Settings.Wildcard = wildcardCharacter!;
   Settings.Separator = separatorCharacter!;
 

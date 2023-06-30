@@ -25,7 +25,7 @@ public static class ResourceService
     {
       if (normalizedResourceId == "/")
       {
-        return await dbContext.Resources.ApplyOrgFilter(orgId).ToListAsync();
+        return await dbContext.Resources.ApplyOrgFilter(orgId).Take(Settings.MaxResults).ToListAsync();
       }
       else
       {

@@ -45,9 +45,11 @@ public static class UserPermissionService
       if (normalizedResourceId == "/")
       {
         return await dbContext.UserPermissions
-                   .ApplyOrgFilter(orgId)
-                   .ApplyUsersFilter(userId)
-                   .ApplyActionsFilter(action).ToListAsync();
+                  .ApplyOrgFilter(orgId)
+                  .ApplyUsersFilter(userId)
+                  .ApplyActionsFilter(action)
+                  .Take(Settings.MaxResults)
+                  .ToListAsync();
       }
       else
       {
@@ -65,7 +67,7 @@ public static class UserPermissionService
           .UsePathScanOptimization<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.UserPermission);
 
-        return await userPermissionsQuery.ToListAsync();
+        return await userPermissionsQuery.Take(Settings.MaxResults).ToListAsync();
       }
     }
     else
@@ -75,6 +77,7 @@ public static class UserPermissionService
         .ApplyUsersFilter(userId)
         .ApplyActionsFilter(action)
         .ApplyExactResourceFilter(normalizedResourceId)
+        .Take(Settings.MaxResults)
         .ToListAsync();
 
       return permissions;
@@ -83,7 +86,7 @@ public static class UserPermissionService
 
   public static async Task<OneOf<bool, Error<string>>> DeleteUserPermissionsAsync(string userId, string resourceId, string action, string orgId)
   {
-    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);    
+    var (normalizedResourceId, isWildcard) = Paths.Normalize(resourceId);
     var dbContext = new TankmanDbContext();
 
     var permission = await dbContext.UserPermissions

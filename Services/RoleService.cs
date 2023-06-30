@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using tankman.Db;
 using OneOf;
 using tankman.Types;
+using tankman.Utils;
 
 namespace tankman.Services;
 
@@ -14,6 +15,7 @@ public static class RoleService
     return await dbContext.Roles
       .ApplyOrgFilter(orgId)
       .ApplyIdFilter(roleId)
+      .Take(Settings.MaxResults)
       .ToListAsync();
   }
 

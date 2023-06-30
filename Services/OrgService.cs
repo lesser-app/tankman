@@ -3,6 +3,7 @@ using tankman.Db;
 using tankman.Models;
 using OneOf;
 using tankman.Types;
+using tankman.Utils;
 
 namespace tankman.Services;
 
@@ -11,7 +12,7 @@ public static class OrgService
   public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs.ApplyIdFilter(orgId).ToListAsync();
+    return await dbContext.Orgs.ApplyIdFilter(orgId).Take(Settings.MaxResults).ToListAsync();
   }
 
   public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId)
