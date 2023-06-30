@@ -18,9 +18,9 @@ public class UpdateRole
 
 public static class RoleHandlers
 {
-  public static async Task<IResult> GetRolesAsync(string? roleId, string orgId)
+  public static async Task<IResult> GetRolesAsync(string? roleId, string orgId, string? properties)
   {
-    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId), (List<Role> entities) => entities.Select(Role.ToJson));
+    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId, properties: properties), (List<Role> entities) => entities.Select(Role.ToJson));
   }
 
   public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole create)
@@ -40,7 +40,7 @@ public static class RoleHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string roleId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await RoleService.UpdatePropertyAsync(orgId: orgId, roleId: roleId, name: name, value: update.Value));
+    return ApiResult.ToResult(await RoleService.UpdatePropertyAsync(orgId: orgId, roleId: roleId, name: name, value: update.Value, hidden: update.Hidden));
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string roleId, string name)

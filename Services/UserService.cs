@@ -15,7 +15,7 @@ public enum SortUserBy
 
 public static class UserService
 {
-  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId, SortUserBy? sortBy, SortOrder? sortOrder, int? from, int? limit)
+  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId, string? properties, SortUserBy? sortBy, SortOrder? sortOrder, int? from, int? limit)
   {
     var dbContext = new TankmanDbContext();
 
@@ -37,20 +37,23 @@ public static class UserService
         : query;
     }
 
-    var users = await query
+    var results = await query
       .Include((x) => x.RoleAssignments)
-      .Include(x => x.Properties)      
+      .Include(x => x.Properties)
       .ApplySkip(from)
       .ApplyLimit(limit)
       .ToListAsync();
 
-    foreach (var user in users)
+    var shownProps = properties != null ? properties.Split(",") : new string[] { };
+
+    foreach (var result in results)
     {
-      user.Roles = user.RoleAssignments.Select((x) => x.RoleId).ToList();
-      user.RoleAssignments = new List<RoleAssignment>();
+      result.Roles = result.RoleAssignments.Select((x) => x.RoleId).ToList();
+      result.RoleAssignments = new List<RoleAssignment>();
+      result.Properties = result.Properties.Where(x => !x.Hidden || shownProps.Contains(x.Name)).ToList();
     }
 
-    return users;
+    return results;
   }
 
   public static async Task<OneOf<User, Error<string>>> CreateUserAsync(string userId, string identityProviderUserId, string identityProvider, string data, string orgId)
@@ -117,7 +120,7 @@ public static class UserService
     return true;
   }
 
-  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string userId, string name, string value, string orgId)
+  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string userId, string name, string value, bool hidden, string orgId)
   {
     var dbContext = new TankmanDbContext();
 
@@ -133,6 +136,7 @@ public static class UserService
       {
         Name = name,
         Value = value,
+        Hidden = hidden,
         UserId = userId,
         OrgId = orgId,
         CreatedAt = DateTime.UtcNow

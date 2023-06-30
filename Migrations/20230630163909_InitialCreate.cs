@@ -31,6 +31,7 @@ namespace tankman.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
                     value = table.Column<string>(type: "text", nullable: false),
+                    hidden = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -189,6 +190,7 @@ namespace tankman.Migrations
                     role_id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
                     value = table.Column<string>(type: "text", nullable: false),
+                    hidden = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -281,6 +283,7 @@ namespace tankman.Migrations
                     user_id = table.Column<string>(type: "text", nullable: false),
                     org_id = table.Column<string>(type: "text", nullable: false),
                     value = table.Column<string>(type: "text", nullable: false),
+                    hidden = table.Column<bool>(type: "boolean", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>

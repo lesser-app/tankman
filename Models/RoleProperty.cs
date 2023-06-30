@@ -8,6 +8,7 @@ public class RoleProperty : IRoleAssociated, IOrgAssociated
 {
   public required string Name { get; set; }
   public required string Value { get; set; }
+  public required bool Hidden { get; set; }
 
   public required string RoleId { get; set; }
   [ForeignKey(nameof(RoleId) + "," + nameof(OrgId))]

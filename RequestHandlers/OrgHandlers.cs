@@ -18,9 +18,9 @@ public class UpdateOrg
 
 public static class OrgHandlers
 {
-  public static async Task<IResult> GetOrgsAsync(string? orgId)
+  public static async Task<IResult> GetOrgsAsync(string? orgId, string? properties)
   {
-    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard), (List<Org> entities) => entities.Select(Org.ToJson));
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard, properties: properties), (List<Org> entities) => entities.Select(Org.ToJson));
   }
 
   public static async Task<IResult> CreateOrgAsync(CreateOrg create)
@@ -44,7 +44,7 @@ public static class OrgHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value));
+    return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value, hidden: update.Hidden));
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string name)

@@ -28,7 +28,7 @@ public class AssignRole
 
 public static class UserHandlers
 {
-  public static async Task<IResult> GetUsersAsync(string? userId, string orgId, string? sort, string? order, int? from, int? limit)
+  public static async Task<IResult> GetUsersAsync(string? userId, string orgId, string? properties, string? sort, string? order, int? from, int? limit)
   {
     SortUserBy? sortBy = sort switch
     {
@@ -45,7 +45,7 @@ public static class UserHandlers
     };
 
     return ApiResult.ToResult(
-      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
+      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, properties: properties, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
       (List<User> entities) => entities.Select(User.ToJson)
     );
   }
@@ -110,7 +110,7 @@ public static class UserHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string userId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value));
+    return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value, hidden: update.Hidden));
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string userId, string name)

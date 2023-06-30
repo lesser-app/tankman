@@ -9,14 +9,24 @@ namespace tankman.Services;
 
 public static class OrgService
 {
-  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId)
+  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId, string? properties)
   {
     var dbContext = new TankmanDbContext();
-    return await dbContext.Orgs      
+
+    var results = await dbContext.Orgs
       .ApplyIdFilter(orgId)
       .Include(x => x.Properties)
       .ApplyLimit(null)
       .ToListAsync();
+
+    var shownProps = properties != null ? properties.Split(",") : new string[] { };
+
+    foreach (var result in results)
+    {
+      result.Properties = result.Properties.Where(x => !x.Hidden || shownProps.Contains(x.Name)).ToList();
+    }
+
+    return results;
   }
 
   public static async Task<OneOf<Org, Error<string>>> CreateOrgAsync(string orgId, string data)
@@ -61,7 +71,7 @@ public static class OrgService
     return true;
   }
 
-  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value)
+  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value, bool hidden)
   {
     var dbContext = new TankmanDbContext();
 
@@ -77,6 +87,7 @@ public static class OrgService
       {
         Name = name,
         Value = value,
+        Hidden = hidden,
         OrgId = orgId,
         CreatedAt = DateTime.UtcNow
       };

@@ -8,6 +8,7 @@ public class OrgProperty : IOrgAssociated
 {
   public required string Name { get; set; }
   public required string Value { get; set; }
+  public required bool Hidden { get; set; }
 
   public required string OrgId { get; set; }
   [ForeignKey(nameof(OrgId))]

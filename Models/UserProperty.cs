@@ -8,6 +8,7 @@ public class UserProperty : IUserAssociated, IOrgAssociated
 {
   public required string Name { get; set; }
   public required string Value { get; set; }
+  public required bool Hidden { get; set; }
 
   public required string UserId { get; set; }
   [ForeignKey(nameof(UserId) + "," + nameof(OrgId))]

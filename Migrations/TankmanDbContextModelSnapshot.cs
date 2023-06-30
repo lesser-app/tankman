@@ -57,6 +57,10 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hidden");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text")
@@ -324,6 +328,10 @@ namespace tankman.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hidden");
+
                     b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("text")
@@ -434,6 +442,10 @@ namespace tankman.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
+
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("boolean")
+                        .HasColumnName("hidden");
 
                     b.Property<string>("Value")
                         .IsRequired()
