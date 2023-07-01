@@ -18,9 +18,10 @@ public class UpdateRole
 
 public static class RoleHandlers
 {
-  public static async Task<IResult> GetRolesAsync(string? roleId, string orgId, string? properties)
+  public static async Task<IResult> GetRolesAsync(string? roleId, string orgId, string? properties, HttpContext context)
   {
-    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId, properties: properties), (List<Role> entities) => entities.Select(Role.ToJson));
+    var matchProperties = QueryStringUtils.GetPrefixedQueryDictionary("properties.", context);
+    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId, properties: properties, matchProperties: matchProperties), (List<Role> entities) => entities.Select(Role.ToJson));
   }
 
   public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole create)

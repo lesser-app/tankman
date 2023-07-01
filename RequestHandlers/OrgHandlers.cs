@@ -18,9 +18,10 @@ public class UpdateOrg
 
 public static class OrgHandlers
 {
-  public static async Task<IResult> GetOrgsAsync(string? orgId, string? properties)
+  public static async Task<IResult> GetOrgsAsync(string? orgId, string? properties, HttpContext context)
   {
-    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard, properties: properties), (List<Org> entities) => entities.Select(Org.ToJson));
+    var matchProperties = QueryStringUtils.GetPrefixedQueryDictionary("properties.", context);
+    return ApiResult.ToResult(await OrgService.GetOrgsAsync(orgId: orgId ?? Settings.Wildcard, properties: properties, matchProperties: matchProperties), (List<Org> entities) => entities.Select(Org.ToJson));
   }
 
   public static async Task<IResult> CreateOrgAsync(CreateOrg create)

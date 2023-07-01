@@ -15,13 +15,23 @@ public enum SortUserBy
 
 public static class UserService
 {
-  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(string userId, string orgId, string? properties, SortUserBy? sortBy, SortOrder? sortOrder, int? from, int? limit)
+  public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(
+    string userId,
+    string orgId,
+    string? properties,
+    SortUserBy? sortBy,
+    SortOrder? sortOrder,
+    int? from,
+    int? limit,
+    Dictionary<string, string> matchProperties
+  )
   {
     var dbContext = new TankmanDbContext();
 
     var query = dbContext.Users
       .ApplyOrgFilter(orgId)
-      .ApplyIdFilter(userId);
+      .ApplyIdFilter(userId)
+      .ApplyPropertiesFilter<User, UserProperty>(matchProperties);
 
     if (sortBy.HasValue)
     {

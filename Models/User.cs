@@ -17,7 +17,7 @@ public class UserJson
 
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
-public class User : IEntity, IOrgAssociated
+public class User : IEntity, IOrgAssociated, IHasDynamicProperties<UserProperty>
 {
   public required string Id { get; set; }
 

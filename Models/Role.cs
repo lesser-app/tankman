@@ -13,7 +13,7 @@ public class RoleJson
 }
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
-public class Role : IEntity, IOrgAssociated
+public class Role : IEntity, IOrgAssociated, IHasDynamicProperties<RoleProperty>
 {
   public required string Id { get; set; }
 

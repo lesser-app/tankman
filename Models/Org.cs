@@ -11,7 +11,7 @@ public class OrgJson
 }
 
 [PrimaryKey(nameof(Id))]
-public class Org : IEntity
+public class Org : IEntity, IHasDynamicProperties<OrgProperty>
 {
   public required string Id { get; set; }
 

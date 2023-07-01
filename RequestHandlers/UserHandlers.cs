@@ -28,8 +28,10 @@ public class AssignRole
 
 public static class UserHandlers
 {
-  public static async Task<IResult> GetUsersAsync(string? userId, string orgId, string? properties, string? sort, string? order, int? from, int? limit)
+  public static async Task<IResult> GetUsersAsync(string? userId, string orgId, string? properties, string? sort, string? order, int? from, int? limit, HttpContext context)
   {
+    var matchProperties = QueryStringUtils.GetPrefixedQueryDictionary("properties.", context);
+
     SortUserBy? sortBy = sort switch
     {
       "id" => SortUserBy.UserId,
@@ -45,7 +47,7 @@ public static class UserHandlers
     };
 
     return ApiResult.ToResult(
-      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, properties: properties, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit),
+      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, properties: properties, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit, matchProperties: matchProperties),
       (List<User> entities) => entities.Select(User.ToJson)
     );
   }

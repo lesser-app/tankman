@@ -19,6 +19,18 @@ public interface IPathSearchHelperEntityInJoin<T> where T : IPathSearchHelperEnt
   T ResourcePath { get; }
 }
 
+public interface IDynamicProperty
+{
+  string Name { get; }
+  string Value { get; }
+  bool Hidden { get; }
+}
+
+public interface IHasDynamicProperties<T> where T : IDynamicProperty
+{
+  List<T> Properties { get; }
+}
+
 public interface IPathSearchHelperEntity
 {
   string ResourceId { get; }
@@ -183,5 +195,14 @@ public static class Filters
   public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string normalizedResourceId) where T : IResourceAssociated
   {
     return baseQuery.Where((x) => x.ResourceId == normalizedResourceId);
+  }
+
+  public static IQueryable<T> ApplyPropertiesFilter<T, TProp>(this IQueryable<T> baseQuery, Dictionary<string, string> matches) where T : IHasDynamicProperties<TProp> where TProp : IDynamicProperty
+  {
+    foreach (var item in matches)
+    {
+      baseQuery = baseQuery.Where(x => x.Properties.Any(p => p.Name == item.Key && p.Value == item.Value));
+    }
+    return baseQuery;
   }
 }

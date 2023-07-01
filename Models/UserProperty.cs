@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(Name), nameof(UserId), nameof(OrgId))]
-public class UserProperty : IUserAssociated, IOrgAssociated
+public class UserProperty : IDynamicProperty, IUserAssociated, IOrgAssociated
 {
   public required string Name { get; set; }
   public required string Value { get; set; }

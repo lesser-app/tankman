@@ -9,12 +9,13 @@ namespace tankman.Services;
 
 public static class OrgService
 {
-  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId, string? properties)
-  {
+  public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId, string? properties, Dictionary<string, string> matchProperties)
+  {    
     var dbContext = new TankmanDbContext();
 
     var results = await dbContext.Orgs
       .ApplyIdFilter(orgId)
+      .ApplyPropertiesFilter<Org, OrgProperty>(matchProperties)
       .Include(x => x.Properties)
       .ApplyLimit(null)
       .ToListAsync();

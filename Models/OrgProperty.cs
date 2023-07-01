@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(Name), nameof(OrgId))]
-public class OrgProperty : IOrgAssociated
+public class OrgProperty : IDynamicProperty, IOrgAssociated
 {
   public required string Name { get; set; }
   public required string Value { get; set; }

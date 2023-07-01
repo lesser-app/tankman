@@ -22,3 +22,21 @@ public static class ApiResult
     return result.IsT0 ? TypedResults.Ok(new ValidResult { Data = jsonTransform(result.AsT0)! }) : TypedResults.BadRequest(new ErrorResult { Error = result.AsT1! });
   }
 }
+
+public static class QueryStringUtils
+{
+  public static Dictionary<string, string> GetPrefixedQueryDictionary(string prefix, HttpContext context)
+  {
+    var dictionary = new Dictionary<string, string>();
+
+    foreach (var query in context.Request.Query)
+    {
+      if (query.Key.StartsWith(prefix))
+      {
+        dictionary[query.Key.Substring(prefix.Length)] = query.Value[0] ?? "";
+      }
+    }
+
+    return dictionary;
+  }
+}
