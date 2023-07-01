@@ -43,6 +43,11 @@ public static class OrgHandlers
     return ApiResult.ToResult(await OrgService.DeleteOrgAsync(orgId: orgId));
   }
 
+  public static async Task<IResult> GetPropertiesAsync(string orgId, string? name)
+  {
+    return ApiResult.ToResult(await OrgService.GetPropertiesAsync(orgId: orgId, name: name ?? Settings.Wildcard));
+  }
+
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string name, UpdateProperty update)
   {
     return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value, hidden: update.Hidden));

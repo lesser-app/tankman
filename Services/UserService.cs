@@ -130,6 +130,21 @@ public static class UserService
     return true;
   }
 
+  public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string userId, string orgId, string name)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var query = dbContext.UserProperties
+      .ApplyOrgFilter(orgId)
+      .ApplyUsersFilter(userId)
+      .SelectProperties(name);
+
+    var props = await query.ToListAsync();
+
+    return props.ToDictionary();
+  }
+
+
   public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string userId, string name, string value, bool hidden, string orgId)
   {
     var dbContext = new TankmanDbContext();

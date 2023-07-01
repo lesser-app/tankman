@@ -10,7 +10,7 @@ namespace tankman.Services;
 public static class OrgService
 {
   public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(string orgId, string? properties, Dictionary<string, string> matchProperties)
-  {    
+  {
     var dbContext = new TankmanDbContext();
 
     var results = await dbContext.Orgs
@@ -70,6 +70,19 @@ public static class OrgService
     dbContext.Orgs.Remove(org);
     await dbContext.SaveChangesAsync();
     return true;
+  }
+
+  public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string orgId, string name)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var query = dbContext.OrgProperties
+      .ApplyOrgFilter(orgId)
+      .SelectProperties(name);
+
+    var props = await query.ToListAsync();
+
+    return props.ToDictionary();
   }
 
   public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value, bool hidden)

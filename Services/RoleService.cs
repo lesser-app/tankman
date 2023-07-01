@@ -65,6 +65,21 @@ public static class RoleService
     return true;
   }
 
+  public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string roleId, string orgId, string name)
+  {
+    var dbContext = new TankmanDbContext();
+
+    var query = dbContext.RoleProperties
+      .ApplyOrgFilter(orgId)
+      .ApplyRolesFilter(roleId)
+      .SelectProperties(name);
+
+    var props = await query.ToListAsync();
+
+    return props.ToDictionary();
+  }
+
+
   public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string roleId, string name, string value, bool hidden, string orgId)
   {
     var dbContext = new TankmanDbContext();

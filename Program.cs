@@ -114,6 +114,7 @@ orgsApi.MapPost("/", OrgHandlers.CreateOrgAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}", OrgHandlers.UpdateOrgAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}", OrgHandlers.DeleteOrgAsync).WithOpenApi();
 // ORG PROPERTIES
+orgsApi.MapGet("/{orgId}/properties/{name?}", OrgHandlers.GetPropertiesAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}/properties/{name}", OrgHandlers.UpdatePropertyAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/properties/{name}", OrgHandlers.DeletePropertyAsync).WithOpenApi();
 
@@ -146,6 +147,7 @@ orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", 
 // COMBINED USER/ROLE
 orgsApi.MapGet("/{orgId}/users/{userId}/effective-permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetEffectivePermissionsAsync).WithOpenApi();
 // ROLE PROPERTIES
+orgsApi.MapGet("/{orgId}/users/{userId}/properties/{name?}", UserHandlers.GetPropertiesAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}/users/{userId}/properties/{name}", UserHandlers.UpdatePropertyAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/users/{userId}/properties/{name}", UserHandlers.DeletePropertyAsync).WithOpenApi();
 
@@ -163,6 +165,7 @@ orgsApi.MapGet("/{orgId}/roles/{roleId}/permissions/{action?}/{*resourceId}", Ro
 orgsApi.MapPost("/{orgId}/roles/{roleId}/permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/roles/{roleId}/permissions/{action}/{*resourceId}", RolePermissionHandlers.DeleteRolePermissionAsync).WithOpenApi();
 // ROLE PROPERTIES
+orgsApi.MapGet("/{orgId}/roles/{roleId}/properties/{name?}", RoleHandlers.GetPropertiesAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}/roles/{roleId}/properties/{name}", RoleHandlers.UpdatePropertyAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/roles/{roleId}/properties/{name}", RoleHandlers.DeletePropertyAsync).WithOpenApi();
 

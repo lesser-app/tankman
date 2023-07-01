@@ -110,6 +110,11 @@ public static class UserHandlers
     ));
   }
 
+  public static async Task<IResult> GetPropertiesAsync(string orgId, string userId, string? name)
+  {
+    return ApiResult.ToResult(await UserService.GetPropertiesAsync(userId: userId, name: name ?? Settings.Wildcard, orgId: orgId));
+  }
+
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string userId, string name, UpdateProperty update)
   {
     return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value, hidden: update.Hidden));

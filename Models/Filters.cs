@@ -4,81 +4,6 @@ using System.Linq.Expressions;
 
 namespace tankman.Models;
 
-public interface IEntity
-{
-  string Id { get; }
-}
-
-public interface IPathedEntity
-{
-  string Id { get; }
-}
-
-public interface IPathSearchHelperEntityInJoin<T> where T : IPathSearchHelperEntity
-{
-  T ResourcePath { get; }
-}
-
-public interface IDynamicProperty
-{
-  string Name { get; }
-  string Value { get; }
-  bool Hidden { get; }
-}
-
-public interface IHasDynamicProperties<T> where T : IDynamicProperty
-{
-  List<T> Properties { get; }
-}
-
-public interface IPathSearchHelperEntity
-{
-  string ResourceId { get; }
-  string ParentId { get; }
-  string Parent1Id { get; }
-  string Parent2Id { get; }
-  string Parent3Id { get; }
-  string Parent4Id { get; }
-  string Parent5Id { get; }
-  string Parent6Id { get; }
-  string Parent7Id { get; }
-  string Parent8Id { get; }
-  string Parent9Id { get; }
-  string Parent10Id { get; }
-  string Parent11Id { get; }
-  string Parent12Id { get; }
-  string Parent13Id { get; }
-  string Parent14Id { get; }
-  string Parent15Id { get; }
-  string Parent16Id { get; }
-}
-
-public interface IOrgAssociated
-{
-  string OrgId { get; }
-}
-
-public interface IUserAssociated
-{
-  string UserId { get; }
-}
-
-public interface IRoleAssociated
-{
-  string RoleId { get; }
-}
-
-
-public interface IActionAssociated
-{
-  string Action { get; }
-}
-
-public interface IResourceAssociated
-{
-  string ResourceId { get; }
-}
-
 public static class Filters
 {
   public static IQueryable<T> ApplyIdFilter<T>(this IQueryable<T> baseQuery, string id) where T : IEntity
@@ -151,8 +76,15 @@ public static class Filters
     }
     else
     {
-      var userList = userId.Split(Settings.Separator).ToList();
-      return userList.Count == 1 ? baseQuery.Where((x) => x.UserId == userId) : baseQuery.Where((x) => userList.Contains(x.UserId));
+      if (userId.Contains(Settings.Separator))
+      {
+        var userList = userId.Split(Settings.Separator).ToList();
+        return baseQuery.Where((x) => userList.Contains(x.UserId));
+      }
+      else
+      {
+        return baseQuery.Where((x) => x.UserId == userId);
+      }
     }
   }
 
@@ -164,8 +96,15 @@ public static class Filters
     }
     else
     {
-      var roleList = roleId.Split(Settings.Separator).ToList();
-      return roleList.Count == 1 ? baseQuery.Where((x) => x.RoleId == roleId) : baseQuery.Where((x) => roleList.Contains(x.RoleId));
+      if (roleId.Contains(Settings.Separator))
+      {
+        var roleList = roleId.Split(Settings.Separator).ToList();
+        return baseQuery.Where((x) => roleList.Contains(x.RoleId));
+      }
+      else
+      {
+        return baseQuery.Where((x) => x.RoleId == roleId);
+      }
     }
   }
 
@@ -204,5 +143,22 @@ public static class Filters
       baseQuery = baseQuery.Where(x => x.Properties.Any(p => p.Name == item.Key && p.Value == item.Value));
     }
     return baseQuery;
+  }
+
+  public static IQueryable<T> SelectProperties<T>(this IQueryable<T> baseQuery, string name) where T : IDynamicProperty
+  {
+    if (name == Settings.Wildcard)
+    {
+      return baseQuery.Where(x => !x.Hidden);
+    }
+    else if (name.Contains(Settings.Separator))
+    {
+      var names = name.Split(Settings.Separator);
+      return baseQuery.Where(x => names.Contains(x.Name));
+    }
+    else
+    {
+      return baseQuery.Where(x => x.Name == name);
+    }
   }
 }
