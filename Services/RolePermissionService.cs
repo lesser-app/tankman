@@ -44,9 +44,9 @@ public static class RolePermissionService
       if (normalizedResourceId == "/")
       {
         return await dbContext.RolePermissions
-                  .ApplyOrgFilter(orgId)
-                  .ApplyRolesFilter(roleId)
-                  .ApplyActionsFilter(action)
+                  .FilterByOrg(orgId)
+                  .FilterByRolePattern(roleId)
+                  .FilterByActionPattern(action)
                   .ApplySkip(from)
                   .ApplyLimit(limit)
                   .ToListAsync();
@@ -54,9 +54,9 @@ public static class RolePermissionService
       else
       {
         var baseQuery = dbContext.RolePermissions
-                  .ApplyOrgFilter(orgId)
-                  .ApplyRolesFilter(roleId)
-                  .ApplyActionsFilter(action);
+                  .FilterByOrg(orgId)
+                  .FilterByRolePattern(roleId)
+                  .FilterByActionPattern(action);
 
         var rolePermissionsQuery = baseQuery.Join(
             dbContext.ResourcePaths,
@@ -64,7 +64,7 @@ public static class RolePermissionService
             (x) => x.ResourceId,
             (perm, path) => new RolePermissionResourcePathJoin { RolePermission = perm, ResourcePath = path }
           )
-          .UsePathScanOptimization<RolePermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
+          .FilterWithPathScanOptimization<RolePermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.RolePermission);
 
         return await rolePermissionsQuery
@@ -76,10 +76,10 @@ public static class RolePermissionService
     else
     {
       var permissions = await dbContext.RolePermissions
-        .ApplyOrgFilter(orgId)
-        .ApplyRolesFilter(roleId)
-        .ApplyActionsFilter(action)
-        .ApplyExactResourceFilter(normalizedResourceId)
+        .FilterByOrg(orgId)
+        .FilterByRolePattern(roleId)
+        .FilterByActionPattern(action)
+        .FilterByResource(normalizedResourceId)
         .ApplyLimit()
         .ToListAsync();
 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace tankman.Models;
 
 [PrimaryKey(nameof(ResourceId), nameof(OrgId))]
-public class ResourcePath : IPathSearchHelperEntity, IOrgAssociated
+public class ResourcePath : IPathSearchHelperEntity, IResourceAssociated, IOrgAssociated
 {
   public required string ResourceId { get; set; }
   [ForeignKey(nameof(ResourceId) + "," + nameof(OrgId))]

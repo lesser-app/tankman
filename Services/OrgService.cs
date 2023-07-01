@@ -14,8 +14,8 @@ public static class OrgService
     var dbContext = new TankmanDbContext();
 
     var results = await dbContext.Orgs
-      .ApplyIdFilter(orgId)
-      .ApplyPropertiesFilter<Org, OrgProperty>(matchProperties)
+      .FilterByIdPattern(orgId)
+      .FilterByProperties<Org, OrgProperty>(matchProperties)
       .Include(x => x.Properties)
       .ApplyLimit(null)
       .ToListAsync();
@@ -77,7 +77,7 @@ public static class OrgService
     var dbContext = new TankmanDbContext();
 
     var query = dbContext.OrgProperties
-      .ApplyOrgFilter(orgId)
+      .FilterByOrg(orgId)
       .SelectProperties(name);
 
     var props = await query.ToListAsync();

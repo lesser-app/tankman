@@ -45,9 +45,9 @@ public static class UserPermissionService
       if (normalizedResourceId == "/")
       {
         return await dbContext.UserPermissions
-                  .ApplyOrgFilter(orgId)
-                  .ApplyUsersFilter(userId)
-                  .ApplyActionsFilter(action)
+                  .FilterByOrg(orgId)
+                  .FilterByUserPattern(userId)
+                  .FilterByActionPattern(action)
                   .ApplySkip(from)
                   .ApplyLimit(limit)
                   .ToListAsync();
@@ -55,9 +55,9 @@ public static class UserPermissionService
       else
       {
         var baseQuery = dbContext.UserPermissions
-            .ApplyOrgFilter(orgId)
-            .ApplyUsersFilter(userId)
-            .ApplyActionsFilter(action);
+            .FilterByOrg(orgId)
+            .FilterByUserPattern(userId)
+            .FilterByActionPattern(action);
 
         var userPermissionsQuery = baseQuery.Join(
             dbContext.ResourcePaths,
@@ -65,7 +65,7 @@ public static class UserPermissionService
             (x) => x.ResourceId,
             (perm, path) => new UserPermissionResourcePathJoin { UserPermission = perm, ResourcePath = path }
           )
-          .UsePathScanOptimization<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
+          .FilterWithPathScanOptimization<UserPermissionResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
           .Select((x) => x.UserPermission);
 
         return await userPermissionsQuery
@@ -77,10 +77,10 @@ public static class UserPermissionService
     else
     {
       var permissions = await dbContext.UserPermissions
-        .ApplyOrgFilter(orgId)
-        .ApplyUsersFilter(userId)
-        .ApplyActionsFilter(action)
-        .ApplyExactResourceFilter(normalizedResourceId)
+        .FilterByOrg(orgId)
+        .FilterByUserPattern(userId)
+        .FilterByActionPattern(action)
+        .FilterByResource(normalizedResourceId)
         .ApplyLimit()
         .ToListAsync();
 

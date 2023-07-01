@@ -26,21 +26,21 @@ public static class ResourceService
       if (normalizedResourceId == "/")
       {
         return await dbContext.Resources
-          .ApplyOrgFilter(orgId)
+          .FilterByOrg(orgId)
           .ApplySkip(from)
           .ApplyLimit(limit)
           .ToListAsync();
       }
       else
       {
-        var baseQuery = dbContext.Resources.ApplyOrgFilter(orgId);
+        var baseQuery = dbContext.Resources.FilterByOrg(orgId);
         var resourcesQuery = baseQuery.Join(
           dbContext.ResourcePaths,
           x => x.Id,
           x => x.ResourceId,
           (res, resPath) => new ResourceResourcePathJoin { Resource = res, ResourcePath = resPath }
         )
-        .UsePathScanOptimization<ResourceResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
+        .FilterWithPathScanOptimization<ResourceResourcePathJoin, ResourcePath>(normalizedResourceId, parts.Count)
         .Select(x => x.Resource);
 
         return await resourcesQuery
@@ -53,7 +53,7 @@ public static class ResourceService
     else
     {
       var resources = await dbContext.Resources
-        .ApplyOrgFilter(orgId)
+        .FilterByOrg(orgId)
         .Where(x => x.Id == normalizedResourceId)
         .ToListAsync();
 

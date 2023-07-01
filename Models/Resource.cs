@@ -12,7 +12,7 @@ public class ResourceJson
 }
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
-public class Resource : IPathedEntity, IOrgAssociated
+public class Resource : IEntity, IOrgAssociated
 {
   public required string Id { get; set; }
 

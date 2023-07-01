@@ -5,11 +5,6 @@ public interface IEntity
   string Id { get; }
 }
 
-public interface IPathedEntity
-{
-  string Id { get; }
-}
-
 public interface IPathSearchHelperEntityInJoin<T> where T : IPathSearchHelperEntity
 {
   T ResourcePath { get; }

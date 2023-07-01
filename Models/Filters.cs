@@ -6,7 +6,12 @@ namespace tankman.Models;
 
 public static class Filters
 {
-  public static IQueryable<T> ApplyIdFilter<T>(this IQueryable<T> baseQuery, string id) where T : IEntity
+  public static IQueryable<T> FilterById<T>(this IQueryable<T> baseQuery, string id) where T : IEntity
+  {
+    return baseQuery.Where((x) => x.Id == id);
+  }
+
+  public static IQueryable<T> FilterByIdPattern<T>(this IQueryable<T> baseQuery, string id) where T : IEntity
   {
     if (id == Settings.Wildcard)
     {
@@ -19,12 +24,7 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyPathedExactIdFilter<T>(this IQueryable<T> baseQuery, string id) where T : IPathedEntity
-  {
-    return baseQuery.Where((x) => x.Id == id);
-  }
-
-  public static IQueryable<TJoin> UsePathScanOptimization<TJoin, TPathScanEntity>(this IQueryable<TJoin> baseQuery, string normalizedResourceId, int partsLength)
+  public static IQueryable<TJoin> FilterWithPathScanOptimization<TJoin, TPathScanEntity>(this IQueryable<TJoin> baseQuery, string normalizedResourceId, int partsLength)
     where TJoin : IPathSearchHelperEntityInJoin<TPathScanEntity>
     where TPathScanEntity : IPathSearchHelperEntity
   {
@@ -63,12 +63,17 @@ public static class Filters
                 : throw new Exception("Internal error. Shouldn't get here."));
   }
 
-  public static IQueryable<T> ApplyOrgFilter<T>(this IQueryable<T> baseQuery, string orgId) where T : IOrgAssociated
+  public static IQueryable<T> FilterByOrg<T>(this IQueryable<T> baseQuery, string orgId) where T : IOrgAssociated
   {
     return baseQuery.Where((x) => x.OrgId == orgId);
   }
 
-  public static IQueryable<T> ApplyUsersFilter<T>(this IQueryable<T> baseQuery, string userId) where T : IUserAssociated
+  public static IQueryable<T> FilterByUser<T>(this IQueryable<T> baseQuery, string userId) where T : IUserAssociated
+  {
+    return baseQuery.Where((x) => x.UserId == userId);
+  }
+
+  public static IQueryable<T> FilterByUserPattern<T>(this IQueryable<T> baseQuery, string userId) where T : IUserAssociated
   {
     if (userId == Settings.Wildcard)
     {
@@ -88,7 +93,12 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyRolesFilter<T>(this IQueryable<T> baseQuery, string roleId) where T : IRoleAssociated
+  public static IQueryable<T> FilterByRole<T>(this IQueryable<T> baseQuery, string roleId) where T : IRoleAssociated
+  {
+    return baseQuery.Where((x) => x.RoleId == roleId);
+  }
+
+  public static IQueryable<T> FilterByRolePattern<T>(this IQueryable<T> baseQuery, string roleId) where T : IRoleAssociated
   {
     if (roleId == Settings.Wildcard)
     {
@@ -108,7 +118,7 @@ public static class Filters
     }
   }
 
-  public static IQueryable<T> ApplyActionsFilter<T>(this IQueryable<T> baseQuery, string action) where T : IActionAssociated
+  public static IQueryable<T> FilterByActionPattern<T>(this IQueryable<T> baseQuery, string action) where T : IActionAssociated
   {
     if (action == Settings.Wildcard)
     {
@@ -131,12 +141,12 @@ public static class Filters
     return limit.HasValue ? baseQuery.Take(limit.Value) : baseQuery.Take(Settings.MaxResults);
   }
 
-  public static IQueryable<T> ApplyExactResourceFilter<T>(this IQueryable<T> baseQuery, string normalizedResourceId) where T : IResourceAssociated
+  public static IQueryable<T> FilterByResource<T>(this IQueryable<T> baseQuery, string normalizedResourceId) where T : IResourceAssociated
   {
     return baseQuery.Where((x) => x.ResourceId == normalizedResourceId);
   }
 
-  public static IQueryable<T> ApplyPropertiesFilter<T, TProp>(this IQueryable<T> baseQuery, Dictionary<string, string> matches) where T : IHasDynamicProperties<TProp> where TProp : IDynamicProperty
+  public static IQueryable<T> FilterByProperties<T, TProp>(this IQueryable<T> baseQuery, Dictionary<string, string> matches) where T : IHasDynamicProperties<TProp> where TProp : IDynamicProperty
   {
     foreach (var item in matches)
     {

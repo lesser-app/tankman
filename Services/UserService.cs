@@ -29,9 +29,9 @@ public static class UserService
     var dbContext = new TankmanDbContext();
 
     var query = dbContext.Users
-      .ApplyOrgFilter(orgId)
-      .ApplyIdFilter(userId)
-      .ApplyPropertiesFilter<User, UserProperty>(matchProperties);
+      .FilterByOrg(orgId)
+      .FilterByIdPattern(userId)
+      .FilterByProperties<User, UserProperty>(matchProperties);
 
     if (sortBy.HasValue)
     {
@@ -135,8 +135,8 @@ public static class UserService
     var dbContext = new TankmanDbContext();
 
     var query = dbContext.UserProperties
-      .ApplyOrgFilter(orgId)
-      .ApplyUsersFilter(userId)
+      .FilterByOrg(orgId)
+      .FilterByUser(userId)
       .SelectProperties(name);
 
     var props = await query.ToListAsync();

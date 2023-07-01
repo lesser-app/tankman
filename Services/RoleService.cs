@@ -13,9 +13,9 @@ public static class RoleService
   {
     var dbContext = new TankmanDbContext();
     var results = await dbContext.Roles
-      .ApplyOrgFilter(orgId)
-      .ApplyIdFilter(roleId)
-      .ApplyPropertiesFilter<Role, RoleProperty>(matchProperties)
+      .FilterByOrg(orgId)
+      .FilterByIdPattern(roleId)
+      .FilterByProperties<Role, RoleProperty>(matchProperties)
       .Include(x => x.Properties)
       .ApplyLimit()
       .ToListAsync();
@@ -70,8 +70,8 @@ public static class RoleService
     var dbContext = new TankmanDbContext();
 
     var query = dbContext.RoleProperties
-      .ApplyOrgFilter(orgId)
-      .ApplyRolesFilter(roleId)
+      .FilterByOrg(orgId)
+      .FilterByRole(roleId)
       .SelectProperties(name);
 
     var props = await query.ToListAsync();
