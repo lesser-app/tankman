@@ -65,6 +65,13 @@ public static class RoleService
     return true;
   }
 
+  public static async Task<OneOf<List<User>, Error<string>>> GetRoleUsersAsync(string roleId, string orgId)
+  {
+    var dbContext = new TankmanDbContext();
+    var roleAssignments = await dbContext.RoleAssignments.Where(x => x.RoleId == roleId).Include(x => x.User).ToListAsync();
+    return roleAssignments.Select(x => x.User!).ToList();
+  }
+
   public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string roleId, string orgId, string name)
   {
     var dbContext = new TankmanDbContext();

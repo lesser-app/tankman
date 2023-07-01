@@ -3,18 +3,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace tankman.Models;
 
-public class UserJson
+public class BaseUserJson
 {
   public required string Id { get; set; }
   public required string Data { get; set; }
   public required string IdentityProvider { get; set; }
   public required string IdentityProviderUserId { get; set; }
   public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-  public required string OrgId { get; set; }
-  public List<string> Roles { get; set; } = new List<string>();
-  public required Dictionary<string, string> Properties { get; set; }
+  public required string OrgId { get; set; }  
 }
 
+public class UserJson : BaseUserJson
+{
+  public List<string> RoleIds { get; set; } = new List<string>();
+  public required Dictionary<string, string> Properties { get; set; }
+}
 
 [PrimaryKey(nameof(Id), nameof(OrgId))]
 public class User : IEntity, IOrgAssociated, IHasDynamicProperties<UserProperty>
@@ -42,6 +45,19 @@ public class User : IEntity, IOrgAssociated, IHasDynamicProperties<UserProperty>
 
   public List<UserProperty> Properties { get; set; } = new List<UserProperty>();
 
+  public static BaseUserJson ToBaseJson(User entity)
+  {
+    return new BaseUserJson
+    {
+      Id = entity.Id,
+      Data = entity.Data,
+      IdentityProvider = entity.IdentityProvider,
+      IdentityProviderUserId = entity.IdentityProviderUserId,
+      CreatedAt = entity.CreatedAt,
+      OrgId = entity.OrgId,
+    };
+  }
+
   public static UserJson ToJson(User entity)
   {
     var properties = new Dictionary<string, string>();
@@ -59,7 +75,7 @@ public class User : IEntity, IOrgAssociated, IHasDynamicProperties<UserProperty>
       IdentityProviderUserId = entity.IdentityProviderUserId,
       CreatedAt = entity.CreatedAt,
       OrgId = entity.OrgId,
-      Roles = entity.Roles,
+      RoleIds = entity.Roles,
       Properties = properties
     };
   }

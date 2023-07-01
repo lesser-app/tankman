@@ -53,12 +53,12 @@ public static class RolePermissionService
       }
       else
       {
-        var baseQuery = dbContext.RolePermissions
+        var query = dbContext.RolePermissions
                   .FilterByOrg(orgId)
                   .FilterByRolePattern(roleId)
                   .FilterByActionPattern(action);
 
-        var rolePermissionsQuery = baseQuery.Join(
+        var rolePermissionsQuery = query.Join(
             dbContext.ResourcePaths,
             (x) => x.ResourceId,
             (x) => x.ResourceId,

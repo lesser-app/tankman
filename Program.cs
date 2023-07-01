@@ -160,6 +160,8 @@ orgsApi.MapGet("/{orgId}/roles/{roleId?}", RoleHandlers.GetRolesAsync).WithOpenA
 orgsApi.MapPost("/{orgId}/roles", RoleHandlers.CreateRoleAsync).WithOpenApi();
 orgsApi.MapPut("/{orgId}/roles/{roleId}", RoleHandlers.UpdateRoleAsync).WithOpenApi();
 orgsApi.MapDelete("/{orgId}/roles/{roleId}", RoleHandlers.DeleteRoleAsync).WithOpenApi();
+// ROLE USERS
+orgsApi.MapGet("/{orgId}/roles/{roleId}/users", RoleHandlers.GetRoleUsersAsync).WithOpenApi();
 // ROLE PERMISSIONS
 orgsApi.MapGet("/{orgId}/roles/{roleId}/permissions/{action?}/{*resourceId}", RolePermissionHandlers.GetRolePermissionsAsync).WithOpenApi();
 orgsApi.MapPost("/{orgId}/roles/{roleId}/permissions", RolePermissionHandlers.CreateRolePermissionAsync).WithOpenApi();

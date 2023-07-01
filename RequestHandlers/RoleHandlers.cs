@@ -39,6 +39,11 @@ public static class RoleHandlers
     return ApiResult.ToResult(await RoleService.DeleteRoleAsync(roleId: roleId, orgId: orgId));
   }
 
+  public static async Task<IResult> GetRoleUsersAsync(string roleId, string orgId)
+  {
+    return ApiResult.ToResult(await RoleService.GetRoleUsersAsync(roleId: roleId, orgId: orgId), (List<User> entities) => entities.Select(User.ToBaseJson));
+  }
+
   public static async Task<IResult> GetPropertiesAsync(string orgId, string roleId, string? name)
   {
     return ApiResult.ToResult(await RoleService.GetPropertiesAsync(roleId: roleId, name: name ?? Settings.Wildcard, orgId: orgId));

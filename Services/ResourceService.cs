@@ -33,8 +33,8 @@ public static class ResourceService
       }
       else
       {
-        var baseQuery = dbContext.Resources.FilterByOrg(orgId);
-        var resourcesQuery = baseQuery.Join(
+        var query = dbContext.Resources.FilterByOrg(orgId);
+        var resourcesQuery = query.Join(
           dbContext.ResourcePaths,
           x => x.Id,
           x => x.ResourceId,

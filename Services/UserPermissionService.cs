@@ -54,12 +54,12 @@ public static class UserPermissionService
       }
       else
       {
-        var baseQuery = dbContext.UserPermissions
+        var query = dbContext.UserPermissions
             .FilterByOrg(orgId)
             .FilterByUserPattern(userId)
             .FilterByActionPattern(action);
 
-        var userPermissionsQuery = baseQuery.Join(
+        var userPermissionsQuery = query.Join(
             dbContext.ResourcePaths,
             (x) => x.ResourceId,
             (x) => x.ResourceId,
