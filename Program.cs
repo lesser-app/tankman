@@ -6,6 +6,16 @@ using tankman.Utils;
 
 var rootCommand = new RootCommand("Tankman user management and access control");
 
+var hostOption = new Option<string>(
+            name: "--host",
+            description: "Host name.",
+            getDefaultValue: () => "localhost");
+
+var portOption = new Option<int>(
+            name: "--port",
+            description: "Port.",
+            getDefaultValue: () => 1989);
+
 var dbHostOption = new Option<string>(
             name: "--dbhost",
             description: "Database hostname.",
@@ -41,7 +51,7 @@ var separatorOption = new Option<string?>(
             description: "Separator character to be used in the url.",
             getDefaultValue: () => ",");
 
-var maxResultsOptions = new Option<int>(
+var maxResultsOption = new Option<int>(
             name: "--max-results",
             description: "Maximum number of results to return.",
             getDefaultValue: () => 10000);
@@ -51,6 +61,8 @@ var safetyKeyArg = new Option<string?>(
   description: "Require this key to be supplied as the querystring parameter 'safetyKey' for org deletion."
 );
 
+rootCommand.AddOption(hostOption);
+rootCommand.AddOption(portOption);
 rootCommand.AddOption(dbHostOption);
 rootCommand.AddOption(dbPortOption);
 rootCommand.AddOption(dbNameOption);
@@ -59,19 +71,36 @@ rootCommand.AddOption(dbPassOption);
 rootCommand.AddOption(wildcardOption);
 rootCommand.AddOption(separatorOption);
 rootCommand.AddOption(safetyKeyArg);
-rootCommand.AddOption(maxResultsOptions);
+rootCommand.AddOption(maxResultsOption);
+
+string host = Environment.GetEnvironmentVariable("TANKMAN_HOST") ?? "localhost";
+int port = !String.IsNullOrEmpty(Environment.GetEnvironmentVariable("TANKMAN_PORT"))
+  ? int.Parse(Environment.GetEnvironmentVariable("TANKMAN_PORT")!)
+  : 1989;
 
 rootCommand.SetHandler((context) =>
 {
-  var host = context.ParseResult.GetValueForOption(dbHostOption);
-  var port = context.ParseResult.GetValueForOption(dbPortOption);
+  var hostOptionResult = context.ParseResult.FindResultFor(hostOption)!;
+  var portOptionResult = context.ParseResult.FindResultFor(portOption)!;
+
+  if (!hostOptionResult.IsImplicit)
+  {
+    host = hostOptionResult.GetValueOrDefault<string>()!;
+  }
+  if (!portOptionResult.IsImplicit)
+  {
+    port = portOptionResult.GetValueOrDefault<int>();
+  }
+
+  var dbHost = context.ParseResult.GetValueForOption(dbHostOption);
+  var dbPort = context.ParseResult.GetValueForOption(dbPortOption);
   var dbName = context.ParseResult.GetValueForOption(dbNameOption);
-  var user = context.ParseResult.GetValueForOption(dbUserOption);
-  var password = context.ParseResult.GetValueForOption(dbPassOption);
+  var dbUser = context.ParseResult.GetValueForOption(dbUserOption);
+  var dbPassword = context.ParseResult.GetValueForOption(dbPassOption);
   var wildcardCharacter = context.ParseResult.GetValueForOption(wildcardOption);
   var separatorCharacter = context.ParseResult.GetValueForOption(separatorOption);
   var safetyKey = context.ParseResult.GetValueForOption(safetyKeyArg);
-  var maxResults = context.ParseResult.GetValueForOption(maxResultsOptions);
+  var maxResults = context.ParseResult.GetValueForOption(maxResultsOption);
 
   Settings.MaxResults = maxResults;
   Settings.Wildcard = wildcardCharacter!;
@@ -82,9 +111,9 @@ rootCommand.SetHandler((context) =>
     Settings.SafetyKey = safetyKey;
   }
 
-  if (user != null && password != null)
+  if (dbUser != null && dbPassword != null)
   {
-    TankmanDbContext.SetConnectionStringFromArgs($"Server={host};Port={port};Database={dbName};User Id={user};Password={password}");
+    TankmanDbContext.SetConnectionStringFromArgs($"Server={dbHost};Port={dbPort};Database={dbName};User Id={dbUser};Password={dbPassword}");
   }
 });
 
@@ -184,5 +213,5 @@ if (app.Environment.IsDevelopment())
   app.UseSwaggerUI();
 }
 
-app.Run();
+app.Run($"http://{host}:{port}");
 
