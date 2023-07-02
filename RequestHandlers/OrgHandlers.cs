@@ -76,7 +76,7 @@ public static class OrgHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value, hidden: update.Hidden));
+    return ApiResult.ToResult(await OrgService.UpdatePropertyAsync(orgId: orgId, name: name, value: update.Value, hidden: update.Hidden), DynamicProperty.ToJson);
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string name)

@@ -143,16 +143,18 @@ public static class UserService
   }
 
 
-  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string userId, string name, string value, bool hidden, string orgId)
+  public static async Task<OneOf<UserProperty, Error<string>>> UpdatePropertyAsync(string userId, string name, string value, bool hidden, string orgId)
   {
     var dbContext = new TankmanDbContext();
 
-    var property = await dbContext.UserProperties.SingleOrDefaultAsync(x => x.Name == name && x.UserId == userId && x.OrgId == orgId);
+    var property = await dbContext.UserProperties.SingleOrDefaultAsync(x => x.Name == name && x.OrgId == orgId);
 
     if (property != null)
     {
       property.Value = value;
       property.Hidden = hidden;
+      await dbContext.SaveChangesAsync();
+      return property;
     }
     else
     {
@@ -166,10 +168,9 @@ public static class UserService
         CreatedAt = DateTime.UtcNow
       };
       dbContext.UserProperties.Add(newProperty);
+      await dbContext.SaveChangesAsync();
+      return newProperty;
     }
-
-    await dbContext.SaveChangesAsync();
-    return true;
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeletePropertyAsync(string userId, string name, string orgId)

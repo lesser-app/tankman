@@ -126,7 +126,7 @@ public static class UserHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string userId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value, hidden: update.Hidden));
+    return ApiResult.ToResult(await UserService.UpdatePropertyAsync(orgId: orgId, userId: userId, name: name, value: update.Value, hidden: update.Hidden), DynamicProperty.ToJson);
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string userId, string name)

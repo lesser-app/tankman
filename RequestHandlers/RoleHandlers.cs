@@ -59,7 +59,7 @@ public static class RoleHandlers
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string roleId, string name, UpdateProperty update)
   {
-    return ApiResult.ToResult(await RoleService.UpdatePropertyAsync(orgId: orgId, roleId: roleId, name: name, value: update.Value, hidden: update.Hidden));
+    return ApiResult.ToResult(await RoleService.UpdatePropertyAsync(orgId: orgId, roleId: roleId, name: name, value: update.Value, hidden: update.Hidden), DynamicProperty.ToJson);
   }
 
   public static async Task<IResult> DeletePropertyAsync(string orgId, string roleId, string name)

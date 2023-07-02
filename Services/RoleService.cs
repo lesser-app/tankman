@@ -84,16 +84,18 @@ public static class RoleService
     return await query.ToListAsync();
   }
 
-  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string roleId, string name, string value, bool hidden, string orgId)
+  public static async Task<OneOf<RoleProperty, Error<string>>> UpdatePropertyAsync(string roleId, string name, string value, bool hidden, string orgId)
   {
     var dbContext = new TankmanDbContext();
 
-    var property = await dbContext.RoleProperties.SingleOrDefaultAsync(x => x.Name == name && x.RoleId == roleId && x.OrgId == orgId);
+    var property = await dbContext.RoleProperties.SingleOrDefaultAsync(x => x.Name == name && x.OrgId == orgId);
 
     if (property != null)
     {
       property.Value = value;
       property.Hidden = hidden;
+      await dbContext.SaveChangesAsync();
+      return property;
     }
     else
     {
@@ -107,10 +109,9 @@ public static class RoleService
         CreatedAt = DateTime.UtcNow
       };
       dbContext.RoleProperties.Add(newProperty);
+      await dbContext.SaveChangesAsync();
+      return newProperty;
     }
-
-    await dbContext.SaveChangesAsync();
-    return true;
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeletePropertyAsync(string roleId, string name, string orgId)

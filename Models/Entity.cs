@@ -19,7 +19,13 @@ public class DynamicProperty
 
   public static DynamicProperty ToJson<T>(T entity) where T : DynamicProperty
   {
-    return entity;
+    return new DynamicProperty
+    {
+      Name = entity.Name,
+      Value = entity.Value,
+      Hidden = entity.Hidden,
+      CreatedAt = entity.CreatedAt,
+    };
   }
 }
 

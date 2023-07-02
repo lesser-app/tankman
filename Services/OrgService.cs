@@ -92,7 +92,7 @@ public static class OrgService
     return await query.ToListAsync();
   }
 
-  public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value, bool hidden)
+  public static async Task<OneOf<OrgProperty, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value, bool hidden)
   {
     var dbContext = new TankmanDbContext();
 
@@ -101,6 +101,9 @@ public static class OrgService
     if (property != null)
     {
       property.Value = value;
+      property.Hidden = hidden;
+      await dbContext.SaveChangesAsync();
+      return property;
     }
     else
     {
@@ -113,10 +116,9 @@ public static class OrgService
         CreatedAt = DateTime.UtcNow
       };
       dbContext.OrgProperties.Add(newProperty);
+      await dbContext.SaveChangesAsync();
+      return newProperty;
     }
-
-    await dbContext.SaveChangesAsync();
-    return true;
   }
 
   public static async Task<OneOf<bool, Error<string>>> DeletePropertyAsync(string orgId, string name)
