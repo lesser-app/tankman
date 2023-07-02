@@ -47,7 +47,16 @@ public static class UserHandlers
     };
 
     return ApiResult.ToResult(
-      await UserService.GetUsersAsync(userId: userId ?? Settings.Wildcard, orgId: orgId, properties: properties, sortBy: sortBy, sortOrder: sortOrder, from: from, limit: limit, matchProperties: matchProperties),
+      await UserService.GetUsersAsync(
+        userId: userId ?? Settings.Wildcard,
+        orgId: orgId,
+        properties: properties,
+        sortBy: sortBy,
+        sortOrder: sortOrder,
+        from: from,
+        limit: limit,
+        matchProperties: matchProperties
+      ),
       (List<User> entities) => entities.Select(User.ToJson)
     );
   }
