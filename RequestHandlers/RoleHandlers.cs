@@ -21,7 +21,15 @@ public static class RoleHandlers
   public static async Task<IResult> GetRolesAsync(string? roleId, string orgId, string? properties, HttpContext context)
   {
     var matchProperties = QueryStringUtils.GetPrefixedQueryDictionary("properties.", context);
-    return ApiResult.ToResult(await RoleService.GetRolesAsync(roleId ?? Settings.Wildcard, orgId: orgId, properties: properties, matchProperties: matchProperties), (List<Role> entities) => entities.Select(Role.ToJson));
+    return ApiResult.ToResult(
+      await RoleService.GetRolesAsync(
+        roleId ?? Settings.Wildcard, 
+        orgId: orgId, 
+        properties: properties, 
+        matchProperties: matchProperties
+      ), 
+      Role.ToJson
+    );
   }
 
   public static async Task<IResult> CreateRoleAsync(string orgId, CreateRole create)

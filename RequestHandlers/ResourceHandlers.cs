@@ -27,7 +27,7 @@ public static class ResourceHandlers
         from: from,
         limit: limit
       ),
-      (List<Resource> entities) => entities.Select(Resource.ToJson)
+      Resource.ToJson
     );
   }
 

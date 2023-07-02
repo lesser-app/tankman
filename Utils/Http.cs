@@ -21,6 +21,11 @@ public static class ApiResult
   {
     return result.IsT0 ? TypedResults.Ok(new ValidResult { Data = jsonTransform(result.AsT0)! }) : TypedResults.BadRequest(new ErrorResult { Error = result.AsT1! });
   }
+
+  public static IResult ToResult<T0, T1, TResult>(OneOf.OneOf<List<T0>, T1> result, Func<T0, TResult> jsonTransform)
+  {
+    return result.IsT0 ? TypedResults.Ok(new ValidResult { Data = (result.AsT0).Select(jsonTransform) }) : TypedResults.BadRequest(new ErrorResult { Error = result.AsT1! });
+  }
 }
 
 public static class QueryStringUtils

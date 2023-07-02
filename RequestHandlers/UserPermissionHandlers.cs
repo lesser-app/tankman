@@ -25,7 +25,7 @@ public static class UserPermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<UserPermission> entities) => entities.Select(UserPermission.ToJson)
+      UserPermission.ToJson
     );
   }
 
@@ -40,7 +40,7 @@ public static class UserPermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<object> entities) => entities.Select<object, object>((object x) => x is UserPermission ? UserPermission.ToJson((UserPermission)x) : RolePermission.ToJson((RolePermission)x))
+      (object x) => x is UserPermission ? UserPermission.ToJson((UserPermission)x) as object : RolePermission.ToJson((RolePermission)x) as object
     );
   }
 

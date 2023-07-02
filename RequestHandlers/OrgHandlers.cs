@@ -46,7 +46,7 @@ public static class OrgHandlers
         limit: limit,
         matchProperties: matchProperties
       ),
-      (List<Org> entities) => entities.Select(Org.ToJson)
+      Org.ToJson
     );
   }
 
@@ -71,7 +71,7 @@ public static class OrgHandlers
 
   public static async Task<IResult> GetPropertiesAsync(string orgId, string? name)
   {
-    return ApiResult.ToResult(await OrgService.GetPropertiesAsync(orgId: orgId, name: name ?? Settings.Wildcard));
+    return ApiResult.ToResult(await OrgService.GetPropertiesAsync(orgId: orgId, name: name ?? Settings.Wildcard), DynamicProperty.ToJson);
   }
 
   public static async Task<IResult> UpdatePropertyAsync(string orgId, string name, UpdateProperty update)

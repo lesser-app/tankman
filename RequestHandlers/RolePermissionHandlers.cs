@@ -25,7 +25,7 @@ public static class RolePermissionHandlers
         from: from,
         limit: limit
       ),
-      (List<RolePermission> entities) => entities.Select(RolePermission.ToJson)
+      RolePermission.ToJson
     );
   }
 

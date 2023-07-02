@@ -57,7 +57,7 @@ public static class UserHandlers
         limit: limit,
         matchProperties: matchProperties
       ),
-      (List<User> entities) => entities.Select(User.ToJson)
+      User.ToJson
     );
   }
 

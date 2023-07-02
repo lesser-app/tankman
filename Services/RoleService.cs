@@ -72,7 +72,7 @@ public static class RoleService
     return roleAssignments.Select(x => x.User!).ToList();
   }
 
-  public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string roleId, string orgId, string name)
+  public static async Task<OneOf<List<RoleProperty>, Error<string>>> GetPropertiesAsync(string roleId, string orgId, string name)
   {
     var dbContext = new TankmanDbContext();
 
@@ -81,11 +81,8 @@ public static class RoleService
       .FilterByRole(roleId)
       .SelectProperties(name);
 
-    var props = await query.ToListAsync();
-
-    return props.ToDictionary();
+    return await query.ToListAsync();
   }
-
 
   public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string roleId, string name, string value, bool hidden, string orgId)
   {

@@ -10,14 +10,20 @@ public interface IPathSearchHelperEntityInJoin<T> where T : IPathSearchHelperEnt
   T ResourcePath { get; }
 }
 
-public interface IDynamicProperty
+public class DynamicProperty
 {
-  string Name { get; }
-  string Value { get; }
-  bool Hidden { get; }
+  public required string Name { get; set; }
+  public required string Value { get; set; }
+  public required bool Hidden { get; set; }
+  public required DateTime CreatedAt { get; set; }
+
+  public static DynamicProperty ToJson<T>(T entity) where T : DynamicProperty
+  {
+    return entity;
+  }
 }
 
-public interface IHasDynamicProperties<T> where T : IDynamicProperty
+public interface IHasDynamicProperties<T> where T : DynamicProperty
 {
   List<T> Properties { get; }
 }
@@ -72,7 +78,7 @@ public interface IResourceAssociated
 
 public static class DynamicPropertyExtensions
 {
-  public static Dictionary<string, string> ToDictionary<T>(this List<T> properties) where T : IDynamicProperty
+  public static Dictionary<string, string> ToDictionary<T>(this List<T> properties) where T : DynamicProperty
   {
     var results = new Dictionary<string, string>();
 

@@ -10,8 +10,8 @@ namespace tankman.Services;
 public static class OrgService
 {
   public static async Task<OneOf<List<Org>, Error<string>>> GetOrgsAsync(
-    string orgId, 
-    string? properties, 
+    string orgId,
+    string? properties,
     SortUserBy? sortBy,
     SortOrder? sortOrder,
     int? from,
@@ -81,7 +81,7 @@ public static class OrgService
     return true;
   }
 
-  public static async Task<OneOf<Dictionary<string, string>, Error<string>>> GetPropertiesAsync(string orgId, string name)
+  public static async Task<OneOf<List<OrgProperty>, Error<string>>> GetPropertiesAsync(string orgId, string name)
   {
     var dbContext = new TankmanDbContext();
 
@@ -89,9 +89,7 @@ public static class OrgService
       .FilterByOrg(orgId)
       .SelectProperties(name);
 
-    var props = await query.ToListAsync();
-
-    return props.ToDictionary();
+    return await query.ToListAsync();
   }
 
   public static async Task<OneOf<bool, Error<string>>> UpdatePropertyAsync(string orgId, string name, string value, bool hidden)

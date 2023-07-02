@@ -146,7 +146,7 @@ public static class Filters
     return query.Where((x) => x.ResourceId == normalizedResourceId);
   }
 
-  public static IQueryable<T> FilterByProperties<T, TProp>(this IQueryable<T> query, Dictionary<string, string> matches) where T : IHasDynamicProperties<TProp> where TProp : IDynamicProperty
+  public static IQueryable<T> FilterByProperties<T, TProp>(this IQueryable<T> query, Dictionary<string, string> matches) where T : IHasDynamicProperties<TProp> where TProp : DynamicProperty
   {
     foreach (var item in matches)
     {
@@ -155,7 +155,7 @@ public static class Filters
     return query;
   }
 
-  public static IQueryable<T> SelectProperties<T>(this IQueryable<T> query, string name) where T : IDynamicProperty
+  public static IQueryable<T> SelectProperties<T>(this IQueryable<T> query, string name) where T : DynamicProperty
   {
     if (name == Settings.Wildcard)
     {
