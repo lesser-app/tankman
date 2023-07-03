@@ -26,9 +26,9 @@ else
   echo "Failed to create directory: $1"
 fi
 
-cp bin/Release/net8.0/linux-arm64/publish/tankman $1/tankman-arm64
-cp bin/Release/net8.0/linux-x64/publish/tankman $1/tankman-x64
-cp bin/Release/net8.0/linux-musl-x64/publish/tankman $1/tankman-musl-x64
+cp bin/Release/net8.0/linux-arm64/publish/tankman $1/tankman-linux-arm64
+cp bin/Release/net8.0/linux-x64/publish/tankman $1/tankman-linux-x64
+cp bin/Release/net8.0/linux-musl-x64/publish/tankman $1/tankman-linux-musl-x64
 cp bin/Release/net8.0/win-x64/publish/tankman.exe $1/tankman-win-x64.exe
 cp bin/Release/net8.0/osx.13-arm64/publish/tankman $1/tankman-osx13-arm64
 cp bin/Release/net8.0/osx-x64/publish/tankman $1/tankman-osx-x64
