@@ -17,7 +17,6 @@ Download binaries for your platform
 - [macOS M1](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-osx13-arm64)
 - [macOS x64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-osx-x64)
 - [Windows x86-64 (untested)](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-win-x64.exe)
-- [Source Code](https://github.com/lesser-app/tankman)
 
 ## Setting up Tankman
 
@@ -1398,3 +1397,13 @@ Response:
 	}
 }
 ```
+
+# Help Wanted
+
+1. Test Suite. We need to build a full test suite. This is our highest priority item.
+2. Publish to Docker Hub
+3. Docker compose file with PostgreSQL
+4. Clean up the Documentation
+5. Document patterns to use for Authorization.
+
+
