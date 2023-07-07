@@ -10,6 +10,7 @@ Tankman is a service which offers a REST API to do the following:
 It's important to note that Tankman does not function as an Identity and Authentication server. However, it can work well with popular open-source identity solutions such as [Ory Kratos](https://github.com/ory/kratos), various OAuth-based providers, or even your own custom authentication mechanism.
 
 Tankman is available on GitHub under the MIT license. You can download it as a binary for your platform; and it utilizes PostgreSQL as its underlying database.
+
 Better formatted documentation can be found on the [Tankman Website - tankman.dev](https://tankman.dev).
 
 ### Install Tankman
