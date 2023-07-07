@@ -59,10 +59,6 @@ TANKMAN_CONN_STR=Server=localhost;Port=5432;Database=tankmandb;User Id=postgres;
 ./tankman
 ```
 
-### Docker
-
-Alternatively you can pull our docker images. [Coming soon. Help wanted.]
-
 ### ⚠️ Caution 
 
 Tankman is an internal service which should be accessible only from your backend apps. Make sure that you don't expose Tankman ports publicly.
@@ -649,8 +645,6 @@ HTTP GET /orgs/{orgId}/roles/{roleId}/users
 HTTP GET /orgs/example.com/roles/admins/users
 ```
 
-For more on assigning Roles to Users, see the [Users API](/docs/api/users).
-
 ## Users
 
 Users belong to an organization. Users may belong to Roles, and can have Permissions to various Resources.
@@ -1155,10 +1149,6 @@ For example:
 HTTP DELETE /orgs/example.com/resources/root/drives/c/home
 ```
 
-### Permissions
-
-See the [Permissions API](../permissions).
-
 ## Permissions
 
 Permissions are entities which determine whether a Role or a User has access to a Resource. Permissions also have an "action" property which specifies what the Role or User is allowed to do with the Resource.
@@ -1194,7 +1184,7 @@ Response:
 }
 ```
 
-The example above specifies that the role "admins" can "write" to the resource "/root/drives/c/home". Note that the resource should already exist. See the [Resources API](../resources) to learn how to create a resource.
+The example above specifies that the role "admins" can "write" to the resource "/root/drives/c/home". Note that the resource should already exist. 
 
 
 ### Creating a User Permission
