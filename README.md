@@ -6,7 +6,7 @@ Tankman is a valuable tool for SaaS applications that require storage for organi
 
 It's important to note that Tankman does not function as an Identity and Authentication server. However, it can work well with popular open-source identity solutions such as [Ory Kratos](https://github.com/ory/kratos), various OAuth-based providers, or even your own custom authentication mechanism.
 
-You can find this documentation on the [Tankman Website](https://tankman.dev) as well.
+Better formatted documentation can be found on the [Tankman Website](https://tankman.dev).
 
 ### Install Tankman
 
