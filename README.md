@@ -1,4 +1,4 @@
-## What is Tankman?
+### What is Tankman?
 
 ![Tankman](https://tankman.dev/tankman-ai.jpg)
 
@@ -8,7 +8,7 @@ It's important to note that Tankman does not function as an Identity and Authent
 
 You can find this documentation on the [Tankman Website](https://tankman.dev) as well.
 
-## Install Tankman
+### Install Tankman
 
 Download binaries for your platform
 - For most Linux distros [Linux x86-64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-linux-x64) 
@@ -18,7 +18,7 @@ Download binaries for your platform
 - [macOS x64](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-osx-x64)
 - [Windows x86-64 (untested)](https://github.com/lesser-app/tankman/releases/download/tankman-1.0.0-beta1/tankman-win-x64.exe)
 
-## Setting up Tankman
+### Setting up Tankman
 
 Step 1: Create a new database for tankman on your PostgreSQL server. Call it whatever you want, but most people call it tankmandb.
 
@@ -30,7 +30,7 @@ Step 2: Initialize the database. You can do that with the following command:
 
 That's it. You're ready to roll.
 
-## Running Tankman
+### Running Tankman
 
 The following command will start tankman on localhost:1989
 
@@ -44,7 +44,7 @@ You can change the hostname and port with the `--host` and `--port` CLI options.
 ./tankman --host 127.0.0.1 --port 1990 --dbhost YOUR_PG_HOST --dbport YOUR_PG_PORT --dbuser YOUR_PG_USER --dbpass YOUR_PG_PASSWORD
 ```
 
-## Configuring via Environment Variables
+### Configuring via Environment Variables
 
 Instead of using CLI options as given above, you may use $TANKMAN_HOST (instead of `--host`), $TANKMAN_PORT (instead of `--port`) and $TANKMAN_CONN_STR (instead of `--dbhost`, `--dbport`, `--dbuser`, `--dbpass`) environment variables.
 
@@ -59,19 +59,19 @@ TANKMAN_CONN_STR=Server=localhost;Port=5432;Database=tankmandb;User Id=postgres;
 ./tankman
 ```
 
-## Docker
+### Docker
 
 Alternatively you can pull our docker images. [Coming soon. Help wanted.]
 
-## ⚠️ Caution 
+### ⚠️ Caution 
 
 Tankman is an internal service which should be accessible only from your backend apps. Make sure that you don't expose Tankman ports publicly.
 
-# Organizations
+## Organizations
 
 Organizations are at the root of the entity hierarchy, and should be the first thing you should create. You may create as many orgs are you need.
 
-## Create an Organization
+### Create an Organization
 
 ```tpl
 HTTP POST /orgs
@@ -99,7 +99,7 @@ Response:
 }
 ```
 
-## Get Organizations
+### Get Organizations
 
 ```tpl
 HTTP GET /orgs
@@ -150,7 +150,7 @@ HTTP GET /orgs/{orgId1,orgId2}
 HTTP GET /orgs/example.com,northwind
 ```
 
-## Update an Organization
+### Update an Organization
 
 ```tpl
 HTTP PUT /orgs/{orgId}
@@ -180,7 +180,7 @@ Response:
 }
 ```
 
-## Delete an Organization
+### Delete an Organization
 
 Deleting an organization will delete everything associated with it - resources, roles, users, permissions etc. This is indeed a very destructive operation.
 
@@ -211,7 +211,7 @@ HTTP DELETE /orgs/{orgId}?safetyKey=$SAFETY_KEY
 HTTP DELETE /orgs/example.com?safetyKey=NOFOOTGUN
 ```
 
-## Add a Custom Property
+### Add a Custom Property
 
 You can add custom string properties to an Organization entity.
 
@@ -262,7 +262,7 @@ For example, `GET /orgs/example.com` will retrieve the following response. Note 
 }
 ```
 
-## Get the value of a property
+### Get the value of a property
 
 Properties are usually read as a part of the fetching entity; Org in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
 
@@ -288,7 +288,7 @@ Response:
 }
 ```
 
-## Delete a Custom Property
+### Delete a Custom Property
 
 ```tpl
 HTTP DELETE /orgs/{orgId}/properties/{propertyName}
@@ -297,7 +297,7 @@ HTTP DELETE /orgs/{orgId}/properties/{propertyName}
 HTTP DELETE /orgs/example.com/properties/country
 ```
 
-## Creating Hidden Properties
+### Creating Hidden Properties
 
 When a property is hidden, it will not be included when the organization is fetched. To create a hidden property, add the hidden flag when creating the property.
 
@@ -346,7 +346,7 @@ Response:
 }
 ```
 
-## Filtering by Property
+### Filtering by Property
 
 Organizations may be filtered by the custom property.
 
@@ -357,11 +357,11 @@ HTTP GET /orgs?properties.{propertyName}={propertyValue}
 HTTP GET /orgs?properties.country=India
 ```
 
-# Roles
+## Roles
 
 Roles belong to an Organization. Users can be assigned Roles. Roles can have Permissions to various Resources.
 
-## Create a Role
+### Create a Role
 
 ```tpl
 HTTP POST /orgs/{orgId}/roles
@@ -393,7 +393,7 @@ Response:
 }
 ```
 
-## Get Roles
+### Get Roles
 
 ```tpl
 HTTP GET /orgs/{orgId}/roles/
@@ -446,7 +446,7 @@ HTTP GET /orgs/example.com/roles/admins,devops
 ```
 
 
-## Update a Role
+### Update a Role
 
 ```tpl
 HTTP PUT /orgs/{orgId}/roles/{roleId}
@@ -477,7 +477,7 @@ Response:
 }
 ```
 
-## Delete a Role
+### Delete a Role
 
 Deleting a role will also delete associated permissions.
 
@@ -488,7 +488,7 @@ HTTP DELETE /orgs/{orgId}/roles/{roleId}
 HTTP DELETE /orgs/example.com/roles/admins
 ```
 
-## Add a Custom Property
+### Add a Custom Property
 
 You can add custom string properties to an Role entity.
 
@@ -539,7 +539,7 @@ For example, `GET /orgs/example.com/roles/admins` will retrieve the following re
 }
 ```
 
-## Get the value of a property
+### Get the value of a property
 
 Properties are usually read as a part of the fetching entity; Role in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
 
@@ -568,7 +568,7 @@ Response:
 ```
 
 
-## Delete a Custom Property 
+### Delete a Custom Property 
 
 ```tpl
 HTTP DELETE: /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
@@ -577,7 +577,7 @@ HTTP DELETE: /orgs/{orgId}/roles/{roleId}/properties/{propertyName}
 HTTP DELETE: /orgs/example.com/roles/admins/properties/privileged
 ```
 
-## Creating Hidden Properties
+### Creating Hidden Properties
 
 When a property is hidden, it will not be included when the Role is fetched. To create a hidden property, add the hidden flag when creating the property.
 
@@ -627,7 +627,7 @@ Response:
 }
 ```
 
-## Filtering by Property
+### Filtering by Property
 
 Roles may be filtered by the custom property.
 
@@ -638,7 +638,7 @@ HTTP GET /orgs/{orgId}/roles?properties.{propertyName}={propertyValue}
 HTTP GET /orgs/example.com/roles?properties.active=yes
 ```
 
-## Finds users in a Role
+### Finds users in a Role
 
 See a list of users who have a specific Role.
 
@@ -651,11 +651,11 @@ HTTP GET /orgs/example.com/roles/admins/users
 
 For more on assigning Roles to Users, see the [Users API](/docs/api/users).
 
-# Users
+## Users
 
 Users belong to an organization. Users may belong to Roles, and can have Permissions to various Resources.
 
-## Create a User
+### Create a User
 
 ```tpl
 HTTP POST /orgs/{orgId}/users
@@ -692,7 +692,7 @@ Response:
 }
 ```
 
-## Get Users
+### Get Users
 
 ```tpl
 HTTP GET /orgs/{orgId}/users/
@@ -739,7 +739,7 @@ HTTP GET /orgs/example.com/users/user3,user5
 ```
 
 
-## Update a user
+### Update a user
 
 ```tpl
 HTTP PUT /orgs/{orgId}/users/{userId}
@@ -775,7 +775,7 @@ Response:
 }
 ```
 
-## Delete a user
+### Delete a user
 
 Deleting a user will also delete associated user permissions.
 
@@ -786,7 +786,7 @@ HTTP DELETE /orgs/{orgId}/users/{userId}
 HTTP DELETE /orgs/example.com/users/user3
 ```
 
-## Assiging Roles
+### Assiging Roles
 
 ```tpl
 HTTP POST /orgs/{orgId}/users/{userId}/roles
@@ -816,7 +816,7 @@ Response:
 }
 ```
 
-## Unassigning Roles
+### Unassigning Roles
 
 ```tpl
 HTTP DELETE /orgs/{orgId}/users/{userId}/roles/{roleId}
@@ -825,7 +825,7 @@ HTTP DELETE /orgs/{orgId}/users/{userId}/roles/{roleId}
 HTTP DELETE /orgs/example.com/users/user3/roles/admins
 ```
 
-## Finds users in a Role
+### Finds users in a Role
 
 See a list of users who have a specific Role.
 
@@ -836,7 +836,7 @@ HTTP GET /orgs/{orgId}/roles/{roleId}/users
 HTTP GET /orgs/example.com/roles/admins/users
 ```
 
-## Add a Custom Property
+### Add a Custom Property
 
 You can add custom string properties to an user entity.
 
@@ -891,7 +891,7 @@ For example, `GET /orgs/example.com/users/user3` will retrieve the following res
 }
 ```
 
-## Get the value of a property
+### Get the value of a property
 
 Properties are usually read as a part of the fetching entity; user in this case. But if you need to get a list of properties without fetching the entity you can use the following API.
 
@@ -920,7 +920,7 @@ Response:
 ```
 
 
-## Delete a Custom Property 
+### Delete a Custom Property 
 
 ```tpl
 HTTP DELETE: /orgs/{orgId}/users/{userId}/properties/{propertyName}
@@ -929,7 +929,7 @@ HTTP DELETE: /orgs/{orgId}/users/{userId}/properties/{propertyName}
 HTTP DELETE: /orgs/example.com/users/user3/properties/firstName
 ```
 
-## Creating Hidden Properties
+### Creating Hidden Properties
 
 When a property is hidden, it will not be included when the user is fetched. To create a hidden property, add the hidden flag when creating the property.
 
@@ -982,7 +982,7 @@ Response:
 }
 ```
 
-## Filtering by Property
+### Filtering by Property
 
 users may be filtered by the custom property.
 
@@ -1014,7 +1014,7 @@ Response:
 }
 ```
 
-# Resources
+## Resources
 
 Resources belong to Organizations - and they're names of various entities in the Organization. We use Unix-like paths to represent entities in an organization.
 
@@ -1030,7 +1030,7 @@ But anything can be a path. For example, if you wanted to control access to a fe
 - /features/sellbitcoin
 - /features/bulkbuy
 
-## Create a Resource
+### Create a Resource
 
 ```tpl
 HTTP POST /orgs/{orgId}/resources
@@ -1061,7 +1061,7 @@ Response:
 }
 ```
 
-## Get Resources
+### Get Resources
 
 ```tpl
 HTTP GET /orgs/{orgId}/resources
@@ -1100,7 +1100,7 @@ HTTP GET /orgs/{orgId}/resources/{resourcePath}
 HTTP GET /orgs/example.com/resources/root/drives/c/home
 ```
 
-## Wildcard searches
+### Wildcard searches
 
 A wildcard search allows you to search for all resources starting with a certain path. The wildcard character to use is a tilde(~).
 
@@ -1118,7 +1118,7 @@ Assume you have the following resources:
 
 The request `HTTP GET /orgs/example.com/resources/root/drives/~` will fetch both since they start with `/root/drives/`.
 
-## Update a Resource
+### Update a Resource
 
 ```tpl
 HTTP PUT /orgs/{orgId}/resources/{resourcePath}
@@ -1146,7 +1146,7 @@ Response:
 }
 ```
 
-## DELETE a Resource
+### DELETE a Resource
 
 ```tpl
 HTTP DELETE /orgs/{orgId}/resources/{resourcePath}
@@ -1155,15 +1155,15 @@ For example:
 HTTP DELETE /orgs/example.com/resources/root/drives/c/home
 ```
 
-## Permissions
+### Permissions
 
 See the [Permissions API](../permissions).
 
-# Permissions
+## Permissions
 
 Permissions are entities which determine whether a Role or a User has access to a Resource. Permissions also have an "action" property which specifies what the Role or User is allowed to do with the Resource.
 
-## Creating a Role Permission
+### Creating a Role Permission
 
 ```tpl
 HTTP POST /orgs/{orgId}/roles/{roleId}/permissions
@@ -1197,7 +1197,7 @@ Response:
 The example above specifies that the role "admins" can "write" to the resource "/root/drives/c/home". Note that the resource should already exist. See the [Resources API](../resources) to learn how to create a resource.
 
 
-## Creating a User Permission
+### Creating a User Permission
 
 ```tpl
 HTTP POST /orgs/{orgId}/users/{userId}/permissions
@@ -1230,7 +1230,7 @@ Response:
 
 The example above specifies that the user "user3" can "read" the resource "/root/drives/c/home".
 
-## Getting Effective Permissions for a User
+### Getting Effective Permissions for a User
 
 Effective Permissions for a user is the combined list of all user permissions defined for the specifc user, and role permissions for the roles in which the user is a member.
 
@@ -1257,7 +1257,7 @@ Response:
 ```
 
 
-## Wildcard actions
+### Wildcard actions
 
 You can specify a wildcard (tilde "~", by default) to get all permissions irrespective of action.
 
@@ -1288,7 +1288,7 @@ Response:
 ]
 ```
 
-## Wildcard Resource Paths
+### Wildcard Resource Paths
 
 You can specify a wildcard in the resource path as well.
 
@@ -1298,7 +1298,7 @@ For example, the following will return all resources starting with "/root/drives
 HTTP GET /orgs/example.com/users/user3/effective-permissions/~/root/drives/~
 ```
 
-## Getting just Role Permissions
+### Getting just Role Permissions
 
 You can get permissions for a role to a resource thus.
 
@@ -1323,7 +1323,7 @@ Response:
 }
 ```
 
-## Getting just User Permissions
+### Getting just User Permissions
 
 You can get permissions for a user to a resource thus.
 
@@ -1348,7 +1348,7 @@ Response:
 }
 ```
 
-## Deleting Role Permissions
+### Deleting Role Permissions
 
 You can delete permissions for a role to a resource thus.
 
@@ -1373,7 +1373,7 @@ Response:
 }
 ```
 
-## Deleting User Permissions
+### Deleting User Permissions
 
 You can delete permissions for a user to a resource thus.
 
