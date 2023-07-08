@@ -10,6 +10,9 @@
     <PublishSingleFile>true</PublishSingleFile>
     <WarningsAsErrors>true</WarningsAsErrors>
     <!-- <PublishAot>true</PublishAot> -->
+    <Version>1.0.1.0</Version>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -179,7 +179,7 @@ if (!initDb)
   orgsApi.MapGet("/{orgId}/users/{userId}/permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetUserPermissionsAsync).WithOpenApi();
   orgsApi.MapPost("/{orgId}/users/{userId}/permissions", UserPermissionHandlers.CreateUserPermissionAsync).WithOpenApi();
   orgsApi.MapDelete("/{orgId}/users/{userId}/permissions/{action}/{*resourceId}", UserPermissionHandlers.DeleteUserPermissionAsync).WithOpenApi();
-  // COMBINED USER/ROLE
+  // COMBINED USER+ROLE PERMISSIONS
   orgsApi.MapGet("/{orgId}/users/{userId}/effective-permissions/{action?}/{*resourceId}", UserPermissionHandlers.GetEffectivePermissionsAsync).WithOpenApi();
   // ROLE PROPERTIES
   orgsApi.MapGet("/{orgId}/users/{userId}/properties/{name?}", UserHandlers.GetPropertiesAsync).WithOpenApi();

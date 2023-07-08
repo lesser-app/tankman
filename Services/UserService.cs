@@ -15,6 +15,12 @@ public enum SortUserBy
 
 public static class UserService
 {
+  public class MatchFields
+  {
+    public required string? identityProvider { get; set; }
+    public required string? identityProviderUserId { get; set; }
+  }
+
   public static async Task<OneOf<List<User>, Error<string>>> GetUsersAsync(
     string userId,
     string orgId,
@@ -23,6 +29,7 @@ public static class UserService
     SortOrder? sortOrder,
     int? from,
     int? limit,
+    MatchFields matchFields,
     Dictionary<string, string> matchProperties
   )
   {
@@ -32,6 +39,16 @@ public static class UserService
       .FilterByOrg(orgId)
       .FilterByIdPattern(userId)
       .FilterByProperties<User, UserProperty>(matchProperties);
+
+    if (matchFields.identityProvider != null)
+    {
+      query = query.Where(x => x.IdentityProvider == matchFields.identityProvider);
+    }
+
+    if (matchFields.identityProviderUserId != null)
+    {
+      query = query.Where(x => x.IdentityProviderUserId == matchFields.identityProviderUserId);
+    }
 
     if (sortBy.HasValue)
     {

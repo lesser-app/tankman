@@ -32,6 +32,15 @@ public static class UserHandlers
   {
     var matchProperties = QueryStringUtils.GetPrefixedQueryDictionary("properties.", context);
 
+    string? identityProvider = context.Request.Query["identityProvider"];
+    string? identityProviderUserId = context.Request.Query["identityProviderUserId"];
+
+    var matchFields = new UserService.MatchFields
+    {
+      identityProvider = identityProvider,
+      identityProviderUserId = identityProviderUserId
+    };
+
     SortUserBy? sortBy = sort switch
     {
       "id" => SortUserBy.UserId,
@@ -55,6 +64,7 @@ public static class UserHandlers
         sortOrder: sortOrder,
         from: from,
         limit: limit,
+        matchFields,
         matchProperties: matchProperties
       ),
       User.ToJson

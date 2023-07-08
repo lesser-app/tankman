@@ -65,7 +65,15 @@ public static class Filters
 
   public static IQueryable<T> FilterByOrg<T>(this IQueryable<T> query, string orgId) where T : IOrgAssociated
   {
-    return query.Where((x) => x.OrgId == orgId);
+    if (orgId == Settings.Wildcard)
+    {
+      return query;
+    }
+    else
+    {
+      var orgsList = orgId.Split(Settings.Separator).ToList();
+      return orgsList.Count == 1 ? query.Where((x) => x.OrgId == orgId) : query.Where((x) => orgsList.Contains(x.OrgId));
+    }
   }
 
   public static IQueryable<T> FilterByUser<T>(this IQueryable<T> query, string userId) where T : IUserAssociated
