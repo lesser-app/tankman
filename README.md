@@ -13,7 +13,7 @@ It's important to note that Tankman does not function as an Identity and Authent
 
 Tankman is available on GitHub under the MIT license. You can download it as a binary for your platform; and it utilizes PostgreSQL as its underlying database.
 
-Better formatted documentation can be found on the [Tankman Website - tankman.dev](https://tankman.dev).
+📢 📢 📢 Better formatted documentation can be found on the [Tankman Website - tankman.dev](https://tankman.dev).
 
 ### Install Tankman
 
