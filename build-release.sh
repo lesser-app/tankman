@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Check if directory path argument is provided
+if [ -z "$1" ]; then
+  echo "Please provide an output directory path as the first argument."
+  exit 1
+fi
+
 dotnet publish -r linux-x64 -c Release
 dotnet publish -r linux-musl-x64 -c Release
 dotnet publish -r linux-arm64 -c Release
@@ -9,12 +15,6 @@ dotnet publish -r osx-x64 -c Release
 
 # Switch to the directory where the script exists
 cd "$(dirname "$0")" || exit 1
-
-# Check if directory path argument is provided
-if [ -z "$1" ]; then
-  echo "Please provide an output directory path as the first argument."
-  exit 1
-fi
 
 # Create the directory
 mkdir -p "$1"
